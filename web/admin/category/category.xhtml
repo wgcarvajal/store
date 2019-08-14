@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../plantillas/admin.xhtml">
+
+            <ui:define name="cssPage">
+                <h:outputStylesheet name="./css/cssItems.css"/>
+            </ui:define>
+            <ui:define name="title">
+                #{bundle.Category}
+            </ui:define>
+            
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="content">
+                
+                <h:form onkeypress="if (event.keyCode == 13) { return false; }">
+                <div class="search">
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-4">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon"></span>
+                                
+                                <p:inputText  value="#{categoryController.category}" placeholder="#{bundle.SearchCategory}"
+                                                  >
+                                    <p:ajax event="keyup" listener="#{categoryController.searchCategory}" update=":formCategories" 
+                                                />
+                                    </p:inputText>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </h:form>
+                
+                
+                
+                <h:form id="formCategories">
+                    <div class="itemList">
+                        <p:commandButton
+                            action="#{categoryController.openRegisterCategoryDialog()}"
+                            icon="fa fa-fw fa-plus" update=":categoryForm" 
+                            onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                            />
+                        <p:dataGrid columns="4" 
+                                    value="#{categoryController.categories}"
+                                    var="category" 
+                                    rendered="#{categoryController.categories.size() > 0}"
+                                    layout="grid"
+                                    rows="12" paginator="true"
+                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                    >
+                            <div class="item">
+                                    #{category.catName}
+                                    <div class="remove_button">
+                                        <p:commandLink style="color: black;text-decoration: none !important;"
+                                                       action="#{categoryController.openDeleteCategoryDialog(category)}"
+                                                       update=":deleteCategoryForm"
+                                                        onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                                       >
+                                            <i class="fa fa-fw fa-trash"></i>
+                                        </p:commandLink>
+                                    </div>
+                                    <div class="edit_button">
+                                        <p:commandLink title="editar"  style="color: black;text-decoration: none !important;"
+                                                       action="#{categoryController.openEditarCategoryDialog(category)}"
+                                                       update=":editCategoryForm" 
+                                                        onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                                       >
+                                            <i class="fa fa-fw fa-edit"></i>
+                                        </p:commandLink>
+                                    </div>
+                                    
+                            </div>
+                        </p:dataGrid>
+                    </div>
+                </h:form>
+                
+                <h:form id="categoryForm">
+                    <p:dialog resizable="false"   header="#{bundle.Category}" position="center" modal="true"  widgetVar="addCategoryDialog" >
+
+                        <p:messages closable="true" showDetail="true" >
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="categoryPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column style="text-align:right;">
+                                    <p:outputLabel  value="#{bundle.Name}:" />
+                                    <p:outputLabel style="color:red;"  value=" * " />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="firstname" value="#{categoryController.nombre}"
+                                                 label="Firstname" requiredMessage="Ingrese nombre de usuario"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton action="#{categoryController.saveCategories()}"
+                                                     value="#{bundle.Ok}" update=":formCategories"
+                                        onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+
+                        </p:panelGrid>        
+
+                    </p:dialog>
+                </h:form>
+                
+                <h:form id="editCategoryForm">
+                    <p:dialog resizable="false"   header="#{bundle.Category}" position="center" modal="true"  widgetVar="editCategoryDialog" >
+
+                        <p:messages closable="true" showDetail="true" >
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="editCategoryPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column style="text-align:right;">
+                                    <p:outputLabel  value="#{bundle.Name}:" />
+                                    <p:outputLabel style="color:red;"  value=" * " />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="firstname" value="#{categoryController.nombre}"
+                                                 />
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        value="#{bundle.Edit}" update=":formCategories" action="#{categoryController.editCategory}"
+                                        onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+
+                        </p:panelGrid>        
+
+                    </p:dialog>
+                </h:form>
+                
+                
+                <h:form id="deleteCategoryForm">
+                    <p:dialog resizable="false"   header="#{bundle.Category}" position="center" modal="true"  widgetVar="deteletCategoryDialog" >
+                        
+                        <p:panelGrid id="deleteCategoryPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column>
+                                    <p:messages id="deleteMessage" showDetail="true" />
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column style="text-align: center;">
+                                    <p:commandButton 
+                                        action="#{categoryController.deleteCategory}"
+                                        onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                        update=":formCategories"
+                                        value="#{bundle.Ok}"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                
+                <h:form id="deleteCategoryResultForm">
+                    <p:dialog resizable="false"   header="#{bundle.Category}" position="center" modal="true"  widgetVar="deteletCategoryResultDialog" >
+                        
+                        <p:panelGrid id="deleteCategoryResultPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column>
+                                    <p:messages showDetail="true" >
+                                        <p:autoUpdate/>
+                                    </p:messages>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column style="text-align: center;">
+                                    <p:commandButton
+                                        value="#{bundle.Ok}"
+                                        onclick="PF('deteletCategoryResultDialog').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
