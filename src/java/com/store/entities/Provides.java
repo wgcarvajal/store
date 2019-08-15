@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Provides.findAll", query = "SELECT p FROM Provides p"),
     @NamedQuery(name = "Provides.findByProvidesId", query = "SELECT p FROM Provides p WHERE p.providesId = :providesId"),
+    @NamedQuery(name = "Provides.findCurrentByProdId", query = "SELECT p FROM Provides p WHERE p.prodId.prodId = :prodId And p.providesFinalDate IS NULL"),
     @NamedQuery(name = "Provides.findByProvidesInitialDate", query = "SELECT p FROM Provides p WHERE p.providesInitialDate = :providesInitialDate"),
     @NamedQuery(name = "Provides.findByProvidesFinalDate", query = "SELECT p FROM Provides p WHERE p.providesFinalDate = :providesFinalDate")})
 public class Provides implements Serializable {

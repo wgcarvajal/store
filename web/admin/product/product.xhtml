@@ -14,46 +14,117 @@
             </ui:define>
 
             <ui:define name="title">
-                #{bundle.Product}
+                 #{bundle.Product}
             </ui:define>
 
             <ui:define name="top">
-               
+                
             </ui:define>
 
             <ui:define name="content">
-                
-                <h:form id="form">
-                    <p:growl id="msg" showDetail="true"  />
-                    <p:dataTable var="prod" value="#{productController.lazyModel}" paginator="true" rows="10"
-                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                 rowsPerPageTemplate="5,10,15" selectionMode="single"  selection="#{productController.selectedProduct}" id="productTable" lazy="true">
-                        
-                        <p:ajax event="rowSelect" listener="#{productController.onRowSelect}" update=":form:msg"/>
-                        <p:column headerText="#{bundle.BarCode}" sortBy="#{prod.prodBarCode}" filterBy="#{prod.prodBarCode}">
-                            <h:outputText value="#{prod.prodBarCode}" />
-                        </p:column>
-                        <p:column headerText="#{bundle.Name}" sortBy="#{prod.prodName}" filterBy="#{prod.prodName}">
-                            <h:outputText value="#{prod.prodName}" />
-                        </p:column>
-                        <p:column headerText="#{bundle.Category}" sortBy="#{prod.catId}"  filterBy="#{prod.catId}">
-                            <h:outputText value="#{prod.catId.catName}" />
-                        </p:column>
-                        <p:column headerText="#{bundle.Brand}" sortBy="#{prod.brandId}"  filterBy="#{prod.brandId}">
-                            <h:outputText value="#{prod.brandId.brandName}" />
-                        </p:column>
-                        <p:column headerText="#{bundle.Stock}" sortBy="#{prod.prodStock}"  filterBy="#{prod.prodStock}">
-                            <h:outputText value="#{prod.prodStock}" />
-                        </p:column>
-                        <p:column headerText="#{bundle.NumberBase}">
-                            <h:outputText value="#{prod.prodBaseNumber}" />
-                        </p:column>
-                        <p:column headerText="#{bundle.Price}">
-                            <h:outputText value="#{productController.precio(prod)}" />
-                        </p:column>
-                    </p:dataTable>
+                <div class="pageTitle">#{bundle.Product}</div>
+                <h:form>
+                    <p:panelGrid style="font-size: 16pt;">
+                        <p:row>
+                            <p:column>
+                                #{bundle.BarCode}
+                            </p:column>
+                            <p:column>
+                                #{productController.product.prodBarCode}
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                #{bundle.Price}
+                            </p:column>
+                            <p:column>
+                                #{productController.price()}
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                #{bundle.Name}
+                            </p:column>
+                            <p:column>
+                                #{productController.product.prodName}
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                #{bundle.Presentation}
+                            </p:column>
+                            <p:column>
+                                #{productController.product.prodUnitValue} #{productController.product.uniId.uniAbbreviation}
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                #{bundle.Category}
+                            </p:column>
+                            <p:column>
+                                #{productController.product.catId.catName}
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                #{bundle.Brand}
+                            </p:column>
+                            <p:column>
+                                #{productController.product.brandId.brandName}
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                #{bundle.Stock}
+                            </p:column>
+                            <p:column>
+                                #{productController.product.prodStock}
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                #{bundle.BaseNumber}
+                            </p:column>
+                            <p:column>
+                                #{productController.product.prodBaseNumber}
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="2" />
+                        </p:row>
+                        <p:row>
+                            <p:column style="text-align: center;" colspan="2">
+                                #{bundle.CurrentProvider}
+                            </p:column>
+                        </p:row>
+                        <p:row rendered="#{productController.provider !=null}">
+                            <p:column>
+                                #{bundle.Nit}
+                            </p:column>
+                            <p:column>
+                                #{productController.provider.provNit}
+                            </p:column>
+                        </p:row>
+                        <p:row rendered="#{productController.provider !=null}">
+                            <p:column>
+                                #{bundle.Name}
+                            </p:column>
+                            <p:column>
+                                #{productController.provider.provName}
+                            </p:column>
+                        </p:row>
+                        <p:row rendered="#{productController.provider !=null}">
+                            <p:column>
+                                #{bundle.Address}
+                            </p:column>
+                            <p:column>
+                                #{productController.provider.provAddress}
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                    
+                    
                 </h:form>
-                
             </ui:define>
 
         </ui:composition>

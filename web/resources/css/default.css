@@ -16,6 +16,14 @@ h1 {
     color: #D20005;
 }
 
+.pageTitle{
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    width: 100%; 
+    text-align: center;
+    color: #D20005;
+    font-size:15pt;
+}
+
 a:link, a:visited {
   color: #045491;
   font-weight : bold;

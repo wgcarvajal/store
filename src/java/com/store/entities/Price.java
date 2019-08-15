@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Price.findAll", query = "SELECT p FROM Price p"),
     @NamedQuery(name = "Price.findByPriceId", query = "SELECT p FROM Price p WHERE p.priceId = :priceId"),
+    @NamedQuery(name = "Price.findCurrentByProdId", query = "SELECT p FROM Price p WHERE p.prodId.prodId = :prodId AND p.priceFinalDate IS NULL"),
     @NamedQuery(name = "Price.findByPriceValue", query = "SELECT p FROM Price p WHERE p.priceValue = :priceValue"),
     @NamedQuery(name = "Price.findByPriceInitialDate", query = "SELECT p FROM Price p WHERE p.priceInitialDate = :priceInitialDate"),
     @NamedQuery(name = "Price.findByPriceFinalDate", query = "SELECT p FROM Price p WHERE p.priceFinalDate = :priceFinalDate")})

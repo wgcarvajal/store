@@ -6,9 +6,11 @@
 package com.store.facade;
 
 import com.store.entities.Price;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,6 +29,14 @@ public class PriceFacade extends AbstractFacade<Price> {
 
     public PriceFacade() {
         super(Price.class);
+    }
+    
+    public Price findCurrentByProdId(long prodId)
+    {
+        Query query = getEntityManager().createNamedQuery("Price.findCurrentByProdId");
+        query.setParameter("prodId", prodId);
+        List<Price> resuList = query.getResultList();
+        return resuList.size() > 0 ? resuList.get(0):null;
     }
     
 }

@@ -6,9 +6,11 @@
 package com.store.facade;
 
 import com.store.entities.Provides;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -29,4 +31,11 @@ public class ProvidesFacade extends AbstractFacade<Provides> {
         super(Provides.class);
     }
     
+    public Provides findCurrentByProdId(long prodId)
+    {
+        Query query = getEntityManager().createNamedQuery("Provides.findCurrentByProdId");
+        query.setParameter("prodId", prodId);
+        List<Provides> resuList = query.getResultList();
+        return resuList.size() > 0 ? resuList.get(0):null;
+    }
 }
