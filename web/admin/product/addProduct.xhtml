@@ -1,14 +1,17 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
 
         <ui:composition template="./../../plantillas/admin.xhtml">
 
             <ui:define name="cssPage">
-                
+                <h:outputStylesheet name="./css/formcss.css"/>
             </ui:define>
 
             <ui:define name="title">
@@ -21,6 +24,234 @@
 
             <ui:define name="content">
                 <div class="pageTitle">#{bundle.Add}</div>
+                
+                <h:form id="form">
+                    <p:messages id="message" showIcon="true" showDetail="true" />
+                    <p:panelGrid id="panel" styleClass="panelgrid">
+                        <p:row>
+                            <p:column colspan="3">
+                                <h:outputLabel style="font-style: italic;font-size: 16px;text-align: left; color:red;" 
+                                               value="* "/>
+                                <h:outputLabel class="messageFieldRequired" value="#{bundle.FieldsRequired}" />
+                            </p:column>                                
+                        </p:row> 
+                        <p:row><p:column></p:column></p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.BarCode}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText 
+                                    id="barCode" class="inputTextMedium"
+                                    value="#{addProductController.barCode}" 
+                                    required="true"  requiredMessage="#{bundle.FieldRequired}"
+                                    >
+                                    <f:validator validatorId="barCodeValidator" />
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="barCode"/>
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Name}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="name" class="inputTextLong"
+                                             value="#{addProductController.name}"
+                                             required="true"  requiredMessage="#{bundle.FieldRequired}">
+                                    <f:validator validatorId="lengthMax100Validator" />
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="name"/>
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Brand}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="brand"  style="width:160px" required="true"
+                                                 requiredMessage="#{bundle.FieldRequired}" 
+                                                 value="#{addProductController.brand}"
+                                                 filter="true" filterMatchMode="startsWith"
+                                                 converter="selectOneMenuConverter"
+                                                 >
+                                    <f:selectItem itemLabel="#{bundle.Select}..."/>
+                                    <f:selectItems value="#{addProductController.brands}" var="brand" 
+                                                   itemLabel="#{brand.brandName}" itemValue="#{brand}"/>
+
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="brand"/>  
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Category}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="category"  style="width:160px" required="true"
+                                                 requiredMessage="#{bundle.FieldRequired}" 
+                                                 value="#{addProductController.category}"
+                                                 filter="true" filterMatchMode="startsWith"
+                                                 converter="selectOneMenuConverter"
+                                                 >
+                                    <f:selectItem itemLabel="#{bundle.Select}..."/>
+                                    <f:selectItems value="#{addProductController.categories}" var="category" 
+                                                   itemLabel="#{category.catName}" itemValue="#{category}"/>
+
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="category"/>  
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Presentation}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="presentation"  style="width:100px" required="true"
+                                                 requiredMessage="#{bundle.FieldRequired}" 
+                                                 value="#{addProductController.unity}"
+                                                 filter="true" filterMatchMode="startsWith"
+                                                 converter="selectOneMenuConverter"
+                                                 >
+                                    <f:selectItem itemLabel="#{bundle.Select}..."/>
+                                    <f:selectItems value="#{addProductController.unities}" var="unity" 
+                                                   itemLabel="#{unity.uniName} (#{unity.uniAbbreviation})" itemValue="#{unity}"/>
+
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="presentation"/>  
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.ValuePresentation}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="valuePresentation" class="inputTextShort"
+                                             required="true" requiredMessage="#{bundle.FieldRequired}"
+                                             value="#{addProductController.unitValue}"
+                                             >
+                                    
+                                    <f:validator validatorId="integerValidator" />
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="valuePresentation"/>
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Price}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="price" class="inputTextShort"
+                                             required="true" requiredMessage="#{bundle.FieldRequired}"
+                                             value="#{addProductController.price}">
+                                    <f:validator validatorId="integerValidator" />
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="price"/>
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Provider}:" />
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="provider"  style="width:300px"  
+                                                 value="#{addProductController.provider}"
+                                                 filter="true" filterMatchMode="contains"
+                                                 converter="selectOneMenuConverter"
+                                                 >
+                                    <f:selectItem itemLabel="#{bundle.Select}..."/>
+                                    <f:selectItems value="#{addProductController.providers}" var="provider" 
+                                                   itemLabel="#{provider.provName}, #{provider.provNit}, #{provider.provAddress}" itemValue="#{provider}"/>
+
+                                </p:selectOneMenu>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.BaseNumber}:" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="baseNumber"
+                                    class="inputTextVeryShort" 
+                                             value="#{addProductController.baseNumber}">
+                                    <f:validator validatorId="integerValidator" />
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="baseNumber"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Stock}:" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="stock"
+                                    class="inputTextVeryShort"
+                                             value="#{addProductController.stock}">
+                                    <f:validator validatorId="integerValidator" />
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="stock"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            
+                        </p:row>
+                        <p:row>
+                            <p:column>
+
+                            </p:column>
+                            <p:column>
+                                <p:commandButton
+                                    style="font-style: italic;font-weight: normal;"
+                                    action="#{addProductController.add()}"
+                                    value="Registrar"
+                                    ajax="true"
+                                    update="panel"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()"
+                                                   />
+                                
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+
+                    
+
+                </h:form>
+                
+                
+         
             </ui:define>
 
         </ui:composition>

@@ -49,8 +49,9 @@ public class Product implements Serializable {
     @Basic(optional = false)
     @Column(name = "prodId")
     private Long prodId;
+    @Size(min = 1, max = 50)
     @Column(name = "prodBarCode")
-    private BigInteger prodBarCode;
+    private String prodBarCode;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -109,11 +110,11 @@ public class Product implements Serializable {
         this.prodId = prodId;
     }
 
-    public BigInteger getProdBarCode() {
+    public String getProdBarCode() {
         return prodBarCode;
     }
 
-    public void setProdBarCode(BigInteger prodBarCode) {
+    public void setProdBarCode(String prodBarCode) {
         this.prodBarCode = prodBarCode;
     }
 

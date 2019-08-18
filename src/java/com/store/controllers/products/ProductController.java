@@ -11,6 +11,7 @@ import com.store.facade.ProvidesFacade;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -23,11 +24,13 @@ import javax.faces.context.FacesContext;
 @ViewScoped
 public class ProductController implements Serializable 
 {
+    private Product product;
+    private Provider provider;
+    private String barCode;
     @EJB private ProductFacade productEJB;
     @EJB private PriceFacade priceEJB;
     @EJB private ProvidesFacade providesEJB;
-    private Product product;
-    private Provider provider;
+    
     @PostConstruct
     public void init()
     {
@@ -68,6 +71,16 @@ public class ProductController implements Serializable
     {
         return product;
     }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
+    }
+    
+    
     
     private void goProducts() {
         try {
@@ -91,6 +104,51 @@ public class ProductController implements Serializable
     public Provider getProvider()
     {
         return provider;
+    }
+    
+    public void editBarCode()
+    {
+        barCode = product.getProdBarCode();
+        Util.update(":formEditBarCode");
+        Util.openDialog("editBarCodeDialog");
+    }
+    
+    public void okEditBarCode()
+    {
+        if(!barCode.equals(product.getProdBarCode()))
+        {
+            if(barCode.length()>50)
+            {
+                Util.addErrorMessage(String.
+                        format(ResourceBundle.getBundle("/Bundle").
+                                getString("BrandSavedSuccessfully"),50));
+            }
+            else
+            {
+               if(productEJB.barcodeAlreadyExists(barCode))
+               {
+                   Util.addErrorMessage(ResourceBundle.
+                           getBundle("/Bundle").
+                           getString("UniqueFieldAlredyExists"));
+               }
+               else
+               {
+                   product.setProdBarCode(barCode);
+                   productEJB.edit(product);
+                   Util.addInfoMessage(ResourceBundle.
+                           getBundle("/Bundle").
+                           getString("EditSuccessfull"));
+                   
+                   Util.update(":formProduct:panelProduct");
+                   Util.update(":formProduct:messageGrowl");
+                   Util.closeDialog("editBarCodeDialog");
+               }
+            }
+        }
+        else
+        {
+            Util.closeDialog("editBarCodeDialog");
+        }
     }
     
     

@@ -1,0 +1,65 @@
+.panelgrid , .panelgrid tr , .panelgrid td
+{
+    border-style: none !important;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.messageFieldRequired
+{
+    font-style: italic;
+    font-size: 15px;    
+}
+
+.fieldLabel
+{
+    font-style: italic;
+    font-size: 16px;
+    text-align: left;
+}
+
+.asterisk
+{
+    font-style: italic;
+    font-size: 16px;
+    text-align: left; 
+    color:red;
+}
+
+.inputTextVeryShort
+{
+   width: 50px;
+   font-size:15px;
+}
+
+.inputTextShort
+{
+   width: 110px;
+   font-size:15px;
+}
+
+.inputTextMedium
+{
+   width: 140px;
+   font-size:15px;
+}
+
+.inputTextLong
+{
+   width: 160px;
+   font-size:15px;
+}
+
+.column{
+    text-align: right;
+}
+
+.button
+{
+    background: #22419A;
+    color:#FFFFFF;font-style: italic;
+    font-weight: normal;
+}
+
+
+

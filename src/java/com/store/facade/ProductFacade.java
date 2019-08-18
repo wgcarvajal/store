@@ -130,4 +130,13 @@ public class ProductFacade extends AbstractFacade<Product> {
     }
     
     
+    public boolean barcodeAlreadyExists(String prodBarCode)
+    {
+        Query query = getEntityManager().createNamedQuery("Product.findByProdBarCode");
+        query.setParameter("prodBarCode", prodBarCode);
+        List<Product> resuList = query.getResultList();
+        return resuList.size() > 0;
+    }
+    
+    
 }

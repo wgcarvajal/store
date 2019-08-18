@@ -7,6 +7,9 @@ package com.store.controllers.util;
 
 import java.text.NumberFormat;
 import java.util.Currency;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import org.primefaces.PrimeFaces;
 
 /**
  *
@@ -34,5 +37,35 @@ public class Util {
         return format.format(price);
     }
     
+    public static void addErrorMessage(String message)
+    {
+        FacesContext.getCurrentInstance().addMessage(null, 
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+                                message, 
+                                message));
+    }
+    
+    public static void addInfoMessage(String message)
+    {
+        FacesContext.getCurrentInstance().addMessage(null, 
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, 
+                                message, 
+                                message));
+    }
+    
+    public static void update(String update)
+    {
+        PrimeFaces.current().ajax().update(update);
+    }
+    
+    public static void openDialog(String widgetVar)
+    {
+        PrimeFaces.current().executeScript("PF('"+widgetVar+"').show()");
+    }
+    
+    public static void closeDialog(String widgetVar)
+    {
+        PrimeFaces.current().executeScript("PF('"+widgetVar+"').hide()");
+    }
     
 }
