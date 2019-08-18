@@ -37,20 +37,9 @@
                             <p:column>
                                 <p:commandLink
                                     action="#{productController.editBarCode}"
-                                    style="font-size: 10pt;">
-                                    <i class="fa fa-fw fa-edit"></i>
-                                </p:commandLink>
-                            </p:column>
-                        </p:row>
-                        <p:row>
-                            <p:column class="column">
-                                <h:outputText class="fieldLabel" value="#{bundle.Price}:"/>
-                            </p:column>
-                            <p:column>
-                                #{productController.price()}
-                            </p:column>
-                            <p:column>
-                                <p:commandLink style="font-size: 10pt;">
+                                    style="font-size: 10pt;" 
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
                                     <i class="fa fa-fw fa-edit"></i>
                                 </p:commandLink>
                             </p:column>
@@ -63,7 +52,11 @@
                                 #{productController.product.prodName}
                             </p:column>
                             <p:column>
-                                <p:commandLink style="font-size: 10pt;">
+                                <p:commandLink 
+                                    action="#{productController.editName}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
                                     <i class="fa fa-fw fa-edit"></i>
                                 </p:commandLink>
                             </p:column>
@@ -76,7 +69,11 @@
                                 #{productController.product.prodUnitValue} #{productController.product.uniId.uniAbbreviation}
                             </p:column>
                             <p:column>
-                                <p:commandLink style="font-size: 10pt;">
+                                <p:commandLink 
+                                    action="#{productController.editPresentation}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
                                     <i class="fa fa-fw fa-edit"></i>
                                 </p:commandLink>
                             </p:column>
@@ -89,7 +86,11 @@
                                 #{productController.product.catId.catName}
                             </p:column>
                             <p:column>
-                                <p:commandLink style="font-size: 10pt;">
+                                <p:commandLink
+                                    action="#{productController.editCategory}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
                                     <i class="fa fa-fw fa-edit"></i>
                                 </p:commandLink>
                             </p:column>
@@ -102,7 +103,28 @@
                                 #{productController.product.brandId.brandName}
                             </p:column>
                             <p:column>
-                                <p:commandLink style="font-size: 10pt;">
+                                <p:commandLink
+                                    action="#{productController.editBrand}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Price}:"/>
+                            </p:column>
+                            <p:column>
+                                #{productController.formatPrice(productController.price.priceValue)}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink
+                                    action="#{productController.editPrice}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
                                     <i class="fa fa-fw fa-edit"></i>
                                 </p:commandLink>
                             </p:column>
@@ -216,6 +238,290 @@
                                         style="font-style: italic;font-weight: normal;"
                                         value="#{bundle.Ok}"
                                         update="formEditBarCode:barCodePanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditName">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Name}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editNameDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="namePanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Name}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        id="name" class="inputTextLong"
+                                        value="#{productController.name}" 
+                                        required="true"  requiredMessage="#{bundle.FieldRequired}"
+                                        >
+                                        <f:validator validatorId="lengthMax100Validator" />
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        action="#{productController.okEditName}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditName:namePanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formPresentation">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Presentation}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editPresentationDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="presentationPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Presentation}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu style="width:100px" 
+                                                     value="#{productController.unity}"
+                                                     filter="true" filterMatchMode="startsWith"
+                                                     converter="selectOneMenuConverter"
+                                                     >
+                                        <f:selectItems value="#{productController.unities}" var="unity" 
+                                                       itemLabel="#{unity.uniName} (#{unity.uniAbbreviation})" itemValue="#{unity}"/>
+
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.ValuePresentation}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                    <p:inputText class="inputTextShort"
+                                                 required="true" requiredMessage="#{bundle.FieldRequired}"
+                                                 value="#{productController.unitValue}"
+                                                 >
+
+                                        <f:validator validatorId="integerValidator" />
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        action="#{productController.okEditPresentation}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formPresentation:presentationPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formCategory">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Category}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editCategoryDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="categoryPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Category}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu style="width:160px" 
+                                                     value="#{productController.category}"
+                                                     filter="true" filterMatchMode="startsWith"
+                                                     converter="selectOneMenuConverter"
+                                                     >
+                                        <f:selectItems value="#{productController.categories}" 
+                                                       var="category" 
+                                                       itemLabel="#{category.catName}" 
+                                                       itemValue="#{category}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton
+                                        action="#{productController.okEditCategory}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formCategory:categoryPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formBrand">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Brand}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editBrandDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="brandPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Brand}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu style="width:160px" 
+                                                     value="#{productController.brand}"
+                                                     filter="true" filterMatchMode="startsWith"
+                                                     converter="selectOneMenuConverter"
+                                                     >
+                                        <f:selectItems value="#{productController.brands}" var="brand" 
+                                                       itemLabel="#{brand.brandName}" itemValue="#{brand}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton
+                                        action="#{productController.okEditBrand}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formBrand:brandPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditPrice">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Price}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editPriceDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="pricePanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Price}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                <p:inputText class="inputTextShort"
+                                             required="true" requiredMessage="#{bundle.FieldRequired}"
+                                             value="#{productController.priceValue}">
+                                    <f:validator validatorId="integerValidator" />
+                                </p:inputText>
+                            </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton
+                                        action="#{productController.okEditPrice}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditPrice:pricePanel"
                                         onstart="PF('efectoCarga').show()"  
                                         onsuccess="PF('efectoCarga').hide()"
                                         />

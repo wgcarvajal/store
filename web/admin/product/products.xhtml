@@ -34,22 +34,22 @@
                                  rowsPerPageTemplate="5,10,15" selectionMode="single"  selection="#{productsController.selectedProduct}" id="productTable" lazy="true">
                         
                         <p:ajax event="rowSelect" listener="#{productsController.onRowSelect}" update=":form:msg"/>
-                        <p:column headerText="#{bundle.BarCode}" sortBy="#{prod.prodBarCode}" filterBy="#{prod.prodBarCode}">
+                        <p:column headerText="#{bundle.BarCode}" filterBy="#{prod.prodBarCode}">
                             <h:outputText value="#{prod.prodBarCode}" />
                         </p:column>
-                        <p:column headerText="#{bundle.Name}" sortBy="#{prod.prodName}" filterBy="#{prod.prodName}">
+                        <p:column headerText="#{bundle.Name}"  filterBy="#{prod.prodName}">
                             <h:outputText value="#{prod.prodName}" />
                         </p:column>
                         <p:column headerText="#{bundle.Presentation}">
                             <h:outputText value="#{prod.prodUnitValue} #{prod.uniId.uniAbbreviation}" />
                         </p:column>
-                        <p:column headerText="#{bundle.Category}" sortBy="#{prod.catId}"  filterBy="#{prod.catId}">
+                        <p:column headerText="#{bundle.Category}"   filterBy="#{prod.catId}">
                             <h:outputText value="#{prod.catId.catName}" />
                         </p:column>
-                        <p:column headerText="#{bundle.Brand}" sortBy="#{prod.brandId}"  filterBy="#{prod.brandId}">
+                        <p:column headerText="#{bundle.Brand}"   filterBy="#{prod.brandId}">
                             <h:outputText value="#{prod.brandId.brandName}" />
                         </p:column>
-                        <p:column headerText="#{bundle.Stock}" sortBy="#{prod.prodStock}"  filterBy="#{prod.prodStock}">
+                        <p:column headerText="#{bundle.Stock}"   filterBy="#{prod.prodStock}">
                             <h:outputText value="#{prod.prodStock}" />
                         </p:column>
                         <p:column headerText="#{bundle.BaseNumber}">
