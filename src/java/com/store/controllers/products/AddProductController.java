@@ -10,6 +10,7 @@ import com.store.entities.Brand;
 import com.store.entities.Category;
 import com.store.entities.Price;
 import com.store.entities.Product;
+import com.store.entities.Producttype;
 import com.store.entities.Provider;
 import com.store.entities.Provides;
 import com.store.entities.Unity;
@@ -17,6 +18,7 @@ import com.store.facade.BrandFacade;
 import com.store.facade.CategoryFacade;
 import com.store.facade.PriceFacade;
 import com.store.facade.ProductFacade;
+import com.store.facade.ProducttypeFacade;
 import com.store.facade.ProviderFacade;
 import com.store.facade.ProvidesFacade;
 import com.store.facade.UnityFacade;
@@ -52,10 +54,12 @@ public class AddProductController implements Serializable
     private Category category;
     private Unity unity;
     private Provider provider;
+    private Producttype producttype;
     private List<Brand> brands;
     private List<Category> categories;
     private List<Unity> unities;
     private List<Provider> providers;
+    private List<Producttype> producttypes;
     @EJB private ProductFacade productEJB;
     @EJB private BrandFacade brandEJB;
     @EJB private CategoryFacade categoryEJB;
@@ -63,6 +67,7 @@ public class AddProductController implements Serializable
     @EJB private ProviderFacade providerEJB;
     @EJB private PriceFacade priceEJB;
     @EJB private ProvidesFacade providesEJB;
+    @EJB private ProducttypeFacade producttiypeEJB;
 
     public String getBarCode() {
         return barCode;
@@ -191,6 +196,26 @@ public class AddProductController implements Serializable
     public void setProviders(List<Provider> providers) {
         this.providers = providers;
     }
+
+    public Producttype getProducttype() {
+        return producttype;
+    }
+
+    public void setProducttype(Producttype producttype) {
+        this.producttype = producttype;
+    }
+
+    public List<Producttype> getProducttypes() {
+        if(producttypes == null)
+        {
+            producttypes = producttiypeEJB.findAll();
+        }
+        return producttypes;
+    }
+
+    public void setProducttypes(List<Producttype> producttypes) {
+        this.producttypes = producttypes;
+    }
     
     public void add()
     {
@@ -202,6 +227,7 @@ public class AddProductController implements Serializable
         product.setCatId(category);
         product.setUniId(unity);
         product.setProdUnitValue(Integer.parseInt(unitValue));
+        product.setProdtypeId(producttype);
         
         if(stock!=null && !stock.isEmpty())
             product.setProdStock(Integer.parseInt(stock));

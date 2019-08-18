@@ -80,6 +80,23 @@
                         </p:row>
                         <p:row>
                             <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Type}:"/>
+                            </p:column>
+                            <p:column>
+                                #{productController.product.prodtypeId.prodtypeValue}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink
+                                    action="#{productController.editProducttype}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.Category}:"/>
                             </p:column>
                             <p:column>
@@ -131,26 +148,34 @@
                         </p:row>
                         <p:row>
                             <p:column class="column">
-                                <h:outputText class="fieldLabel" value="#{bundle.Stock}:"/>
-                            </p:column>
-                            <p:column>
-                                #{productController.product.prodStock}
-                            </p:column>
-                            <p:column>
-                                <p:commandLink style="font-size: 10pt;">
-                                    <i class="fa fa-fw fa-edit"></i>
-                                </p:commandLink>
-                            </p:column>
-                        </p:row>
-                        <p:row>
-                            <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.BaseNumber}:"/>
                             </p:column>
                             <p:column>
                                 #{productController.product.prodBaseNumber}
                             </p:column>
                             <p:column>
-                                <p:commandLink style="font-size: 10pt;">
+                                <p:commandLink 
+                                    action="#{productController.editBaseNumber}"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()"
+                                    style="font-size: 10pt;">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Stock}:"/>
+                            </p:column>
+                            <p:column>
+                                #{productController.product.prodStock}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink 
+                                    action="#{productController.editStock}"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()"
+                                    style="font-size: 10pt;">
                                     <i class="fa fa-fw fa-edit"></i>
                                 </p:commandLink>
                             </p:column>
@@ -163,33 +188,61 @@
                                 #{bundle.CurrentProvider}
                             </p:column>
                             <p:column>
-                                <p:commandLink style="font-size: 10pt;">
+                                <p:commandLink
+                                    action="#{productController.editProvider}"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()"
+                                    style="font-size: 10pt;">
                                     <i class="fa fa-fw fa-edit"></i>
                                 </p:commandLink>
                             </p:column>
                         </p:row>
-                        <p:row rendered="#{productController.provider !=null}">
+                        <p:row rendered="#{productController.currentProvides !=null}">
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Rut}:"/>
+                            </p:column>
+                            <p:column>
+                                #{productController.currentProvides.provId.provRut}
+                            </p:column>
+                        </p:row>
+                        <p:row rendered="#{productController.currentProvides !=null}">
                             <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.Nit}:"/>
                             </p:column>
                             <p:column>
-                                #{productController.provider.provNit}
+                                #{productController.currentProvides.provId.provNit}
                             </p:column>
                         </p:row>
-                        <p:row rendered="#{productController.provider !=null}">
+                        <p:row rendered="#{productController.currentProvides !=null}">
                             <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.Name}:"/>
                             </p:column>
                             <p:column>
-                                #{productController.provider.provName}
+                                #{productController.currentProvides.provId.provName}
                             </p:column>
                         </p:row>
-                        <p:row rendered="#{productController.provider !=null}">
+                        <p:row rendered="#{productController.currentProvides !=null}">
                             <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.Address}:"/>
                             </p:column>
                             <p:column>
-                                #{productController.provider.provAddress}
+                                #{productController.currentProvides.provId.provAddress}
+                            </p:column>
+                        </p:row>
+                        <p:row rendered="#{productController.currentProvides !=null}">
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Phones}:"/>
+                            </p:column>
+                            <p:column>
+                                #{productController.currentProvides.provId.provPhones}
+                            </p:column>
+                        </p:row>
+                        <p:row rendered="#{productController.currentProvides !=null}">
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.WebSite}:"/>
+                            </p:column>
+                            <p:column>
+                                #{productController.currentProvides.provId.provWeb}
                             </p:column>
                         </p:row>
                     </p:panelGrid>
@@ -369,6 +422,59 @@
                         </p:panelGrid>
                     </p:dialog>
                 </h:form>
+                <h:form id="formEditProducttype">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Type}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editProducttypeDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="producttypePanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Type}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu style="width:160px" 
+                                                     value="#{productController.producttype}"
+                                                     converter="selectOneMenuConverter"
+                                                     >
+                                        <f:selectItems value="#{productController.producttypes}" var="producttype" 
+                                                       itemLabel="#{producttype.prodtypeValue}" itemValue="#{producttype}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton
+                                        action="#{productController.okEditProducttype}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditProducttype:producttypePanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
                 <h:form id="formCategory">
                     <p:dialog resizable="false"   
                               header="#{bundle.Category}" 
@@ -530,6 +636,299 @@
                         </p:panelGrid>
                     </p:dialog>
                 </h:form>
+                <h:form id="formEditStock">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Stock}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editStockDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="stockPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Stock}:" />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="stock"
+                                                 class="inputTextVeryShort"
+                                                 value="#{productController.stock}">
+                                        <f:validator validatorId="integerValidator" />
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        action="#{productController.okEditStock}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditStock:stockPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditBaseNumber">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.BaseNumber}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editBaseNumberDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="baseNumberPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.BaseNumber}:" />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="stock"
+                                                 class="inputTextVeryShort"
+                                                 value="#{productController.baseNumber}">
+                                        <f:validator validatorId="integerValidator" />
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        action="#{productController.okEditBaseNumber}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditBaseNumber:baseNumberPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditProvider">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Provider}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editProviderDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="providerPanel" style="text-align:left;" styleClass="panelgrid">  
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Provider}:" />
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu style="width:160px" 
+                                                     value="#{productController.provider}"
+                                                     filter="true" filterMatchMode="startsWith"
+                                                     converter="selectOneMenuConverter"
+                                                     >
+                                        <f:selectItem itemLabel="#{bundle.Select}..."/>
+                                        <f:selectItems value="#{productController.providers}" var="provider" 
+                                                       itemLabel="#{provider.provName}, #{provider.provNit}, #{provider.provAddress}" 
+                                                       itemValue="#{provider}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton
+                                        action="#{productController.okEditProvider}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditProvider:providerPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form  id="productImageForm" style="width:50%; margin: 0px auto; margin-top: 10px;">
+                    <p:panelGrid rendered="#{!productController.editImage}">
+                            <p:row>
+                                <p:column >
+
+                                    <p:galleria value="#{productController.productimages}" var="productImage" 
+                                                panelWidth="500" panelHeight="300">
+                                        <p:graphicImage value="/image?image=#{productImage.prodimgPath}" 
+                                                        />
+                                    </p:galleria>
+                                </p:column>
+                                <p:column>
+                                    <p:commandLink title="editar"  style="color: black;text-decoration: none !important;"
+                                                   action="#{productController.editImageActive}"
+                                                   update="productImageForm :uploadImageForm :fileUploadForm" 
+                                                   onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                                   >
+                                        <i class="fa fa-fw fa-edit"></i>
+                                    </p:commandLink>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </h:form>
+
+                    <div style="width:50%; margin: 0px auto; margin-top: 10px;">
+                        <h:form id="fileUploadForm">
+                            <p:messages showDetail="true" closable="true"/>
+                            <p:fileUpload
+                                rendered="#{productController.editImage}"
+                                style="width: 100%;" 
+                                fileUploadListener="#{productController.loadImage}" 
+                                mode="advanced"
+                                auto="true"
+                                update="fileUploadForm :uploadImageForm"
+                                dragDropSupport="false"
+                                label="cargar"
+                                allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                onstart="PF('efectoCarga').show()"  oncomplete="PF('efectoCarga').hide()"
+                                />
+                        </h:form>
+
+                        <h:form id="uploadImageForm">
+                            <p:panelGrid style="width: 100%;" rendered="#{productController.editImage}">
+                                <p:row>
+                                    <p:column style="width: 90%;">
+                                        <div style="width:100%;height:300px;">
+                                            <p:repeat value="#{productController.editProductimages}" 
+                                                      var="productImage"
+                                                      >
+                                                <div style="border: 1px #000000 solid; width: 165px;height:100px;float: left; margin-left:5px; margin-bottom: 10px;">
+                                                    <p:commandLink title="#{bundle.ImageDefault}" rendered="#{productImage.prodimgMain}" 
+                                                                   style="position: absolute;color: white;background-color: black;">
+                                                        <i  class="fa fa-fw fa-star"></i> 
+                                                    </p:commandLink>
+
+                                                    <p:graphicImage style="width: 100%;height: 80%;"
+                                                                    value="/image?image=#{productImage.prodimgPath}" 
+                                                                    />
+                                                    <div style="text-align: center;width: 100%; height: 20%;">
+                                                        <p:commandLink title="#{bundle.SetImageDefault}" 
+                                                                       action="#{productController.openDefaultImagenDialog(productImage)}"
+                                                                       rendered="#{!productImage.prodimgMain}" 
+                                                                       update="uploadImageForm"
+                                                                       style="color: black;text-decoration: none !important;">
+                                                            <i class="fa fa-fw fa-check"></i>
+                                                        </p:commandLink>
+
+                                                        <p:commandLink rendered="#{!productImage.prodimgMain}" 
+                                                                       title="#{bundle.Delete}" 
+                                                                       action="#{productController.openDeleteImagenDialog(productImage)}"
+                                                                       style="color: black;text-decoration: none !important;">
+                                                            <i class="fa fa-fw fa-trash"></i>
+                                                        </p:commandLink>
+                                                    </div>
+                                                </div>
+                                            </p:repeat>
+                                        </div>
+                                    </p:column>
+                                    <p:column style="width: 10%;">
+                                        <p:commandLink value="#{bundle.Ok}"  style="color: black;text-decoration: none !important;"
+                                                       action="#{productController.editImagesOk}"
+                                                       update="uploadImageForm :productImageForm :fileUploadForm"
+                                                       onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                                       />
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+
+                            <p:dialog resizable="false"   header="#{bundle.Set}" position="center" modal="true"  widgetVar="defaulImagenDialog" >
+                                <p:panelGrid id="defaulImagenPanel" style="text-align:left;" styleClass="panelgrid">
+                                    <p:row>
+                                        <p:column>
+                                            <p:messages showDetail="true" >
+                                                <p:autoUpdate/>
+                                            </p:messages>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column style="text-align: center;">
+                                            <p:commandButton
+                                                action="#{productController.setDefaultImage}"
+                                                value="#{bundle.Ok}"
+                                                update="uploadImageForm"
+                                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                                />
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:dialog>
+
+                            <p:dialog resizable="false"   header="#{bundle.Set}" position="center" modal="true"  widgetVar="defaulImagenResultDialog" >
+                                <p:panelGrid id="defaulImagenResultPanel" style="text-align:left;" styleClass="panelgrid">
+                                    <p:row>
+                                        <p:column>
+                                            <p:messages showDetail="true" >
+                                                <p:autoUpdate/>
+                                            </p:messages>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column style="text-align: center;">
+                                            <p:commandButton
+                                                value="#{bundle.Ok}"
+                                                onclick="PF('defaulImagenResultDialog').hide()"
+                                                />
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:dialog>
+
+                            <p:dialog resizable="false"   header="#{bundle.Delete}" position="center" modal="true"  widgetVar="deleteImagenDialog" >
+                                <p:panelGrid id="deleteImagenPanel" style="text-align:left;" styleClass="panelgrid">
+                                    <p:row>
+                                        <p:column>
+                                            <p:messages showDetail="true" >
+                                                <p:autoUpdate/>
+                                            </p:messages>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column style="text-align: center;">
+                                            <p:commandButton
+                                                action="#{productController.deleteImagen}"
+                                                value="#{bundle.Ok}"
+                                                update="uploadImageForm"
+                                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                                />
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:dialog>
+
+                            <p:dialog resizable="false"   header="#{bundle.Delete}" position="center" modal="true"  widgetVar="deleteImageResultDialog" >
+                                <p:panelGrid id="deleteImageResultPanel" style="text-align:left;" styleClass="panelgrid">
+                                    <p:row>
+                                        <p:column>
+                                            <p:messages showDetail="true" >
+                                                <p:autoUpdate/>
+                                            </p:messages>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column style="text-align: center;">
+                                            <p:commandButton
+                                                value="#{bundle.Ok}"
+                                                onclick="PF('deleteImageResultDialog').hide()"
+                                                />
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:dialog>
+                        </h:form>
+                    </div>
+                
             </ui:define>
         </ui:composition>
 

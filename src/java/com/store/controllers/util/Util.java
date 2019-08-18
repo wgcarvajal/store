@@ -19,6 +19,8 @@ public class Util {
     
     
     public static String projectPath = "/store";
+    public static String PRODUCTIMAGEDIR= "/Users/aranda/filesStore/productImage/";
+    
    
     
     public static String formatText(String value)
@@ -37,20 +39,28 @@ public class Util {
         return format.format(price);
     }
     
-    public static void addErrorMessage(String message)
+    public static void addErrorMessage(String message,String messageDetail)
     {
         FacesContext.getCurrentInstance().addMessage(null, 
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, 
                                 message, 
-                                message));
+                                messageDetail));
     }
     
-    public static void addInfoMessage(String message)
+    public static void addInfoMessage(String message,String messageDetail)
     {
         FacesContext.getCurrentInstance().addMessage(null, 
                         new FacesMessage(FacesMessage.SEVERITY_INFO, 
                                 message, 
-                                message));
+                                messageDetail));
+    }
+    
+    public static void addWarnMessage(String message,String messageDetail)
+    {
+        FacesContext.getCurrentInstance().addMessage(null, 
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, 
+                                message, 
+                                messageDetail));
     }
     
     public static void update(String update)

@@ -120,6 +120,29 @@
                         
                         <p:row>
                             <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Type}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="type"  style="width:160px" required="true"
+                                                 requiredMessage="#{bundle.FieldRequired}" 
+                                                 value="#{addProductController.producttype}"
+                                                 filter="true" filterMatchMode="startsWith"
+                                                 converter="selectOneMenuConverter"
+                                                 >
+                                    <f:selectItem itemLabel="#{bundle.Select}..."/>
+                                    <f:selectItems value="#{addProductController.producttypes}" var="producttypes" 
+                                                   itemLabel="#{producttypes.prodtypeValue}" itemValue="#{producttypes}"/>
+
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="type"/>  
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.Presentation}:" />
                                 <h:outputLabel class="asterisk" value="*"/>
                             </p:column>

@@ -5,6 +5,8 @@ import com.store.entities.Brand;
 import com.store.entities.Category;
 import com.store.entities.Price;
 import com.store.entities.Product;
+import com.store.entities.Productimage;
+import com.store.entities.Producttype;
 import com.store.entities.Provider;
 import com.store.entities.Provides;
 import com.store.entities.Unity;
@@ -12,21 +14,32 @@ import com.store.facade.BrandFacade;
 import com.store.facade.CategoryFacade;
 import com.store.facade.PriceFacade;
 import com.store.facade.ProductFacade;
+import com.store.facade.ProductimageFacade;
+import com.store.facade.ProducttypeFacade;
+import com.store.facade.ProviderFacade;
 import com.store.facade.ProvidesFacade;
 import com.store.facade.UnityFacade;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.primefaces.event.FileUploadEvent;
 
 @ManagedBean(name = "productController")
 @ViewScoped
@@ -36,16 +49,26 @@ public class ProductController implements Serializable
     private Provider provider;
     private String barCode;
     private String name;
+    private String stock;
+    private String baseNumber;
     private Unity unity;
     private String unitValue;
     private Category category;
     private Brand brand;
     private Price price;
     private String priceValue;
+    private Producttype producttype;
+    private Provides currentProvides;
+    private Productimage productimage;
     
     private List<Unity> unities;
     private List<Category> categories;
     private List<Brand> brands;
+    private List<Producttype> producttypes;
+    private List<Provider> providers;
+    private List<Productimage> productimages;
+    
+    private boolean editImage = false;
     
     @EJB private ProductFacade productEJB;
     @EJB private PriceFacade priceEJB;
@@ -53,6 +76,9 @@ public class ProductController implements Serializable
     @EJB private UnityFacade unityEJB;
     @EJB private CategoryFacade categoryEJB;
     @EJB private BrandFacade brandEJB;
+    @EJB private ProducttypeFacade producttypeEJB;
+    @EJB private ProviderFacade providerEJB;
+    @EJB private ProductimageFacade productimageEJB;
     
     @PostConstruct
     public void init()
@@ -83,11 +109,7 @@ public class ProductController implements Serializable
     
     public void initValues()
     {
-        Provides provides = providesEJB.findCurrentByProdId(product.getProdId());
-        if(provides!=null)
-        {
-            provider = provides.getProvId();
-        }
+        currentProvides = providesEJB.findCurrentByProdId(product.getProdId());
     }
     
     public Product getProduct()
@@ -167,6 +189,22 @@ public class ProductController implements Serializable
         this.brands = brands;
     }
 
+    public String getStock() {
+        return stock;
+    }
+
+    public void setStock(String stock) {
+        this.stock = stock;
+    }
+
+    public String getBaseNumber() {
+        return baseNumber;
+    }
+
+    public void setBaseNumber(String baseNumber) {
+        this.baseNumber = baseNumber;
+    }
+   
     public Price getPrice() {
         if(price == null)
         {
@@ -186,7 +224,34 @@ public class ProductController implements Serializable
     public void setPriceValue(String priceValue) {
         this.priceValue = priceValue;
     }
-    
+
+    public Producttype getProducttype() {
+        return producttype;
+    }
+
+    public void setProducttype(Producttype producttype) {
+        this.producttype = producttype;
+    }
+
+    public List<Producttype> getProducttypes() {
+        return producttypes;
+    }
+
+    public void setProducttypes(List<Producttype> producttypes) {
+        this.producttypes = producttypes;
+    }
+
+    public Provides getCurrentProvides() {
+        return currentProvides;
+    }
+
+    public void setCurrentProvides(Provides currentProvides) {
+        this.currentProvides = currentProvides;
+    }
+
+    public boolean isEditImage() {
+        return editImage;
+    }
     
     private void goProducts() {
         try {
@@ -205,6 +270,22 @@ public class ProductController implements Serializable
     public Provider getProvider()
     {
         return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
+
+    public List<Provider> getProviders() {
+        if(providers == null)
+        {
+            providers = providerEJB.findAll();
+        }
+        return providers;
+    }
+
+    public void setProviders(List<Provider> providers) {
+        this.providers = providers;
     }
     
     public void editBarCode()
@@ -256,6 +337,40 @@ public class ProductController implements Serializable
         Util.openDialog("editPriceDialog");
     }
     
+    public void editProducttype()
+    {
+        producttype = product.getProdtypeId();
+        if(producttypes == null)
+            producttypes = producttypeEJB.findAll();
+        Util.update(":formEditProducttype");
+        Util.openDialog("editProducttypeDialog");
+    }
+    
+    public void editBaseNumber()
+    {
+        baseNumber = product.getProdBaseNumber()+"";
+        Util.update(":formEditBaseNumber");
+        Util.openDialog("editBaseNumberDialog");
+    }
+    
+    public void editStock()
+    {
+        stock = product.getProdStock()+"";
+        Util.update(":formEditStock");
+        Util.openDialog("editStockDialog");
+    }
+    
+    public void editProvider()
+    {
+       provider = null;
+       if(currentProvides!=null)
+       {
+           provider = currentProvides.getProvId();
+       }
+       Util.update(":formEditProvider");
+       Util.openDialog("editProviderDialog");
+    }
+    
     public void okEditBarCode()
     {
         if(!barCode.equals(product.getProdBarCode()))
@@ -263,6 +378,8 @@ public class ProductController implements Serializable
             if(barCode.length()>50)
             {
                 Util.addErrorMessage(String.
+                        format(ResourceBundle.getBundle("/Bundle").
+                                getString("BrandSavedSuccessfully"),50),String.
                         format(ResourceBundle.getBundle("/Bundle").
                                 getString("BrandSavedSuccessfully"),50));
             }
@@ -272,6 +389,9 @@ public class ProductController implements Serializable
                {
                    Util.addErrorMessage(ResourceBundle.
                            getBundle("/Bundle").
+                           getString("UniqueFieldAlredyExists"),
+                           ResourceBundle.
+                           getBundle("/Bundle").
                            getString("UniqueFieldAlredyExists"));
                }
                else
@@ -280,7 +400,9 @@ public class ProductController implements Serializable
                    productEJB.edit(product);
                    Util.addInfoMessage(ResourceBundle.
                            getBundle("/Bundle").
-                           getString("EditSuccessfull"));
+                           getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
                    
                    Util.update(":formProduct:panelProduct");
                    Util.update(":formProduct:messageGrowl");
@@ -301,6 +423,8 @@ public class ProductController implements Serializable
             product.setProdName(Util.formatText(name));
             productEJB.edit(product);
             Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
                     getBundle("/Bundle").
                     getString("EditSuccessfull"));
 
@@ -324,6 +448,8 @@ public class ProductController implements Serializable
             productEJB.edit(product);
             Util.addInfoMessage(ResourceBundle.
                     getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
                     getString("EditSuccessfull"));
 
             Util.update(":formProduct:panelProduct");
@@ -336,6 +462,28 @@ public class ProductController implements Serializable
         }
     }
     
+    public void okEditProducttype()
+    {
+        if(!product.getProdtypeId().getProdtypeId().equals(producttype.getProdtypeId()))
+        {
+            product.setProdtypeId(producttype);
+            productEJB.edit(product);
+            Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+
+            Util.update(":formProduct:panelProduct");
+            Util.update(":formProduct:messageGrowl");
+            Util.closeDialog("editProducttypeDialog");
+        }
+        else
+        {
+            Util.closeDialog("editProducttypeDialog");
+        }
+    }
+    
     public void okEditCategory()
     {
         if(!product.getCatId().getCatId().equals(category.getCatId()))
@@ -343,6 +491,8 @@ public class ProductController implements Serializable
             product.setCatId(category);
             productEJB.edit(product);
             Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
                     getBundle("/Bundle").
                     getString("EditSuccessfull"));
 
@@ -363,6 +513,8 @@ public class ProductController implements Serializable
             product.setBrandId(brand);
             productEJB.edit(product);
             Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
                     getBundle("/Bundle").
                     getString("EditSuccessfull"));
 
@@ -391,6 +543,8 @@ public class ProductController implements Serializable
             priceEJB.create(price);
             Util.addInfoMessage(ResourceBundle.
                     getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
                     getString("EditSuccessfull"));
 
             Util.update(":formProduct:panelProduct");
@@ -401,6 +555,333 @@ public class ProductController implements Serializable
         {
             Util.closeDialog("editPriceDialog");
         }
+    }
+    
+    public void okEditStock()
+    {
+        
+        if(stock!=null && !stock.isEmpty()){
+            int stockValue = Integer.parseInt(stock);
+            if(product.getProdStock() != stockValue)
+            {
+                product.setProdStock(stockValue);
+                productEJB.edit(product);
+                Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+                Util.update(":formProduct:panelProduct");
+                Util.update(":formProduct:messageGrowl");
+                Util.closeDialog("editStockDialog");
+            }
+            else{
+                Util.closeDialog("editStockDialog"); 
+            }
+        }
+        else
+        {
+            if(product.getProdStock()!=0)
+            {
+                product.setProdStock(0);
+                productEJB.edit(product);
+                Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+                Util.update(":formProduct:panelProduct");
+                Util.update(":formProduct:messageGrowl");
+                Util.closeDialog("editStockDialog");
+            }
+            else
+            {
+                Util.closeDialog("editStockDialog"); 
+            }
+        }
+    }
+    
+    public void okEditBaseNumber()
+    {
+        
+        if(baseNumber!=null && !baseNumber.isEmpty()){
+            int baseNumberValue = Integer.parseInt(baseNumber);
+            if(product.getProdBaseNumber()!= baseNumberValue)
+            {
+                product.setProdBaseNumber(baseNumberValue);
+                productEJB.edit(product);
+                Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+                Util.update(":formProduct:panelProduct");
+                Util.update(":formProduct:messageGrowl");
+                Util.closeDialog("editBaseNumberDialog");
+            }
+            else{
+                Util.closeDialog("editBaseNumberDialog"); 
+            }
+        }
+        else
+        {
+            if(product.getProdBaseNumber()!=0)
+            {
+                product.setProdBaseNumber(0);
+                productEJB.edit(product);
+                Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+                Util.update(":formProduct:panelProduct");
+                Util.update(":formProduct:messageGrowl");
+                Util.closeDialog("editBaseNumberDialog");
+            }
+            else
+            {
+                Util.closeDialog("editBaseNumberDialog"); 
+            }
+        }
+    }
+    
+    public void okEditProvider()
+    {
+        Date date = new Date();
+        if(currentProvides!=null)
+        {
+            if(provider!=null)
+            {
+                if(!currentProvides.getProvId().getProvId().equals(provider.getProvId()))
+                {
+                    currentProvides.setProvidesFinalDate(date);
+                    providesEJB.edit(currentProvides);
+                    currentProvides = new Provides();
+                    currentProvides.setProdId(product);
+                    currentProvides.setProvId(provider);
+                    currentProvides.setProvidesInitialDate(date);
+                    providesEJB.create(currentProvides);
+                    Util.addInfoMessage(ResourceBundle.
+                        getBundle("/Bundle").
+                        getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+                    Util.update(":formProduct:panelProduct");
+                    Util.update(":formProduct:messageGrowl");
+                    Util.closeDialog("editProviderDialog");
+                }
+                else
+                {
+                    Util.closeDialog("editProviderDialog");
+                }
+            }
+            else
+            {
+                currentProvides.setProvidesFinalDate(date);
+                providesEJB.edit(currentProvides);
+                currentProvides = null;
+                Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+                Util.update(":formProduct:panelProduct");
+                Util.update(":formProduct:messageGrowl");
+                Util.closeDialog("editProviderDialog");
+            }
+        }
+        else
+        {
+            if(provider !=null)
+            {
+                currentProvides = new Provides();
+                currentProvides.setProdId(product);
+                currentProvides.setProvId(provider);
+                currentProvides.setProvidesInitialDate(date);
+                providesEJB.create(currentProvides);
+                Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+                Util.update(":formProduct:panelProduct");
+                Util.update(":formProduct:messageGrowl");
+                Util.closeDialog("editProviderDialog");
+            }
+            else
+            {
+                Util.closeDialog("editProviderDialog");
+            }
+        }
+    }
+    
+    public List<Productimage> getEditProductimages()
+    {
+        if(productimages==null || productimages.isEmpty())
+        {
+            productimages = productimageEJB.findByProdId(product.getProdId());
+        }
+        return productimages;
+    }
+    
+    public List<Productimage> getProductimages() {
+        if(productimages==null || productimages.isEmpty())
+        {
+            productimages = productimageEJB.findByProdId(product.getProdId());
+            if(productimages==null || productimages.isEmpty())
+            {
+                Productimage pi = new Productimage();
+                pi.setProdimgPath("");
+                productimages = new ArrayList<>();
+                productimages.add(pi);
+            }
+        }
+        return productimages;
+    }
+    
+    public void editImageActive()
+    {
+        editImage= true;
+        productimages = null;
+    }
+    
+    public void loadImage(FileUploadEvent event) {
+        try {
+            if(productimages.size()<6)
+            {
+                if(copyFile(event.getFile().getFileName(), event.getFile().getInputstream()))
+                {
+                    productimages = null;
+                    Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("Info")+":", ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("UploadImageSuccessfull"));
+                }
+                else
+                {
+                    Util.addErrorMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("Error")+":",ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("UploadImageError"));
+                }
+            }
+            else
+            {
+                Util.addErrorMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("Error")+":",String.format(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("UploadImageMax"),6));
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public boolean copyFile(String fileName, InputStream in) {
+        try {
+
+            String filePath = Util.PRODUCTIMAGEDIR + product.getProdId();
+            File file = new File(filePath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            String[] split = fileName.split(Pattern.quote("."));
+            int indice = split.length - 1;
+            System.out.println("indice:" + indice);
+            String extension = split[indice];
+
+            Productimage pi = new Productimage();
+            pi.setProdId(product);
+            if (productimages == null || productimages.isEmpty()) {
+                pi.setProdimgMain(true);
+            } else {
+                pi.setProdimgMain(false);
+            }
+            productimageEJB.create(pi);
+
+            filePath = filePath + File.separator + pi.getProdimgId()+ "." + extension;
+            pi.setProdimgPath(product.getProdId()+ File.separator + pi.getProdimgId() + "." + extension);
+            productimageEJB.edit(pi);
+            // write the inputStream to a FileOutputStream
+            OutputStream out = new FileOutputStream(new File(filePath));
+
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = in.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            in.close();
+            out.flush();
+            out.close();
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+    
+    public void openDefaultImagenDialog(Productimage productimage)
+    {
+        this.productimage = productimage;
+        Util.addWarnMessage("", ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("DoyouwantSetImageDefault"));
+        Util.openDialog("defaulImagenDialog");
+    }
+    
+    public void openDeleteImagenDialog(Productimage productimage)
+    {
+        this.productimage = productimage;
+        Util.addWarnMessage("", ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("DoyouwantDeleteImage"));
+        Util.openDialog("deleteImagenDialog");
+        
+    }
+    
+    public void editImagesOk(){
+        editImage = false;
+        productimages = null;
+    }
+    
+    public void setDefaultImage()
+    {
+        for(Productimage pi : productimages)
+        {
+            if(pi.getProdimgMain())
+            {
+                pi.setProdimgMain(false);
+                productimage.setProdimgMain(true);
+                productimageEJB.edit(pi);
+                productimageEJB.edit(productimage);
+                productimages = null;
+                break;
+            }
+        }
+        Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("Info")+":", ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("ImageSetByDefault"));
+        Util.closeDialog("defaulImagenDialog");
+        Util.openDialog("defaulImagenResultDialog");
+    }
+    
+    public void deleteImagen()
+    {  
+        File file = new File(Util.PRODUCTIMAGEDIR+productimage.getProdimgPath());
+        file.delete();
+        productimageEJB.remove(productimage);
+        productimages = null;
+        Util.addInfoMessage("", ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("ImageDeleted"));
+        Util.closeDialog("deleteImagenDialog");
+        Util.openDialog("deleteImageResultDialog");
     }
 }
  

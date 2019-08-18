@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Productimage.findAll", query = "SELECT p FROM Productimage p"),
     @NamedQuery(name = "Productimage.findByProdimgId", query = "SELECT p FROM Productimage p WHERE p.prodimgId = :prodimgId"),
+    @NamedQuery(name = "Productimage.findByProdId", query = "SELECT p FROM Productimage p WHERE p.prodId.prodId = :prodId"),
     @NamedQuery(name = "Productimage.findByProdimgPath", query = "SELECT p FROM Productimage p WHERE p.prodimgPath = :prodimgPath")})
 public class Productimage implements Serializable {
 
@@ -40,11 +41,13 @@ public class Productimage implements Serializable {
     @Basic(optional = false)
     @Column(name = "prodimgId")
     private Long prodimgId;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "prodimgPath")
     private String prodimgPath;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "prodimgMain")
+    private boolean prodimgMain;
     @JoinColumn(name = "prodId", referencedColumnName = "prodId")
     @ManyToOne(optional = false)
     private Product prodId;
@@ -56,9 +59,9 @@ public class Productimage implements Serializable {
         this.prodimgId = prodimgId;
     }
 
-    public Productimage(Long prodimgId, String prodimgPath) {
+    public Productimage(Long prodimgId, boolean prodimgMain) {
         this.prodimgId = prodimgId;
-        this.prodimgPath = prodimgPath;
+        this.prodimgMain = prodimgMain;
     }
 
     public Long getProdimgId() {
@@ -75,6 +78,14 @@ public class Productimage implements Serializable {
 
     public void setProdimgPath(String prodimgPath) {
         this.prodimgPath = prodimgPath;
+    }
+
+    public boolean getProdimgMain() {
+        return prodimgMain;
+    }
+
+    public void setProdimgMain(boolean prodimgMain) {
+        this.prodimgMain = prodimgMain;
     }
 
     public Product getProdId() {
@@ -107,7 +118,6 @@ public class Productimage implements Serializable {
 
     @Override
     public String toString() {
-        return "com.store.entities.Productimage[ prodimgId=" + prodimgId + " ]";
+        return "com.Productimage[ prodimgId=" + prodimgId + " ]";
     }
-    
 }

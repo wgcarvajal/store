@@ -25,4 +25,12 @@
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
+    <servlet>
+		<servlet-name>ProductImageServlet</servlet-name>
+		<servlet-class>com.store.servlets.ProductImageServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProductImageServlet</servlet-name>
+		<url-pattern>/image</url-pattern>
+	</servlet-mapping>
 </web-app>

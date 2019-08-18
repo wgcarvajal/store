@@ -5,19 +5,17 @@
  */
 package com.store.facade;
 
-import com.store.entities.Productimage;
-import java.util.List;
+import com.store.entities.Producttype;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  *
  * @author aranda
  */
 @Stateless
-public class ProductimageFacade extends AbstractFacade<Productimage> {
+public class ProducttypeFacade extends AbstractFacade<Producttype> {
 
     @PersistenceContext(unitName = "storePU")
     private EntityManager em;
@@ -27,16 +25,9 @@ public class ProductimageFacade extends AbstractFacade<Productimage> {
         return em;
     }
 
-    public ProductimageFacade() {
-        super(Productimage.class);
-    }
-    
-    public List<Productimage> findByProdId(Long prodId)
-    {
-        Query query = getEntityManager().createNamedQuery("Productimage.findByProdId");
-        query.setParameter("prodId", prodId);
-        List<Productimage> resultList = query.getResultList();
-        return resultList;
+    public ProducttypeFacade() {
+        super(Producttype.class);
     }
     
 }
+

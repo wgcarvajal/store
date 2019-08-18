@@ -6,7 +6,6 @@
 package com.store.entities;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -49,7 +48,7 @@ public class Product implements Serializable {
     @Basic(optional = false)
     @Column(name = "prodId")
     private Long prodId;
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     @Column(name = "prodBarCode")
     private String prodBarCode;
     @Basic(optional = false)
@@ -72,6 +71,9 @@ public class Product implements Serializable {
     @JoinColumn(name = "brandId", referencedColumnName = "brandId")
     @ManyToOne
     private Brand brandId;
+    @JoinColumn(name = "prodtypeId", referencedColumnName = "prodtypeId")
+    @ManyToOne(optional = false)
+    private Producttype prodtypeId;
     @JoinColumn(name = "uniId", referencedColumnName = "uniId")
     @ManyToOne(optional = false)
     private Unity uniId;
@@ -79,13 +81,13 @@ public class Product implements Serializable {
     @ManyToOne(optional = false)
     private Category catId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
-    private List<Price> priceList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
-    private List<Provides> providesList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
     private List<Purchaseitem> purchaseitemList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
     private List<Productimage> productimageList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
+    private List<Price> priceList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
+    private List<Provides> providesList;
 
     public Product() {
     }
@@ -158,6 +160,14 @@ public class Product implements Serializable {
         this.brandId = brandId;
     }
 
+    public Producttype getProdtypeId() {
+        return prodtypeId;
+    }
+
+    public void setProdtypeId(Producttype prodtypeId) {
+        this.prodtypeId = prodtypeId;
+    }
+
     public Unity getUniId() {
         return uniId;
     }
@@ -172,24 +182,6 @@ public class Product implements Serializable {
 
     public void setCatId(Category catId) {
         this.catId = catId;
-    }
-
-    @XmlTransient
-    public List<Price> getPriceList() {
-        return priceList;
-    }
-
-    public void setPriceList(List<Price> priceList) {
-        this.priceList = priceList;
-    }
-
-    @XmlTransient
-    public List<Provides> getProvidesList() {
-        return providesList;
-    }
-
-    public void setProvidesList(List<Provides> providesList) {
-        this.providesList = providesList;
     }
 
     @XmlTransient
@@ -208,6 +200,24 @@ public class Product implements Serializable {
 
     public void setProductimageList(List<Productimage> productimageList) {
         this.productimageList = productimageList;
+    }
+
+    @XmlTransient
+    public List<Price> getPriceList() {
+        return priceList;
+    }
+
+    public void setPriceList(List<Price> priceList) {
+        this.priceList = priceList;
+    }
+
+    @XmlTransient
+    public List<Provides> getProvidesList() {
+        return providesList;
+    }
+
+    public void setProvidesList(List<Provides> providesList) {
+        this.providesList = providesList;
     }
 
     @Override
@@ -232,7 +242,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "com.store.entities.Product[ prodId=" + prodId + " ]";
+        return "test.Product[ prodId=" + prodId + " ]";
     }
     
 }
