@@ -13,8 +13,6 @@ import com.store.facade.ProductFacade;
 import com.store.lazydatamodel.LazyProductDataModel;
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;

@@ -31,6 +31,22 @@ public class Util {
         
     }
     
+    public static String formatTextWithSapace(String value)
+    {
+        value = value.trim();
+        value = value.substring(0, 1).toUpperCase() + value.substring(1).toLowerCase();
+        String [] values = value.split(" ");
+        if(values.length > 1)
+        {
+            value = values[0];
+            for(int i=1;i<values.length;i++)
+            {
+               value = value +" "+values[i].substring(0, 1).toUpperCase() + values[i].substring(1).toLowerCase();; 
+            }
+        }
+        return value;
+    }
+    
     public static String getFormatPrice(int price)
     {
         NumberFormat format = NumberFormat.getInstance();

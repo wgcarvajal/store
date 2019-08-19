@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../plantillas/admin.xhtml">
+
+            <ui:define name="cssPage">
+                
+            </ui:define>
+
+            <ui:define name="title">
+                #{bundle.Clients}
+            </ui:define>
+
+            <ui:define name="top">
+                
+            </ui:define>
+
+            <ui:define name="content">
+                <div class="pageTitle">#{bundle.Clients}</div>
+                <h:form id="form">
+                    <p:commandButton
+                        action="#{clientsController.goAddClient}"
+                        icon="fa fa-fw fa-plus" value="#{bundle.Add}"
+                            />
+                    <p:dataTable var="client" value="#{clientsController.lazyModel}" paginator="true" rows="10"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 rowsPerPageTemplate="5,10,15" selectionMode="single"  selection="#{clientsController.selectedClient}" id="clientTable" lazy="true">
+                        
+                        <p:ajax event="rowSelect" listener="#{clientsController.onRowSelect}"/>
+                        <p:column headerText="#{bundle.IdentificationNumber}" filterBy="#{client.cliIdentity}">
+                            <h:outputText value="#{client.cliIdentity}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Names}"  filterBy="#{client.cliName}">
+                            <h:outputText value="#{client.cliName}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.LastName}" filterBy="#{client.cliLastName}">
+                            <h:outputText value="#{client.cliLastName}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Address}" filterBy="#{client.cliAddress}">
+                            <h:outputText value="#{client.cliAddress}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Phones}">
+                            <h:outputText value="#{client.cliPhones}" />
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -50,6 +50,12 @@
    font-size:15px;
 }
 
+.inputTextVeryLong
+{
+   width: 300px;
+   font-size:15px;
+}
+
 .column{
     text-align: right;
 }
