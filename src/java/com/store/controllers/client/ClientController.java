@@ -7,6 +7,7 @@ import com.store.facade.ClientFacade;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -20,6 +21,11 @@ import javax.faces.context.FacesContext;
 public class ClientController implements Serializable {
 
     private Client client;
+    private String identification;
+    private String name;
+    private String lastName;
+    private String address;
+    private String phones;
     
     @EJB private ClientFacade clientEJB;
     
@@ -57,6 +63,216 @@ public class ClientController implements Serializable {
     public Client getClient()
     {
         return client;
+    }
+
+    public String getIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(String identification) {
+        this.identification = identification;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhones() {
+        return phones;
+    }
+
+    public void setPhones(String phones) {
+        this.phones = phones;
+    }
+    
+    public void editIdentification()
+    {
+        identification = client.getCliIdentity();
+        Util.update(":formEditIdentification");
+        Util.openDialog("editIdentificationDialog");
+    }
+    
+    public void editName()
+    {
+        name = client.getCliName();
+        Util.update(":formEditName");
+        Util.openDialog("editNameDialog");
+    }
+    
+    public void editLastName()
+    {
+        lastName = client.getCliLastName();
+        Util.update(":formEditLastName");
+        Util.openDialog("editLastNameDialog");
+    }
+    
+    public void editAddress()
+    {
+        address = client.getCliAddress();
+        Util.update(":formEditAddress");
+        Util.openDialog("editAddressDialog");
+    }
+    
+    public void editPhones()
+    {
+        phones = client.getCliPhones();
+        Util.update(":formEditPhones");
+        Util.openDialog("editPhonesDialog");
+    }
+    
+    public void okIdentification()
+    {
+        if(!identification.equals(client.getCliIdentity()))
+        {
+            if(identification.length()>50)
+            {
+                Util.addErrorMessage(String.
+                        format(ResourceBundle.getBundle("/Bundle").
+                                getString("BrandSavedSuccessfully"),50),String.
+                        format(ResourceBundle.getBundle("/Bundle").
+                                getString("BrandSavedSuccessfully"),50));
+            }
+            else
+            {
+               if(clientEJB.identificationAlreadyExists(identification))
+               {
+                   Util.addErrorMessage(ResourceBundle.
+                           getBundle("/Bundle").
+                           getString("UniqueFieldAlredyExists"),
+                           ResourceBundle.
+                           getBundle("/Bundle").
+                           getString("UniqueFieldAlredyExists"));
+               }
+               else
+               {
+                   client.setCliIdentity(identification);
+                   clientEJB.edit(client);
+                   Util.addInfoMessage(ResourceBundle.
+                           getBundle("/Bundle").
+                           getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+                   
+                   Util.update(":formClient:panelClient");
+                   Util.update(":formClient:messageGrowl");
+                   Util.closeDialog("editIdentificationDialog");
+               }
+            }
+        }
+        else
+        {
+            Util.closeDialog("editIdentificationDialog");
+        }
+    }
+    
+    public void okEditName()
+    {
+        String formatName = Util.formatTextWithSapace(name);
+        if(!formatName.equals(client.getCliName()))
+        {
+            client.setCliName(formatName);
+            clientEJB.edit(client);
+            Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+
+            Util.update(":formClient:panelClient");
+            Util.update(":formClient:messageGrowl");
+            Util.closeDialog("editNameDialog");
+        }
+        else
+        {
+            Util.closeDialog("editNameDialog");
+        }
+    }
+    
+    public void okEditLastName()
+    {
+        String formatName = Util.formatTextWithSapace(lastName);
+        if(!formatName.equals(client.getCliLastName()))
+        {
+            client.setCliLastName(formatName);
+            clientEJB.edit(client);
+            Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+
+            Util.update(":formClient:panelClient");
+            Util.update(":formClient:messageGrowl");
+            Util.closeDialog("editLastNameDialog");
+        }
+        else
+        {
+            Util.closeDialog("editLastNameDialog");
+        }
+    }
+    
+    public void okEditAddress()
+    {
+        if(!address.equals(client.getCliAddress()))
+        {
+            client.setCliAddress(address);
+            clientEJB.edit(client);
+            Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+
+            Util.update(":formClient:panelClient");
+            Util.update(":formClient:messageGrowl");
+            Util.closeDialog("editAddressDialog");
+        }
+        else
+        {
+            Util.closeDialog("editAddressDialog");
+        }
+    }
+    
+    public void okEditPhones()
+    {
+        if(!phones.equals(client.getCliPhones()))
+        {
+            client.setCliPhones(phones);
+            clientEJB.edit(client);
+            Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+
+            Util.update(":formClient:panelClient");
+            Util.update(":formClient:messageGrowl");
+            Util.closeDialog("editPhonesDialog");
+        }
+        else
+        {
+            Util.closeDialog("editPhonesDialog");
+        }
     }
 
 }

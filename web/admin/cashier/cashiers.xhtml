@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../../plantillas/admin.xhtml">
+
+            <ui:define name="cssPage">
+               
+            </ui:define>
+
+            <ui:define name="title">
+                #{bundle.Cashiers}
+            </ui:define>
+
+            <ui:define name="top">
+                
+            </ui:define>
+
+            <ui:define name="content">
+                <div class="pageTitle">#{bundle.Cashiers}</div>
+                <h:form id="form">
+                   <p:commandButton
+                       action="#{cashiersController.goAddCashier}"
+                        icon="fa fa-fw fa-plus" value="#{bundle.Add}"
+                        />
+                    <p:dataTable var="cashier" value="#{cashiersController.lazyModel}" paginator="true" rows="10"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 rowsPerPageTemplate="5,10,15" selectionMode="single"  selection="#{cashiersController.selectedUser}" id="userTable" lazy="true">
+                        
+                        <p:ajax event="rowSelect" listener="#{cashiersController.onRowSelect}"/>
+                        <p:column headerText="#{bundle.IdentificationNumber}" filterBy="#{cashier.usIdentification}">
+                            <h:outputText value="#{cashier.usIdentification}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Names}" filterBy="#{cashier.usName}">
+                            <h:outputText value="#{cashier.usName}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.LastName}" filterBy="#{cashier.usLastName}">
+                            <h:outputText value="#{cashier.usLastName}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.UserName}" filterBy="#{cashier.usUserName}">
+                            <h:outputText value="#{cashier.usUserName}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Email}">
+                            <h:outputText value="#{cashier.usEmail}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Address}">
+                            <h:outputText value="#{cashier.usAddress}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Phones}">
+                            <h:outputText value="#{cashier.usPhone}" />
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

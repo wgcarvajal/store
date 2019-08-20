@@ -13,7 +13,7 @@ import org.primefaces.model.SortOrder;
 
 /**
  *
- * @author aranda
+ * @author Wilson Carvajal
  */
 public class LazyClientDataModel extends LazyDataModel<Client> {
 

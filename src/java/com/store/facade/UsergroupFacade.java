@@ -5,7 +5,7 @@
  */
 package com.store.facade;
 
-import com.store.entities.Unity;
+import com.store.entities.Usergroup;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  * @author Wilson Carvajal
  */
 @Stateless
-public class UnityFacade extends AbstractFacade<Unity> {
+public class UsergroupFacade extends AbstractFacade<Usergroup> {
 
     @PersistenceContext(unitName = "storePU")
     private EntityManager em;
@@ -25,8 +25,8 @@ public class UnityFacade extends AbstractFacade<Unity> {
         return em;
     }
 
-    public UnityFacade() {
-        super(Unity.class);
+    public UsergroupFacade() {
+        super(Usergroup.class);
     }
     
 }

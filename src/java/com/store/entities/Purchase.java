@@ -72,6 +72,9 @@ public class Purchase implements Serializable {
     @JoinColumn(name = "staId", referencedColumnName = "staId")
     @ManyToOne(optional = false)
     private Status staId;
+    @JoinColumn(name = "usId", referencedColumnName = "usId")
+    @ManyToOne(optional = false)
+    private User usId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "purId")
     private List<Purchaseitem> purchaseitemList;
 
@@ -146,6 +149,14 @@ public class Purchase implements Serializable {
         this.staId = staId;
     }
 
+    public User getUsId() {
+        return usId;
+    }
+
+    public void setUsId(User usId) {
+        this.usId = usId;
+    }
+
     @XmlTransient
     public List<Purchaseitem> getPurchaseitemList() {
         return purchaseitemList;
@@ -177,7 +188,7 @@ public class Purchase implements Serializable {
 
     @Override
     public String toString() {
-        return "com.store.entities.Purchase[ purId=" + purId + " ]";
+        return "com.Purchase[ purId=" + purId + " ]";
     }
     
 }
