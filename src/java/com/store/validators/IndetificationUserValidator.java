@@ -5,7 +5,7 @@
  */
 package com.store.validators;
 
-import com.store.facade.ClientFacade;
+import com.store.facade.UserFacade;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -19,10 +19,10 @@ import javax.faces.validator.ValidatorException;
  *
  * @author Wilson Carvajal
  */
-@FacesValidator(value="indetificationClientValidator")
-public class IndetificationClientValidator implements Validator{
+@FacesValidator(value="indetificationUserValidator")
+public class IndetificationUserValidator implements Validator{
     
-    @EJB private ClientFacade clientEJB;
+    @EJB private UserFacade userEJB;
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
@@ -45,7 +45,7 @@ public class IndetificationClientValidator implements Validator{
                             msgString,
                             msgString);
                     throw new ValidatorException(msg);
-                } else if (clientEJB.identificationAlreadyExists(identificaton)) {
+                } else if (userEJB.identificationAlreadyExists(identificaton)) {
                     msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                             ResourceBundle.getBundle("/Bundle").getString("UniqueFieldAlredyExists"),
                             ResourceBundle.getBundle("/Bundle").getString("UniqueFieldAlredyExists"));
@@ -62,3 +62,4 @@ public class IndetificationClientValidator implements Validator{
         }
     }
 }
+

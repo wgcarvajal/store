@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.store.controllers.cashier;
+package com.store.controllers.admin;
 
 import com.store.controllers.util.Rol;
 import com.store.controllers.util.Util;
@@ -28,9 +28,9 @@ import org.primefaces.model.LazyDataModel;
  *
  * @author Wilson Carvajal
  */
-@ManagedBean(name = "cashiersController")
+@ManagedBean(name = "adminsController")
 @ViewScoped
-public class CashiersController implements Serializable,LazyUserDataModel.OnLazyUserDataModel
+public class AdminsController implements Serializable,LazyUserDataModel.OnLazyUserDataModel
 {
     @EJB private UserFacade userEJB;
     private LazyDataModel<User> lazyModel;
@@ -60,31 +60,31 @@ public class CashiersController implements Serializable,LazyUserDataModel.OnLazy
 
     @Override
     public List<User> getUsersByParametters(Map<String, Object> filters, int first, int limit) {
-       return userEJB.findByParametters(filters, first, limit,Rol.cashier);
+       return userEJB.findByParametters(filters, first, limit,Rol.admin);
     }
 
     @Override
     public long getUsersByParamettersCount(Map<String, Object> filters) {
-       return userEJB.findByParamettersCount(filters,Rol.cashier);
+       return userEJB.findByParamettersCount(filters,Rol.admin);
     }
     
     public void onRowSelect(SelectEvent event) {
         try {
             User user = (User)event.getObject();
-            String uri = Util.projectPath+"/admin/cashier/cashier.xhtml?i=5&u="+user.getUsId();
+            String uri = Util.projectPath+"/sAdmin/admin/admin.xhtml?i=0&u="+user.getUsId();
             FacesContext.getCurrentInstance().getExternalContext().redirect(uri);
         } catch (IOException ex) {
-            Logger.getLogger(CashiersController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AdminsController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void goAddCashier()
+    public void goAddAdmin()
     {
         try {
-            String uri = Util.projectPath+"/admin/cashier/addCashier.xhtml?i=5";
+            String uri = Util.projectPath+"/sAdmin/admin/addAdmin.xhtml?i=0";
             FacesContext.getCurrentInstance().getExternalContext().redirect(uri);
         } catch (IOException ex) {
-            Logger.getLogger(CashiersController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AdminsController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

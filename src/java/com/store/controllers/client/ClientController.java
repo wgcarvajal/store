@@ -148,9 +148,9 @@ public class ClientController implements Serializable {
             {
                 Util.addErrorMessage(String.
                         format(ResourceBundle.getBundle("/Bundle").
-                                getString("BrandSavedSuccessfully"),50),String.
+                                getString("TextLengthMax"),50),String.
                         format(ResourceBundle.getBundle("/Bundle").
-                                getString("BrandSavedSuccessfully"),50));
+                                getString("TextLengthMax"),50));
             }
             else
             {

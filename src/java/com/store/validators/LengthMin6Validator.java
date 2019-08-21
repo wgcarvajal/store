@@ -17,25 +17,21 @@ import javax.faces.validator.ValidatorException;
  *
  * @author Wilson Carvajal
  */
-@FacesValidator(value="lengthMax200Validator")
-public class LengthMax200Validator implements Validator{
+@FacesValidator(value="lengthMin6Validator")
+public class LengthMin6Validator implements Validator{
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        String v = String.valueOf(value);        
+        String barCode = String.valueOf(value);        
         FacesMessage msg;
         
-        if(v!=null)
+        if(barCode.length()<6)
         {
-            if(v.length()>200)
-            {
-                String msgString = String.format(ResourceBundle.getBundle("/Bundle").getString("TextLengthMax"), 200);
-                msg= new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                msgString,
-                msgString);
-                throw new ValidatorException(msg);
-            }
+            String msgString = String.format(ResourceBundle.getBundle("/Bundle").getString("TextLengthMin"), 6);
+            msg= new FacesMessage(FacesMessage.SEVERITY_ERROR,
+            msgString,
+            msgString);
+            throw new ValidatorException(msg);
         }
     }
-    
 }

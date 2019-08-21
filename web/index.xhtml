@@ -1,27 +1,78 @@
-<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version='1.0' encoding='UTF-8' ?> 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <body>
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="css/cssLogin.css"/>
+        <title>#{bundle.Store}</title>
 
-        <ui:composition template="./plantillas/admin.xhtml">
+    </h:head>
 
-            <ui:define name="cssPage">
-                
-            </ui:define>
-            <ui:define name="title">
-                #{bundle.Index}
-            </ui:define>
-            <ui:define name="top">
-                top
-            </ui:define>
+    <h:body>
+        <div id="center">
+            <h:form >
+                <header>Inicio de sesión</header>
+                <center><p:panelGrid style="text-align: left" styleClass="panelgrid" class="transparentBackground" >
+                        <p:row >                        
+                            <p:column>
+                                <p:inputText class="userNameClass" id="nombreUsuario" value="#{sessionUserController.userName}"
+                                             
+                                             label="#{bundle.UserName}" required="true"  requiredMessage="Ingrese nombre de usuario"/>
+                            </p:column>
+                            
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:password id="contrasena" class="passwordClass"  value="#{sessionUserController.password}"
+                                            label="#{bundle.Password}" required="true" requiredMessage="Ingrese una contraseña">
+                                    
+                                </p:password>                          
+                            </p:column>
+                            
+                        </p:row>
 
-            <ui:define name="content">
-                content
-            </ui:define>
+                        <p:row>
+                            <p:column  style="text-align: center; ">
+                                <br/>
+                                <br/>
+                                <p:commandButton style="background: gainsboro; width: 150px; color:#000000; font-weight: bold; "
+                                                 value="Iniciar sesión" 
+                                                 action="#{sessionUserController.login}"
+                                                 ajax="false"
+                                                 />
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid></center>
+            </h:form>
+        </div>  
+        <p:dialog visible="#{sessionUserController.sessionError}" 
+                  resizable="false" width="250"
+                  widgetVar="errorInicioSesion" closable="false"
+                  modal="true" 
+                  style="background: #C8CDD6"
+                  >
+            <p:panelGrid styleClass="panelgrid" style="text-align:center" >
+                <p:row >
+                    <p:column  style="background: #C8CDD6">
+                        <p:outputLabel value="El usuario o la contraseña no son correctos" />            
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column  style="background: #C8CDD6">
+                        <p:commandButton value="Aceptar" 
+                                         onclick="PF('errorInicioSesion').hide()"
+                                         />
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
 
-        </ui:composition>
+        </p:dialog>
 
-    </body>
+    </h:body>
+
 </html>

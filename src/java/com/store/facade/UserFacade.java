@@ -51,6 +51,13 @@ public class UserFacade extends AbstractFacade<User> {
         return resuList.size() > 0 ? resuList.get(0):null;
     }
     
+    public User findByUsUserName( String usUserName ){
+        Query query = getEntityManager().createNamedQuery("User.findByUsUserName");
+        query.setParameter("usUserName", usUserName);
+        List<User> resuList = query.getResultList();
+        return resuList.size() > 0 ? resuList.get(0):null;
+    }
+    
     public long findByParamettersCount(Map<String, Object> filters,String group) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         javax.persistence.criteria.CriteriaQuery cq = cb.createQuery();
@@ -100,6 +107,30 @@ public class UserFacade extends AbstractFacade<User> {
             cq.where(restricciones.toArray(new Predicate[restricciones.size()]));
         }
         return getEntityManager().createQuery(cq).setFirstResult(first).setMaxResults(limit).getResultList();
+    }
+    
+    public boolean identificationAlreadyExists(String usIdentification)
+    {
+        Query query = getEntityManager().createNamedQuery("User.findByUsIdentification");
+        query.setParameter("usIdentification", usIdentification);
+        List<User> resuList = query.getResultList();
+        return resuList.size() > 0;
+    }
+    
+    public boolean userNameAlreadyExists(String usUserName)
+    {
+        Query query = getEntityManager().createNamedQuery("User.findByUsUserName");
+        query.setParameter("usUserName", usUserName);
+        List<User> resuList = query.getResultList();
+        return resuList.size() > 0;
+    }
+    
+    public boolean emailAlreadyExists(String usEmail)
+    {
+        Query query = getEntityManager().createNamedQuery("User.findByUsEmail");
+        query.setParameter("usEmail", usEmail);
+        List<User> resuList = query.getResultList();
+        return resuList.size() > 0;
     }
     
 }

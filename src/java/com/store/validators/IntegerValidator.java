@@ -23,24 +23,34 @@ public class IntegerValidator implements Validator{
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
     
-        String barCode = String.valueOf(value);
-        if (barCode != null && !barCode.isEmpty()) {
+        String v = String.valueOf(value);
+        if (v != null && !v.isEmpty()) {
             FacesMessage msg;
-            try {
-                int number = Integer.parseInt(barCode);
-                if (number < 0) {
+            if(v.length()>9)
+            {
+                String msgString = String.format(ResourceBundle.getBundle("/Bundle").getString("TextLengthMax"), 9);
+                msg= new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                msgString,
+                msgString);
+                throw new ValidatorException(msg);
+            }
+            else {
+                try {
+                    int number = Integer.parseInt(v);
+                    if (number < 0) {
+                        String msgString = ResourceBundle.getBundle("/Bundle").getString("FieldIntegerPositive");
+                        msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                msgString,
+                                msgString);
+                        throw new ValidatorException(msg);
+                    }
+                } catch (NumberFormatException n) {
                     String msgString = ResourceBundle.getBundle("/Bundle").getString("FieldIntegerPositive");
                     msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                             msgString,
                             msgString);
                     throw new ValidatorException(msg);
                 }
-            } catch (NumberFormatException n) {
-                String msgString = ResourceBundle.getBundle("/Bundle").getString("FieldIntegerPositive");
-                msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        msgString,
-                        msgString);
-                throw new ValidatorException(msg);
             }
         }
     }

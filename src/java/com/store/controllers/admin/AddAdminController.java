@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.store.controllers.cashier;
+package com.store.controllers.admin;
 
 import com.store.controllers.util.Encrypt;
 import com.store.controllers.util.Util;
@@ -26,9 +26,9 @@ import javax.faces.validator.ValidatorException;
  *
  * @author Wilson Carvajal
  */
-@ManagedBean(name = "addCashierController")
+@ManagedBean(name = "addAdminController")
 @ViewScoped
-public class AddCashierController implements Serializable 
+public class AddAdminController implements Serializable 
 {
     private String identification;
     private String name;
@@ -115,8 +115,6 @@ public class AddCashierController implements Serializable
         this.email = email;
     }
     
-    
-    
     public void add()
     {
         User user = new User();
@@ -132,7 +130,7 @@ public class AddCashierController implements Serializable
             user.setUsPhone(phones);
         
         userEJB.create(user);
-        Groupp groupp = new Groupp("cashier");
+        Groupp groupp = new Groupp("admin");
         Usergroup usergroup = new Usergroup();
         usergroup.setGrouId(groupp);
         usergroup.setUsId(user);

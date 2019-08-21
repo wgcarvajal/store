@@ -10,8 +10,8 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <context-param>
-	<param-name>primefaces.THEME</param-name>
-	<param-value>redmond</param-value>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>redmond</param-value>
     </context-param>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
@@ -26,11 +26,51 @@
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
     <servlet>
-		<servlet-name>ProductImageServlet</servlet-name>
-		<servlet-class>com.store.servlets.ProductImageServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>ProductImageServlet</servlet-name>
-		<url-pattern>/image</url-pattern>
-	</servlet-mapping>
+        <servlet-name>ProductImageServlet</servlet-name>
+        <servlet-class>com.store.servlets.ProductImageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProductImageServlet</servlet-name>
+        <url-pattern>/image</url-pattern>
+    </servlet-mapping>
+    <security-constraint>
+        <display-name>administrator</display-name>
+        <web-resource-collection>
+            <web-resource-name>admin</web-resource-name>
+            <description/>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <display-name>superAdministrator</display-name>
+        <web-resource-collection>
+            <web-resource-name>super</web-resource-name>
+            <description/>
+            <url-pattern>/sAdmin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>sAdmin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>storeJDBCRealm</realm-name>
+        <form-login-config>
+            <form-login-page>/errorpage.html</form-login-page>
+            <form-error-page>/errorpage.html</form-error-page>
+        </form-login-config>
+    </login-config>
+    <security-role>
+        <description/>
+        <role-name>admin</role-name>
+    </security-role>
+    <security-role>
+        <description/>
+        <role-name>sAdmin</role-name>
+    </security-role>
 </web-app>

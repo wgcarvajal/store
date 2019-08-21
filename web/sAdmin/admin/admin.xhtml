@@ -4,19 +4,18 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
 
-        <ui:composition template="./../../plantillas/admin.xhtml">
+        <ui:composition template="./../../plantillas/sAdmin.xhtml">
 
             <ui:define name="cssPage">
                 <h:outputStylesheet name="./css/formcss.css"/>
             </ui:define>
 
             <ui:define name="title">
-                #{bundle.Cashier}
+                #{bundle.Admin}
             </ui:define>
 
             <ui:define name="top">
@@ -24,20 +23,20 @@
             </ui:define>
 
             <ui:define name="content">
-                <div class="pageTitle">#{bundle.Cashier}</div>
-                <h:form id="formCashier">
+                <div class="pageTitle">#{bundle.Admin}</div>
+                <h:form id="formAdmin">
                     <p:growl id="messageGrowl"/>
-                    <p:panelGrid id="panelCashier" styleClass="panelgrid">
+                    <p:panelGrid id="panelAdmin" styleClass="panelgrid">
                         <p:row>
                             <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.IdentificationNumber}:" />
                             </p:column>
                             <p:column>
-                                #{cashierController.user.usIdentification}
+                                #{adminController.user.usIdentification}
                             </p:column>
                             <p:column>
                                 <p:commandLink
-                                    action="#{cashierController.editIdentification}"
+                                    action="#{adminController.editIdentification}"
                                     style="font-size: 10pt;" 
                                     onstart="PF('efectoCarga').show()"  
                                     onsuccess="PF('efectoCarga').hide()">
@@ -50,11 +49,11 @@
                                 <h:outputText class="fieldLabel" value="#{bundle.Names}:"/>
                             </p:column>
                             <p:column>
-                                #{cashierController.user.usName}
+                                #{adminController.user.usName}
                             </p:column>
                             <p:column>
                                 <p:commandLink 
-                                    action="#{cashierController.editName}"
+                                    action="#{adminController.editName}"
                                     style="font-size: 10pt;"
                                     onstart="PF('efectoCarga').show()"  
                                     onsuccess="PF('efectoCarga').hide()">
@@ -67,11 +66,11 @@
                                 <h:outputText class="fieldLabel" value="#{bundle.LastName}:"/>
                             </p:column>
                             <p:column>
-                                #{cashierController.user.usLastName} 
+                                #{adminController.user.usLastName} 
                             </p:column>
                             <p:column>
                                 <p:commandLink 
-                                    action="#{cashierController.editLastName}"
+                                    action="#{adminController.editLastName}"
                                     style="font-size: 10pt;"
                                     onstart="PF('efectoCarga').show()"  
                                     onsuccess="PF('efectoCarga').hide()">
@@ -84,11 +83,11 @@
                                 <h:outputText class="fieldLabel" value="#{bundle.UserName}:"/>
                             </p:column>
                             <p:column>
-                                #{cashierController.user.usUserName} 
+                                #{adminController.user.usUserName} 
                             </p:column>
                             <p:column>
                                 <p:commandLink 
-                                    action="#{cashierController.editUserName}"
+                                    action="#{adminController.editUserName}"
                                     style="font-size: 10pt;"
                                     onstart="PF('efectoCarga').show()"  
                                     onsuccess="PF('efectoCarga').hide()">
@@ -105,7 +104,7 @@
                             </p:column>
                             <p:column>
                                 <p:commandLink 
-                                    action="#{cashierController.editPassword}"
+                                    action="#{adminController.editPassword}"
                                     style="font-size: 10pt;"
                                     onstart="PF('efectoCarga').show()"  
                                     onsuccess="PF('efectoCarga').hide()">
@@ -118,11 +117,11 @@
                                 <h:outputText class="fieldLabel" value="#{bundle.Email}:"/>
                             </p:column>
                             <p:column>
-                                #{cashierController.user.usEmail} 
+                                #{adminController.user.usEmail} 
                             </p:column>
                             <p:column>
                                 <p:commandLink 
-                                    action="#{cashierController.editEmail}"
+                                    action="#{adminController.editEmail}"
                                     style="font-size: 10pt;"
                                     onstart="PF('efectoCarga').show()"  
                                     onsuccess="PF('efectoCarga').hide()">
@@ -135,12 +134,12 @@
                                 <h:outputText class="fieldLabel" value="#{bundle.Status}:"/>
                             </p:column>
                             <p:column>
-                               ${cashierController.user.usActive ? bundle.Active : bundle.Inactive}
+                               ${adminController.user.usActive ? bundle.Active : bundle.Inactive}
                                 
                             </p:column>
                             <p:column>
                                 <p:commandLink 
-                                    action="#{cashierController.editStatus}"
+                                    action="#{adminController.editStatus}"
                                     style="font-size: 10pt;"
                                     onstart="PF('efectoCarga').show()"  
                                     onsuccess="PF('efectoCarga').hide()">
@@ -153,11 +152,11 @@
                                 <h:outputText class="fieldLabel" value="#{bundle.Address}:"/>
                             </p:column>
                             <p:column>
-                                #{cashierController.user.usAddress}
+                                #{adminController.user.usAddress}
                             </p:column>
                             <p:column>
                                 <p:commandLink
-                                    action="#{cashierController.editAddress}"
+                                    action="#{adminController.editAddress}"
                                     style="font-size: 10pt;"
                                     onstart="PF('efectoCarga').show()"  
                                     onsuccess="PF('efectoCarga').hide()">
@@ -170,11 +169,11 @@
                                 <h:outputText class="fieldLabel" value="#{bundle.Phones}:"/>
                             </p:column>
                             <p:column>
-                                #{cashierController.user.usPhone}
+                                #{adminController.user.usPhone}
                             </p:column>
                             <p:column>
                                 <p:commandLink
-                                    action="#{cashierController.editPhones}"
+                                    action="#{adminController.editPhones}"
                                     style="font-size: 10pt;"
                                     onstart="PF('efectoCarga').show()"  
                                     onsuccess="PF('efectoCarga').hide()">
@@ -215,7 +214,7 @@
                                 <p:column>
                                     <p:inputText 
                                         id="barCode" class="inputTextMedium"
-                                        value="#{cashierController.identification}" 
+                                        value="#{adminController.identification}" 
                                         required="true"  requiredMessage="#{bundle.FieldRequired}"
                                         >
                                     </p:inputText>
@@ -225,7 +224,7 @@
                                 <p:column></p:column>
                                 <p:column>
                                     <p:commandButton 
-                                        action="#{cashierController.okIdentification}"
+                                        action="#{adminController.okIdentification}"
                                         style="font-style: italic;font-weight: normal;"
                                         value="#{bundle.Ok}"
                                         update="formEditIdentification:identificationPanel"
@@ -266,7 +265,7 @@
                                 </p:column>
                                 <p:column>
                                     <p:inputText class="inputTextLong"
-                                                 value="#{cashierController.name}"
+                                                 value="#{adminController.name}"
                                                  required="true"  requiredMessage="#{bundle.FieldRequired}">
                                         <f:validator validatorId="lengthMax100Validator" />
                                     </p:inputText>
@@ -276,7 +275,7 @@
                                 <p:column></p:column>
                                 <p:column>
                                     <p:commandButton 
-                                        action="#{cashierController.okEditName}"
+                                        action="#{adminController.okEditName}"
                                         style="font-style: italic;font-weight: normal;"
                                         value="#{bundle.Ok}"
                                         update="formEditName:namePanel"
@@ -317,7 +316,7 @@
                                 </p:column>
                                 <p:column>
                                     <p:inputText class="inputTextLong"
-                                                 value="#{cashierController.lastName}"
+                                                 value="#{adminController.lastName}"
                                                  required="true"  requiredMessage="#{bundle.FieldRequired}">
                                         <f:validator validatorId="lengthMax100Validator" />
                                     </p:inputText>
@@ -327,7 +326,7 @@
                                 <p:column></p:column>
                                 <p:column>
                                     <p:commandButton 
-                                        action="#{cashierController.okEditLastName}"
+                                        action="#{adminController.okEditLastName}"
                                         style="font-style: italic;font-weight: normal;"
                                         value="#{bundle.Ok}"
                                         update="formEditLastName:lastNamePanel"
@@ -368,7 +367,7 @@
                                 </p:column>
                                 <p:column>
                                     <p:inputText class="inputTextLong"
-                                                 value="#{cashierController.userName}"
+                                                 value="#{adminController.userName}"
                                                  required="true"  requiredMessage="#{bundle.FieldRequired}">
                                     </p:inputText>
                                 </p:column>
@@ -377,7 +376,7 @@
                                 <p:column></p:column>
                                 <p:column>
                                     <p:commandButton 
-                                        action="#{cashierController.okEditUserName}"
+                                        action="#{adminController.okEditUserName}"
                                         style="font-style: italic;font-weight: normal;"
                                         value="#{bundle.Ok}"
                                         update="formEditUserName:userNamePanel"
@@ -418,10 +417,10 @@
                                 </p:column>
                                 <p:column>
                                     <p:password class="inputTextLong"
-                                                 value="#{cashierController.password}"
+                                                 value="#{adminController.password}"
                                                  redisplay="true" required="true"  
                                                  requiredMessage="#{bundle.FieldRequired}"
-                                                 validator="#{cashierController.validatePassword}">
+                                                 validator="#{adminController.validatePassword}">
                                         <f:validator validatorId="lengthMin6Validator" />
                                         <f:validator validatorId="lengthMax20Validator" />
                                     </p:password>
@@ -434,10 +433,10 @@
                                 </p:column>
                                 <p:column>
                                     <p:password class="inputTextLong"
-                                                value="#{cashierController.repeatPassword}"
+                                                value="#{adminController.repeatPassword}"
                                                  redisplay="true" required="true"  
                                                  requiredMessage="#{bundle.FieldRequired}"
-                                                 validator="#{cashierController.validateRepeatPassword}">
+                                                 validator="#{adminController.validateRepeatPassword}">
                                     </p:password>
                                 </p:column>
                             </p:row>
@@ -445,7 +444,7 @@
                                 <p:column></p:column>
                                 <p:column>
                                     <p:commandButton 
-                                        action="#{cashierController.okEditPassword}"
+                                        action="#{adminController.okEditPassword}"
                                         style="font-style: italic;font-weight: normal;"
                                         value="#{bundle.Ok}"
                                         update="formEditPassword:passwordPanel"
@@ -486,7 +485,7 @@
                                 </p:column>
                                 <p:column>
                                     <p:inputText class="inputTextLong"
-                                                 value="#{cashierController.email}"
+                                                 value="#{adminController.email}"
                                                  required="true"  
                                                  requiredMessage="#{bundle.FieldRequired}">
                                     </p:inputText>
@@ -496,7 +495,7 @@
                                 <p:column></p:column>
                                 <p:column>
                                     <p:commandButton 
-                                        action="#{cashierController.okEditEmail}"
+                                        action="#{adminController.okEditEmail}"
                                         style="font-style: italic;font-weight: normal;"
                                         value="#{bundle.Ok}"
                                         update="formEditEmail:emailPanel"
@@ -538,9 +537,9 @@
                                 <p:column>
                                     <p:selectOneMenu
                                         style="width:100px"
-                                        value="#{cashierController.status}"
+                                        value="#{adminController.status}"
                                         >
-                                        <f:selectItems value="#{cashierController.listStatus}" var="status" 
+                                        <f:selectItems value="#{adminController.listStatus}" var="status" 
                                                        itemValue="#{status}" itemLabel="#{status}"
                                                        />
                                     </p:selectOneMenu>
@@ -550,7 +549,7 @@
                                 <p:column></p:column>
                                 <p:column>
                                     <p:commandButton 
-                                        action="#{cashierController.okEditStatus}"
+                                        action="#{adminController.okEditStatus}"
                                         style="font-style: italic;font-weight: normal;"
                                         value="#{bundle.Ok}"
                                         update="formEditStatus:statusPanel"
@@ -578,7 +577,7 @@
                                 </p:column>
                                 <p:column>
                                     <p:inputText class="inputTextVeryLong"
-                                                 value="#{cashierController.address}"
+                                                 value="#{adminController.address}"
                                                  >
                                         <f:validator validatorId="lengthMax200Validator" />
                                     </p:inputText>
@@ -588,7 +587,7 @@
                                 <p:column></p:column>
                                 <p:column>
                                     <p:commandButton 
-                                        action="#{cashierController.okEditAddress}"
+                                        action="#{adminController.okEditAddress}"
                                         style="font-style: italic;font-weight: normal;"
                                         value="#{bundle.Ok}"
                                         update="formEditAddress:addressPanel"
@@ -617,7 +616,7 @@
                                 </p:column>
                                 <p:column>
                                     <p:inputText class="inputTextVeryLong"
-                                                 value="#{cashierController.phones}">
+                                                 value="#{adminController.phones}">
                                         <f:validator validatorId="lengthMax200Validator" />
                                     </p:inputText>
                                 </p:column>
@@ -626,7 +625,7 @@
                                 <p:column></p:column>
                                 <p:column>
                                     <p:commandButton 
-                                        action="#{cashierController.okEditPhones}"
+                                        action="#{adminController.okEditPhones}"
                                         style="font-style: italic;font-weight: normal;"
                                         value="#{bundle.Ok}"
                                         update="formEditPhones:phonesPanel"

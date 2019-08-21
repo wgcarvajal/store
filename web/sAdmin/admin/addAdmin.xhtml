@@ -8,18 +8,18 @@
 
     <body>
 
-        <ui:composition template="./../../plantillas/admin.xhtml">
+        <ui:composition template="./../../plantillas/sAdmin.xhtml">
 
             <ui:define name="cssPage">
-                 <h:outputStylesheet name="./css/formcss.css"/>
+                <h:outputStylesheet name="./css/formcss.css"/>
             </ui:define>
 
             <ui:define name="title">
-                #{bundle.Cashier}
+                 #{bundle.Admin}
             </ui:define>
 
             <ui:define name="top">
-                
+                top
             </ui:define>
 
             <ui:define name="content">
@@ -43,7 +43,7 @@
                             <p:column>
                                 <p:inputText 
                                     id="identification" class="inputTextMedium"
-                                    value="#{addCashierController.identification}" 
+                                    value="#{addAdminController.identification}" 
                                     required="true"  requiredMessage="#{bundle.FieldRequired}"
                                     >
                                     <f:validator validatorId="indetificationUserValidator" />
@@ -61,7 +61,7 @@
                             </p:column>
                             <p:column>
                                 <p:inputText id="name" class="inputTextLong"
-                                             value="#{addCashierController.name}"
+                                             value="#{addAdminController.name}"
                                              required="true"  requiredMessage="#{bundle.FieldRequired}">
                                     <f:validator validatorId="lengthMax100Validator" />
                                 </p:inputText>
@@ -78,7 +78,7 @@
                             </p:column>
                             <p:column>
                                 <p:inputText id="lastName" class="inputTextLong"
-                                             value="#{addCashierController.lastName}"
+                                             value="#{addAdminController.lastName}"
                                              required="true"  requiredMessage="#{bundle.FieldRequired}">
                                     <f:validator validatorId="lengthMax100Validator" />
                                 </p:inputText>
@@ -95,7 +95,7 @@
                             </p:column>
                             <p:column>
                                 <p:inputText id="userName" class="inputTextLong"
-                                             value="#{addCashierController.userName}"
+                                             value="#{addAdminController.userName}"
                                              required="true"  requiredMessage="#{bundle.FieldRequired}">
                                     <f:validator validatorId="userNameValidator" />
                                 </p:inputText>
@@ -112,10 +112,10 @@
                             </p:column>
                             <p:column>
                                 <p:password id="password" class="inputTextMedium"
-                                             value="#{addCashierController.password}"
+                                             value="#{addAdminController.password}"
                                              redisplay="true"
                                              required="true"  requiredMessage="#{bundle.FieldRequired}"
-                                             validator="#{addCashierController.validatePassword}"
+                                             validator="#{addAdminController.validatePassword}"
                                              >
                                     <f:validator validatorId="lengthMin6Validator" />
                                     <f:validator validatorId="lengthMax20Validator" />
@@ -142,8 +142,8 @@
                             <p:column>
                                 <p:password id="repeatPassword" class="inputTextMedium"
                                             redisplay="true"
-                                            value="#{addCashierController.repeatPassword}"
-                                            validator="#{addCashierController.validateRepeatPassword}"
+                                            value="#{addAdminController.repeatPassword}"
+                                            validator="#{addAdminController.validateRepeatPassword}"
                                              required="true"  requiredMessage="#{bundle.FieldRequired}">
                                 </p:password>
                             </p:column>
@@ -158,7 +158,7 @@
                             </p:column>
                             <p:column>
                                 <p:inputText id="email" class="inputTextVeryLong"
-                                             value="#{addCashierController.email}"
+                                             value="#{addAdminController.email}"
                                              required="true" requiredMessage="#{bundle.FieldRequired}"
                                              >
                                     <f:validator validatorId="emailValidator" />
@@ -174,7 +174,7 @@
                             </p:column>
                             <p:column>
                                 <p:inputText id="address" class="inputTextVeryLong"
-                                             value="#{addCashierController.address}"
+                                             value="#{addAdminController.address}"
                                              >
                                     <f:validator validatorId="lengthMax200Validator" />
                                 </p:inputText>
@@ -189,7 +189,7 @@
                             </p:column>
                             <p:column>
                                 <p:inputText id="phones" class="inputTextVeryLong"
-                                             value="#{addCashierController.phones}"
+                                             value="#{addAdminController.phones}"
                                              >
                                     <f:validator validatorId="lengthMax200Validator" />
                                 </p:inputText>
@@ -205,7 +205,7 @@
                             <p:column>
                                 <p:commandButton
                                     style="font-style: italic;font-weight: normal;"
-                                    action="#{addCashierController.add}"
+                                    action="#{addAdminController.add}"
                                     value="Registrar"
                                     ajax="true"
                                     update="panel"
