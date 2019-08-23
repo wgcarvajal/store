@@ -21,7 +21,6 @@ public class Util {
     public static String projectPath = "/store";
     public static String PRODUCTIMAGEDIR= "/Users/aranda/filesStore/productImage/";
     
-   
     
     public static String formatText(String value)
     {
@@ -92,6 +91,18 @@ public class Util {
     public static void closeDialog(String widgetVar)
     {
         PrimeFaces.current().executeScript("PF('"+widgetVar+"').hide()");
+    }
+    
+    public static boolean isInteger(String value)
+    {
+        try
+        {
+            long l = Integer.parseInt(value);
+            return true;
+        }catch(NumberFormatException e)
+        {
+            return false;
+        }
     }
     
 }

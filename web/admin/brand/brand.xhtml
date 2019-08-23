@@ -16,19 +16,16 @@
             <ui:define name="title">
                 #{bundle.Brand}
             </ui:define>
-
-            <ui:define name="top">
-            </ui:define>
-
+            
             <ui:define name="content">
-                <h:form onkeypress="if (event.keyCode == 13) { return false; }">
+                <h:form  onkeypress="if (event.keyCode == 13) { return false; }">
                 <div class="search">
                     <div class="ui-g ui-fluid">
                         <div class="ui-g-12 ui-md-4">
                             <div class="ui-inputgroup">
                                 <span class="ui-inputgroup-addon"></span>
                                 
-                                <p:inputText  value="#{brandController.brand}" placeholder="#{bundle.SearchBrand}"
+                                <p:inputText value="#{brandController.brand}" placeholder="#{bundle.SearchBrand}"
                                                   >
                                     <p:ajax event="keyup" listener="#{brandController.searchBrand}" update=":formBrands" 
                                                 />

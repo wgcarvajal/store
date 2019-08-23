@@ -16,6 +16,9 @@
     <h:body>
         <div id="center">
             <h:form >
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{sessionUserController.sessionActive}"/>
+                </f:metadata>
                 <header>Inicio de sesión</header>
                 <center><p:panelGrid style="text-align: left" styleClass="panelgrid" class="transparentBackground" >
                         <p:row >                        
@@ -41,7 +44,7 @@
                                 <br/>
                                 <br/>
                                 <p:commandButton style="background: gainsboro; width: 150px; color:#000000; font-weight: bold; "
-                                                 value="Iniciar sesión" 
+                                                 value="#{bundle.LogIn}" 
                                                  action="#{sessionUserController.login}"
                                                  ajax="false"
                                                  />
@@ -59,12 +62,12 @@
             <p:panelGrid styleClass="panelgrid" style="text-align:center" >
                 <p:row >
                     <p:column  style="background: #C8CDD6">
-                        <p:outputLabel value="El usuario o la contraseña no son correctos" />            
+                        <p:outputLabel value="#{bundle.FailedLogin}" />            
                     </p:column>
                 </p:row>
                 <p:row>
                     <p:column  style="background: #C8CDD6">
-                        <p:commandButton value="Aceptar" 
+                        <p:commandButton value="#{bundle.Ok}" 
                                          onclick="PF('errorInicioSesion').hide()"
                                          />
                     </p:column>

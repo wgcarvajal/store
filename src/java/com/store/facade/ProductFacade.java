@@ -44,6 +44,13 @@ public class ProductFacade extends AbstractFacade<Product> {
         List<Product> resuList = query.getResultList();
         return resuList.size() > 0 ? resuList.get(0):null;
     }
+    
+    public Product findByBarCode( String prodBarCode ){
+        Query query = getEntityManager().createNamedQuery("Product.findByProdBarCode");
+        query.setParameter("prodBarCode", prodBarCode);
+        List<Product> resuList = query.getResultList();
+        return resuList.size() > 0 ? resuList.get(0):null;
+    }
 
     @Override
     public long findByParamettersCount(Map<String, Object> filters) {

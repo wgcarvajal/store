@@ -9,6 +9,10 @@
     <role-name>sAdmin</role-name>
     <group-name>sAdmin</group-name>
   </security-role-mapping>
+  <security-role-mapping>
+    <role-name>cashier</role-name>
+    <group-name>cashier</group-name>
+  </security-role-mapping>
   <class-loader delegate="true"/>
   <jsp-config>
     <property name="keepgenerated" value="true">

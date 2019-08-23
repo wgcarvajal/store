@@ -57,7 +57,7 @@ public class Purchase implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "purFinalAmount")
-    private int purFinalAmount;
+    private double purFinalAmount;
     @Basic(optional = false)
     @NotNull
     @Column(name = "purDiscount")
@@ -85,7 +85,7 @@ public class Purchase implements Serializable {
         this.purId = purId;
     }
 
-    public Purchase(Long purId, Date purDate, int purFinalAmount, int purDiscount, int purPayment) {
+    public Purchase(Long purId, Date purDate, double purFinalAmount, int purDiscount, int purPayment) {
         this.purId = purId;
         this.purDate = purDate;
         this.purFinalAmount = purFinalAmount;
@@ -109,11 +109,11 @@ public class Purchase implements Serializable {
         this.purDate = purDate;
     }
 
-    public int getPurFinalAmount() {
+    public double getPurFinalAmount() {
         return purFinalAmount;
     }
 
-    public void setPurFinalAmount(int purFinalAmount) {
+    public void setPurFinalAmount(double purFinalAmount) {
         this.purFinalAmount = purFinalAmount;
     }
 
@@ -190,5 +190,6 @@ public class Purchase implements Serializable {
     public String toString() {
         return "com.Purchase[ purId=" + purId + " ]";
     }
+    
     
 }

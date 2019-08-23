@@ -5,6 +5,7 @@
  */
 package com.store.login;
 
+import com.store.controllers.cashregister.CashRegisterController;
 import com.store.controllers.util.Rol;
 import com.store.controllers.util.Util;
 import com.store.entities.User;
@@ -21,15 +22,14 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import org.primefaces.model.StreamedContent;
 
 /**
  *
- * @author aranda
+ * @author Wilson Carvajal
  */
 @ManagedBean(name = "sessionUserController")
 @SessionScoped
-public class SessionUserController implements Serializable {
+public class SessionUserController implements Serializable,CashRegisterController.OnSesionUserController {
 
     @EJB
     private UsergroupFacade usergroupEJB;
@@ -44,10 +44,6 @@ public class SessionUserController implements Serializable {
 
     public SessionUserController() {
         thereIsSession = false;
-    }
-
-    public String getUserName() {
-        return userName;
     }
 
     public void setUserName(String userName) {
@@ -86,53 +82,72 @@ public class SessionUserController implements Serializable {
         this.user = user;
     }
 
-   
+   public void sessionActive() throws IOException, ServletException
+   {
+       FacesContext fc = FacesContext.getCurrentInstance();
+       HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();
+       if (req.getUserPrincipal() != null) {
+          userName = req.getUserPrincipal().getName();
+          User u = userEJB.findByUsUserName(userName);
+          if(u!=null && u.getUsActive())
+          {
+            redirectView();
+          }
+          else
+          {
+              logout();
+          }
+       }
+   }
 
     public void login() throws IOException, ServletException {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();
-        if (req.getUserPrincipal() == null) {
-            try {
-                req.login(this.userName, this.password);
-                
-                req.getServletContext().log(ResourceBundle.getBundle("/Bundle").
-                        getString("SuccessfulAuthentication"));
-                thereIsSession = true;
-                this.sessionError = false;
-                Usergroup usergroup = usergroupEJB.findByUsUserName(userName);
-                if(usergroup.getGrouId().getGrouId().equals(Rol.sAdmin))
-                {
-                    FacesContext.getCurrentInstance()
-                            .getExternalContext()
-                            .redirect(Util.projectPath+"/sAdmin/admin/admins.xhtml?i=0");
-                }
-                else if(usergroup.getGrouId().getGrouId().equals(Rol.admin))
-                {
-                    FacesContext.getCurrentInstance()
-                            .getExternalContext()
-                            .redirect(Util.projectPath+"/admin/index.xhtml?i=0");
-                }
-                else if(usergroup.getGrouId().getGrouId().equals(Rol.cashier))
-                {
-                    
-                }
-            } catch (ServletException e) {
+        User u = userEJB.findByUsUserName(userName);
+        if(u!=null && u.getUsActive())
+        {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();
+            if (req.getUserPrincipal() == null) {
+                try {
+                    req.login(this.userName, this.password);
 
-                this.sessionError = true;
-            }
-        } else {
-            Usergroup usergroup = usergroupEJB.findByUsUserName(userName);
-            if (usergroup.getGrouId().getGrouId().equals(Rol.sAdmin)) {
-                FacesContext.getCurrentInstance()
-                        .getExternalContext()
-                        .redirect(Util.projectPath + "/sAdmin/admin/admins.xhtml?i=0");
-            } else if (usergroup.getGrouId().getGrouId().equals(Rol.admin)) {
-                FacesContext.getCurrentInstance()
-                        .getExternalContext()
-                        .redirect(Util.projectPath + "/admin/admin/index.xhtml?i=0");
-            } else if (usergroup.getGrouId().getGrouId().equals(Rol.cashier)) {
+                    req.getServletContext().log(ResourceBundle.getBundle("/Bundle").
+                            getString("SuccessfulAuthentication"));
+                    redirectView();
 
+                } catch (ServletException e) {
+
+                    this.sessionError = true;
+                }
             }
+        }
+        else
+        {
+            this.sessionError = true;
+        }
+    }
+    
+    private void redirectView() throws IOException
+    {
+        thereIsSession = true;
+        this.sessionError = false;
+        Usergroup usergroup = usergroupEJB.findByUsUserName(userName);
+        if(usergroup.getGrouId().getGrouId().equals(Rol.sAdmin))
+        {
+            FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .redirect(Util.projectPath+"/sAdmin/admin/admins.xhtml?i=0");
+        }
+        else if(usergroup.getGrouId().getGrouId().equals(Rol.admin))
+        {
+            FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .redirect(Util.projectPath+"/admin/index.xhtml?i=0");
+        }
+        else if(usergroup.getGrouId().getGrouId().equals(Rol.cashier))
+        {
+            FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .redirect(Util.projectPath+"/cashier/index.xhtml");
         }
     }
 
@@ -192,19 +207,38 @@ public class SessionUserController implements Serializable {
 
     }
 
-    public String nombreUsuario() {
+    public String getUserName() {
         FacesContext fc = FacesContext.getCurrentInstance();
         HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();
         if (req.getUserPrincipal() == null) {
+            userName = null;
             return "";
         } else {
             User u = userEJB.findByUsUserName(req.getUserPrincipal().getName());
             if (u == null) {
+                userName = null;
                 return "";
             } else {
-                return u.getUsName()+ " " + u.getUsLastName();
+                userName = u.getUsUserName();
+                return userName;
             }
 
         }
     }
+
+    @Override
+    public boolean isCorrectPassword(String password) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();
+        User u = userEJB.findByUsUserName(req.getUserPrincipal().getName());
+        return u.getUsPassword().equals(password);
+    }
+
+    @Override
+    public User getCurrentCashier() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();
+        return  userEJB.findByUsUserName(req.getUserPrincipal().getName());
+    }
+        
 }

@@ -4,7 +4,8 @@
     background-color: #036fab;
     color: white;
     padding: 5px;
-    margin: 0px 0px 10px 0px;
+    margin: 0px 0px 0px 0px;
+    height: 30px;
 }
 
 #bottom {
@@ -57,4 +58,9 @@
   text-decoration : underline;
 }
 
-
+.sessionBox
+{
+  position: absolute;
+  right: 0px;
+  padding: 10px;
+}

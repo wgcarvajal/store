@@ -1,0 +1,306 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../plantillas/cashier.xhtml">
+
+            <ui:define name="cssPage">
+                <h:outputStylesheet name="./css/cssPurshase.css"/>
+            </ui:define>
+
+            <ui:define name="title">
+                #{bundle.Cashier}
+            </ui:define>
+
+            <ui:define name="content">
+                
+                <div class="contentLeft">
+                    <h:form id="formMenu">
+                        <div class="contentLeftMenu">
+                            <p:commandLink
+                                tabindex="-1"
+                                action="#{cashRegisterController.openCashPasswordRequest}"
+                                rendered="#{cashRegisterController.openCash}"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="sale/openDoor.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                tabindex="-1"
+                                action="#{cashRegisterController.closeCashRegister}"
+                                rendered="#{cashRegisterController.closeCash}"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="sale/exitDoor.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                tabindex="-1"
+                                action="#{cashRegisterController.startSale}"
+                                rendered="#{cashRegisterController.start}"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="sale/addToBasket.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                action="#{cashRegisterController.openCancelSalePasswordRequest}"
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.cancel}"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="sale/cancelar.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.payment}"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="sale/payment.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.searchProduct}"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="product/searchProduct.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.searchClient}"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="client/searchClient.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.addClient}"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="client/addClient.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.changeQuantityLastProdut}"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="sale/changeQuantity.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.removeProduct}"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="product/removeProduct.png" />
+                                </div>
+                            </p:commandLink>
+                            <div class="clearLeft">
+
+                            </div>
+                        </div>
+                    </h:form>
+                    <div style="margin-top: 10px;">
+                        <h:form id="formCode">
+                            <p:focus id="focusCode" for="code"/>
+                            <p:outputLabel
+                                for="code" value="#{bundle.Code}:" />
+                            <p:inputText 
+                                style="margin-bottom: 0px;margin-left: 5px;width: 82%;font-size: 16pt;"
+                                id="code" 
+                                autocomplete="off"
+                                value="#{cashRegisterController.code}"
+                                />        
+                            <p:commandButton
+                                action="#{cashRegisterController.readCode(sessionUserController)}"
+                                style="position: absolute;width: 3%;height: 35px;" 
+                                icon="fa fa-fw fa-search"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                tabindex="-1" />
+                        </h:form>
+                    </div>
+                </div>
+                <div class="contentRight">
+                    <h:form id="formSaleDescription">
+                        <p:panelGrid style="width: 100%;margin-bottom: 10px;">
+                            <p:row>
+                                <p:column style="font-size: 10pt;font-weight: bold;">
+                                    <p:outputLabel 
+                                        rendered="#{cashRegisterController.saleDescription}"
+                                        class="label" value="#{bundle.Client}:"/>
+                                </p:column>
+                                <p:column style="font-size: 10pt;font-weight: bold;text-align: right;">
+                                    <p:outputLabel 
+                                        rendered="#{cashRegisterController.saleDescription}"
+                                        value="Benito Carvajal Molina"
+                                        class="label"
+                                        />
+                                    <br />
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column style="font-size: 20pt;font-weight: bold;">
+                                    <p:outputLabel 
+                                        rendered="#{cashRegisterController.saleDescription}"
+                                        value="#{bundle.Total}:"
+                                        />
+                                </p:column>
+                                <p:column style="font-size: 15pt;font-weight: bold;text-align: right;">
+                                    <p:outputLabel 
+                                        rendered="#{cashRegisterController.saleDescription}"
+                                        value="#{cashRegisterController.amountTotal}"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <p:dataTable 
+                            rendered="#{cashRegisterController.saleDescription and cashRegisterController.showList}"
+                            value="#{cashRegisterController.purchaseitems}" var="purchaseitem" 
+                                     >
+                            <p:column style="width: 40%;" headerText="#{bundle.Name}">
+                                #{purchaseitem.prodId.prodName} #{purchaseitem.prodId.prodUnitValue} #{purchaseitem.prodId.uniId.uniAbbreviation}
+                            </p:column>
+                            <p:column style="text-align: center;width: 23%;" headerText="#{bundle.SalePrice}">
+                                #{cashRegisterController.getPrice(purchaseitem)}
+                            </p:column>
+                            <p:column style="text-align: center;width: 12%;" headerText="#{bundle.Quantity}">
+                                #{cashRegisterController.getQuantity(purchaseitem)}
+                            </p:column>
+                            <p:column style="text-align: right;" headerText="#{bundle.Total}">
+                                #{cashRegisterController.getTotal(purchaseitem)}
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+                <div class="clearLeft"></div>
+                <h:form id="formOpenCashPasswordRequest">
+                    <p:dialog
+                        closable="false"
+                        resizable="false"
+                        widgetVar="openCashPasswordRequest"
+                        modal="true"
+                        style="background: #C8CDD6"
+                        >
+                        <p:panelGrid id="panelOpenCashPasswordRequest" styleClass="panelgrid" style="text-align:center" >
+                            <p:focus for="password"/>
+                            <p:hotkey bind="esc" action="#{cashRegisterController.escKeyCashPasswordRequest}"/>
+                            <p:row >
+                                <p:column style="background: #C8CDD6">
+                                    #{bundle.Password}:
+                                </p:column>
+                                <p:column  style="background: #C8CDD6">
+                                    <p:password 
+                                        id="password"
+                                        redisplay="true"
+                                        value="#{cashRegisterController.password}">
+                                    </p:password>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="2"  style="background: #C8CDD6; text-align: center;">
+                                    <p:commandButton 
+                                        action="#{cashRegisterController.okPasswordRequest(sessionUserController)}"
+                                        value="#{bundle.Ok}"
+                                        onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                                     />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formNoAction">
+                    <p:dialog resizable="false" width="250"
+                              widgetVar="noAction" closable="false"
+                              modal="true" 
+                              style="background: #C8CDD6"
+                              >
+                        <p:panelGrid styleClass="panelgrid" style="text-align:center" >
+                            <p:row >
+                                <p:column  style="background: #C8CDD6">
+                                    <p:outputLabel value="#{bundle.NoAction}" />            
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column  style="background: #C8CDD6">
+                                    <p:commandButton
+                                        id="btnNoAction"
+                                        value="#{bundle.Ok}" 
+                                        action="#{cashRegisterController.okNoAction}"
+                                                     />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                
+                <h:form id="formOpenCancelSalePasswordRequest">
+                    <p:dialog
+                        closable="false"
+                        resizable="false"
+                        widgetVar="openCancelSalePasswordRequest"
+                        modal="true"
+                        style="background: #C8CDD6"
+                        >
+                        <p:panelGrid id="panelOpenCashPasswordRequest" styleClass="panelgrid" style="text-align:center" >
+                            <p:focus for="cancelSalePassword"/>
+                            <p:hotkey bind="esc" action="#{cashRegisterController.escKeyCancelSalePasswordRequest}"/>
+                            <p:row>
+                                <p:column colspan="2">
+                                    <p:messages />
+                                </p:column>
+                            </p:row>
+                            <p:row >
+                                <p:column style="background: #C8CDD6">
+                                    #{bundle.Password}:
+                                </p:column>
+                                <p:column  style="background: #C8CDD6">
+                                    <p:password 
+                                        id="cancelSalePassword"
+                                        redisplay="true"
+                                        value="#{cashRegisterController.password}">
+                                    </p:password>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="2"  style="background: #C8CDD6; text-align: center;">
+                                    <p:commandButton 
+                                        action="#{cashRegisterController.okCancelSalePasswordRequest(sessionUserController)}"
+                                        value="#{bundle.Ok}"
+                                        onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                                     />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

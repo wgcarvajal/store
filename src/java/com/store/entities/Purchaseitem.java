@@ -49,6 +49,10 @@ public class Purchaseitem implements Serializable {
     @JoinColumn(name = "purId", referencedColumnName = "purId")
     @ManyToOne(optional = false)
     private Purchase purId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "priceValue")
+    private int priceValue;
 
     public Purchaseitem() {
     }
@@ -94,6 +98,14 @@ public class Purchaseitem implements Serializable {
         this.purId = purId;
     }
 
+    public int getPriceValue() {
+        return priceValue;
+    }
+
+    public void setPriceValue(int priceValue) {
+        this.priceValue = priceValue;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

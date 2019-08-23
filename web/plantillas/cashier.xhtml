@@ -16,11 +16,28 @@
     </h:head>
 
     <h:body>
-
         <div id="top" class="top">
-            <ui:insert name="top">Top</ui:insert>
+            <div class="date">
+                <p:clock  pattern="dd/MM/yyyy"/>
+            </div>
+            <div class="clock">
+                <p:clock  pattern="hh:mm:ss a"/>
+            </div>
+            <div class="sessionBox" >
+                <h:form id="formSessionBox">
+                    <h:link tabindex="-1"  id="opcionesusuario" style="text-decoration: none;color:#FFFFFF ;font-size: 10pt; ">
+
+                        <i class="fa fa-fw fa-user"></i>
+                        #{sessionUserController.userName}
+                    </h:link>
+                    <p:menu overlay="true" trigger="opcionesusuario"  my="left top" at="left bottom">        
+
+                        <p:menuitem value="Cerrar Sesión" action="#{sessionUserController.logout}" 
+                                    onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"      />
+                    </p:menu>
+                </h:form>
+            </div>
         </div>
-        
         
         <div id="content" class="center_content">
             <ui:insert name="content">Content</ui:insert>
