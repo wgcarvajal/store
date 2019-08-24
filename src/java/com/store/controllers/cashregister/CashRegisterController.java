@@ -36,6 +36,12 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class CashRegisterController implements Serializable {
     
+    public interface OnSesionUserController
+    {
+        boolean isCorrectPassword(String password);
+        User getCurrentCashier();
+    } 
+    
     private boolean openCash;
     private boolean closeCash;
     private boolean start;
@@ -52,11 +58,18 @@ public class CashRegisterController implements Serializable {
     private String password;
     private String code;
     private String quantity;
+    private String receivedAmount;
     private String identification;
     private String codeForRemove;
+    private String total;
+    private String refund;
+    private String action;
     
     private List<Purchaseitem> purchaseitems;
     private Purchase purchase;
+    
+    private List<Purchaseitem> copyPrintPurchaseitems;
+    private Purchase copyPrintPurchase;
     
     
     @EJB private PurchaseFacade purchaseEJB;
@@ -158,6 +171,30 @@ public class CashRegisterController implements Serializable {
         this.codeForRemove = codeForRemove;
     }
 
+    public String getReceivedAmount() {
+        return receivedAmount;
+    }
+
+    public void setReceivedAmount(String receivedAmount) {
+        this.receivedAmount = receivedAmount;
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public String getRefund() {
+        return refund;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+    
     public List<Purchaseitem> getPurchaseitems() {
         if(purchaseitems!=null)
         {
@@ -332,6 +369,26 @@ public class CashRegisterController implements Serializable {
                     openNoAction();
                 }
                 break;
+            case "27":
+                if(payment)
+                {
+                    openPayment();
+                }
+                else
+                {
+                    openNoAction();
+                }
+                break;
+            case "28":
+                if(searchProduct)
+                {
+                    openSearchProduct();
+                }
+                else
+                {
+                    openNoAction();
+                }
+                break;
             default:
                 if(cancel)
                 {
@@ -479,12 +536,6 @@ public class CashRegisterController implements Serializable {
         }
     }
     
-    public interface OnSesionUserController
-    {
-        boolean isCorrectPassword(String password);
-        User getCurrentCashier();
-    } 
-    
     public String getQuantity(Purchaseitem purchaseitem)
     {
         if(purchaseitem.getProdId().getProdtypeId().getProdtypeValue().equals("Sin empaquetar"))
@@ -543,6 +594,27 @@ public class CashRegisterController implements Serializable {
             }
         }
         return "$"+Util.getFormatPrice(amount);
+    }
+    
+    public int getAmountTotalIntegerFormat()
+    {
+        int amount = 0;
+        if (purchaseitems != null) {
+            for (Purchaseitem purchaseitem : purchaseitems) {
+                if (purchaseitem.getProdId().getProdtypeId().getProdtypeValue().equals("Sin empaquetar")) {
+                    String unity = purchaseitem.getProdId().getUniId().getUniAbbreviation();
+                    switch (unity) {
+                        case "gr":
+                            float fv = (float)purchaseitem.getPurItemQuantity() / 1000.0f;
+                            fv = fv * purchaseitem.getPriceValue();
+                            amount = amount + Math.round(fv);
+                    }
+                }
+                else
+                    amount = amount + (purchaseitem.getPurItemQuantity() * purchaseitem.getPriceValue());
+            }
+        }
+        return amount;
     }
     
     public int getSimulatedBalance()
@@ -671,4 +743,120 @@ public class CashRegisterController implements Serializable {
             }
         }
     }
+    
+    public void openPayment()
+    {
+        Util.update(":formOpenPayment");
+        Util.openDialog("openPayment");
+    }
+    
+    public void escKeyPayment()
+    {
+        Util.update(":formCode:focusCode");
+        Util.closeDialog("openPayment");
+    }
+    
+    public void okPaymentCash()
+    {
+        receivedAmount = null;
+        Util.closeDialog("openPayment");
+        Util.update(":formOpenReceivedAmount");
+        Util.openDialog("openReceivedAmount");
+    }
+    
+    public void escKeyReceivedAmount()
+    {
+        receivedAmount = null;
+        Util.update(":formCode:focusCode");
+        Util.closeDialog("openReceivedAmount");
+    }
+    
+    public void okReceivedAmount()
+    {
+        if(!receivedAmount.isEmpty())
+        {
+            try
+            {
+                int rm = Integer.parseInt(receivedAmount);
+                if(rm>0)
+                {
+                    int amount = getAmountTotalIntegerFormat();
+                    if(rm>=amount)
+                    {
+                        int r = rm-amount;
+                        refund = Util.getFormatPrice(r);
+                        receivedAmount = Util.getFormatPrice(rm);
+                        total = Util.getFormatPrice(amount);
+                        purchase.setPurFinalAmount(amount);
+                        purchase.setPurState(1);
+                        purchaseEJB.edit(purchase);
+                        openCash = false;
+                        closeCash = true;
+                        start = true;
+                        cancel = false;
+                        payment = false;
+                        searchProduct = true;
+                        searchClient = true;
+                        addClient = false;
+                        changeQuantityLastProdut = false;
+                        removeProduct = false;
+                        saleDescription = false;
+                        showList = false;
+                        copyPrintPurchase = purchase;
+                        copyPrintPurchaseitems = purchaseitems;
+                        purchaseitems = null;
+                        purchase = null;
+                        action = null;
+                        Util.update(":formCode:focusCode");
+                        Util.update(":formMenu");
+                        Util.update(":formSaleDescription");
+                        Util.closeDialog("openReceivedAmount");
+                        Util.update(":formOpenSuccessfulPayment");
+                        Util.openDialog("openSuccessfulPayment");
+                    }
+                }
+            }catch(NumberFormatException e)
+            {
+            }
+        }
+    }
+    
+    public void okAction()
+    {
+        if(!action.isEmpty())
+        {
+            try{
+                int a = Integer.parseInt(action);
+                if(a==1)
+                {
+                    Util.update(":formCode:focusCode");
+                    Util.closeDialog("openSuccessfulPayment");
+                }
+                else if(a == 2)
+                {
+                   Util.update(":formCode:focusCode");
+                   Util.closeDialog("openSuccessfulPayment");         
+                }
+                    
+            }
+            catch(NumberFormatException e)
+            {
+                
+            }
+        }
+    }
+    
+    public void openSearchProduct()
+    {
+        Util.update(":formOpenSearchProduct");
+        Util.openDialog("openSearchProduct");
+    }
+    
+    public void closeSearchProduct()
+    {
+        Util.closeDialog("openSearchProduct");
+        Util.update(":formCode:focusCode");
+    }
+    
+    
 }
