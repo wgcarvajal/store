@@ -7,18 +7,19 @@ package com.store.controllers.cashregister;
 
 import com.store.controllers.util.Encrypt;
 import com.store.controllers.util.Util;
+import com.store.entities.Client;
 import com.store.entities.Price;
 import com.store.entities.Product;
 import com.store.entities.Purchase;
 import com.store.entities.Purchaseitem;
 import com.store.entities.User;
+import com.store.facade.ClientFacade;
 import com.store.facade.PriceFacade;
 import com.store.facade.ProductFacade;
 import com.store.facade.PurchaseFacade;
 import com.store.facade.PurchaseitemFacade;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -35,7 +36,6 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class CashRegisterController implements Serializable {
     
-    
     private boolean openCash;
     private boolean closeCash;
     private boolean start;
@@ -51,6 +51,9 @@ public class CashRegisterController implements Serializable {
     
     private String password;
     private String code;
+    private String quantity;
+    private String identification;
+    private String codeForRemove;
     
     private List<Purchaseitem> purchaseitems;
     private Purchase purchase;
@@ -60,10 +63,7 @@ public class CashRegisterController implements Serializable {
     @EJB private PurchaseitemFacade purchaseItemEJB;
     @EJB private ProductFacade productEJB;
     @EJB private PriceFacade priceEJB;
-    
-    
-    private List<String> strings = Arrays.asList("sup1", "sup2", "sup3","sup1", "sup2", "sup3"
-    ,"sup1", "sup2", "sup3","sup1", "sup2", "sup3","sup1", "sup2", "sup3","0,763");
+    @EJB private ClientFacade clientEJB;
     
     public CashRegisterController()
     {
@@ -132,6 +132,30 @@ public class CashRegisterController implements Serializable {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(String identification) {
+        this.identification = identification;
+    }
+
+    public String getCodeForRemove() {
+        return codeForRemove;
+    }
+
+    public void setCodeForRemove(String codeForRemove) {
+        this.codeForRemove = codeForRemove;
     }
 
     public List<Purchaseitem> getPurchaseitems() {
@@ -278,6 +302,36 @@ public class CashRegisterController implements Serializable {
                     openNoAction();
                 }
                 break;
+            case "24":
+                if(changeQuantityLastProdut)
+                {
+                    openChangeQuantityProduct();
+                }
+                else
+                {
+                    openNoAction();
+                }
+                break;
+            case "25":
+                if(addClient)
+                {
+                    openAddClient();
+                }
+                else
+                {
+                    openNoAction();
+                }
+                break;
+            case "26":
+                if(removeProduct)
+                {
+                    openRemoveProducto();
+                }
+                else
+                {
+                    openNoAction();
+                }
+                break;
             default:
                 if(cancel)
                 {
@@ -350,6 +404,13 @@ public class CashRegisterController implements Serializable {
         removeProduct = false;
         saleDescription = false;
         showList = false;
+        if(purchase!=null)
+        {
+            purchaseItemEJB.deleteByPurId(purchase.getPurId());
+            purchaseEJB.remove(purchase);
+            purchase = null;
+        }
+        purchaseitems = null;
         Util.update(":formCode:focusCode");
         Util.update(":formMenu");
         Util.update(":formSaleDescription");
@@ -360,34 +421,44 @@ public class CashRegisterController implements Serializable {
     {
         Product product = productEJB.findByBarCode(code);
         if (product != null) {
+            boolean productType;
             Price price = priceEJB.findCurrentByProdId(product.getProdId());
             if (purchaseitems == null || purchaseitems.isEmpty()) {
                 purchase = new Purchase();
                 purchase.setPurDate(new Date());
                 User cashier = onSesionUserController.getCurrentCashier();
                 purchase.setUsId(cashier);
+                purchase.setPurState(0);
+                purchaseEJB.create(purchase);
                 purchaseitems = new ArrayList<>();
                 addClient = true;
                 showList = true;
+                removeProduct = true;
+                payment = true;
             }
             
             if (!purchaseitems.isEmpty() && product.getProdId().equals(purchaseitems.get(purchaseitems.size() - 1).getProdId().getProdId())) {
                 
-                int quantity = 1;
-                if(product.getProdtypeId().getProdtypeValue().equals("Sin empaquetar"))
+                int q = 1;
+                productType = product.getProdtypeId().getProdtypeValue().equals("Sin empaquetar");
+                if(productType)
                 {
-                    quantity = getSimulatedBalance();
+                    q = getSimulatedBalance();
+                    changeQuantityLastProdut = false;
+                    
                 }
                 
                 purchaseitems.get(purchaseitems.size() - 1).
                         setPurItemQuantity(purchaseitems.get(purchaseitems.size() - 1).
-                        getPurItemQuantity() +quantity);
+                        getPurItemQuantity() +q);
+                purchaseItemEJB.edit(purchaseitems.get(purchaseitems.size() - 1));
             }
             else
             {
                 Purchaseitem purchaseitem = new Purchaseitem();
                 purchaseitem.setProdId(product);
-                if(product.getProdtypeId().getProdtypeValue().equals("Sin empaquetar"))
+                productType = product.getProdtypeId().getProdtypeValue().equals("Sin empaquetar");
+                if(productType)
                 {
                     
                     purchaseitem.setPurItemQuantity(getSimulatedBalance());
@@ -398,7 +469,10 @@ public class CashRegisterController implements Serializable {
                 }
                 purchaseitem.setPriceValue(price.getPriceValue());
                 purchaseitems.add(purchaseitem);
+                purchaseitem.setPurId(purchase);
+                purchaseItemEJB.create(purchaseitem);
             }
+            changeQuantityLastProdut = !productType;
             Util.update(":formCode:focusCode");
             Util.update(":formMenu");
             Util.update(":formSaleDescription");
@@ -477,5 +551,124 @@ public class CashRegisterController implements Serializable {
 
         int finalX = rand.nextInt(2000);
         return finalX;
+    }
+    
+    public void openChangeQuantityProduct()
+    {
+        quantity = null;
+        Util.update(":formOpenChangeQuantityProduct");
+        Util.openDialog("openChangeQuantityProduct");
+    }
+    
+    public void escKeyChangeQuantityProduct()
+    {
+        Util.update(":formCode:focusCode");
+        Util.closeDialog("openChangeQuantityProduct");
+    }
+    
+    public void okChangeQuantityProduct()
+    {
+        if(!quantity.isEmpty())
+        {
+            try
+            {
+                int q = Integer.parseInt(quantity);
+                if(q>0)
+                {
+                    int index = purchaseitems.size() -1;
+                    purchaseitems.get(index).setPurItemQuantity(q);
+                    purchaseItemEJB.edit(purchaseitems.get(index));
+                    Util.update(":formCode:focusCode");
+                    Util.closeDialog("openChangeQuantityProduct");
+                    Util.update(":formSaleDescription");
+                }
+                
+            }
+            catch(NumberFormatException e)
+            {
+                
+            }
+        }
+    }
+    
+    public void openAddClient()
+    {
+        identification = null;
+        Util.update(":formOpenAddClient");
+        Util.openDialog("openAddClient");
+    }
+    
+    public void escKeyOpenAddClient()
+    {
+        Util.update(":formCode:focusCode");
+        Util.closeDialog("openAddClient");
+    }
+    
+    public void okAddClient()
+    {
+        if(!identification.isEmpty())
+        {
+            Client client = clientEJB.findByCliIdentity(identification);
+            if(client!=null)
+            {
+                purchase.setCliId(client);
+                purchaseEJB.edit(purchase);
+                Util.update(":formCode:focusCode");
+                Util.closeDialog("openAddClient");
+                Util.update(":formSaleDescription");
+            }
+        }
+    }
+    
+    public String nameAndLastNameClient()
+    {
+        return purchase!=null && purchase.getCliId()!=null?purchase.getCliId().getCliName() +" "+purchase.getCliId().getCliLastName():"";
+        
+    }
+    
+    public void openRemoveProducto()
+    {
+        codeForRemove = null;
+        Util.update(":formOpenRemoveProducto");
+        Util.openDialog("openRemoveProducto");
+    }
+    
+    public void escKeyRemoveProducto()
+    {
+        Util.update(":formCode:focusCode");
+        Util.closeDialog("openRemoveProducto");
+    }
+    
+    public void okRemoveProducto()
+    {
+        if(!codeForRemove.isEmpty())
+        {
+            Product product = productEJB.findByBarCode(codeForRemove);
+            if (product != null) {
+                for (int i = purchaseitems.size() - 1; i >= 0; i--) {
+                     Purchaseitem p = purchaseitems.get(i);
+                     if(p.getProdId().getProdBarCode().equals(product.getProdBarCode()))
+                     {
+                         purchaseitems.remove(i);
+                     }
+                }
+                purchaseItemEJB.deleteByPurIdAndProdId(purchase.getPurId(),product.getProdId());
+                if(purchaseitems.isEmpty())
+                {
+                    purchaseEJB.remove(purchase);
+                    addClient = false;
+                    removeProduct = false;
+                    showList = false;
+                    changeQuantityLastProdut=false;
+                    payment = false;
+                    purchaseitems = null;
+                    purchase = null;
+                }
+                Util.update(":formCode:focusCode");
+                Util.closeDialog("openRemoveProducto");
+                Util.update(":formMenu");
+                Util.update(":formSaleDescription");
+            }
+        }
     }
 }

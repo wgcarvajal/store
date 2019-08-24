@@ -6,9 +6,16 @@
 package com.store.facade;
 
 import com.store.entities.Purchaseitem;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
  *
@@ -27,6 +34,32 @@ public class PurchaseitemFacade extends AbstractFacade<Purchaseitem> {
 
     public PurchaseitemFacade() {
         super(Purchaseitem.class);
+    }
+    
+    public int deleteByPurIdAndProdId(Long purId,Long prodId)
+    {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaDelete<Purchaseitem> cq = cb.createCriteriaDelete(Purchaseitem.class);
+        Root<Purchaseitem> root = cq.from(Purchaseitem.class);
+        List<Predicate> restriccions = new ArrayList();
+        Expression<String> x = root.<String>get("purId").<String>get("purId");
+        Expression<String> y = root.<String>get("prodId").<String>get("prodId");
+        restriccions.add(cb.equal(x, purId));
+        restriccions.add(cb.and(cb.equal(y, prodId)));
+        cq.where(restriccions.toArray(new Predicate[restriccions.size()]));
+        return em.createQuery(cq).executeUpdate();
+    }
+    
+    public int deleteByPurId(Long purId)
+    {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaDelete<Purchaseitem> cq = cb.createCriteriaDelete(Purchaseitem.class);
+        Root<Purchaseitem> root = cq.from(Purchaseitem.class);
+        List<Predicate> restriccions = new ArrayList();
+        Expression<String> x = root.<String>get("purId").<String>get("purId");
+        restriccions.add(cb.equal(x, purId));
+        cq.where(restriccions.toArray(new Predicate[restriccions.size()]));
+        return em.createQuery(cq).executeUpdate();
     }
     
 }

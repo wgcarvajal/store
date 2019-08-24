@@ -54,7 +54,7 @@ public class ClientsController implements Serializable,LazyClientDataModel.OnLaz
     
     @Override
     public Client getClientById(Long cliId) {
-       return clientEJB.findByProdId(cliId);
+       return clientEJB.findByCliId(cliId);
     }
 
     @Override

@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition>
+        <h:form id="formOpenAddClient">
+            <p:dialog
+                closable="false"
+                resizable="false"
+                widgetVar="openAddClient"
+                modal="true"
+                style="background: #C8CDD6"
+                >
+                <p:panelGrid id="panelOpenAddClient" styleClass="panelgrid" style="text-align:center" >
+                    <p:focus for="addIdentification"/>
+                    <p:hotkey bind="esc" action="#{cashRegisterController.escKeyOpenAddClient}"/>
+                    <p:row >
+                        <p:column style="background: #C8CDD6">
+                                    #{bundle.IdentificationNumber}:
+                        </p:column>
+                        <p:column  style="background: #C8CDD6">
+                            <p:inputText 
+                                id="addIdentification"
+                                value="#{cashRegisterController.identification}">
+                            </p:inputText>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2"  style="background: #C8CDD6; text-align: center;">
+                            <p:commandButton 
+                                action="#{cashRegisterController.okAddClient}"
+                                value="#{bundle.Ok}"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:dialog>
+        </h:form>
+    </ui:composition>
+</html>
+

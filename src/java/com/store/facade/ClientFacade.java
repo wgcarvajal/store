@@ -38,7 +38,14 @@ public class ClientFacade extends AbstractFacade<Client> {
         super(Client.class);
     }
     
-    public Client findByProdId( Long cliId ){
+    public Client findByCliIdentity( String cliIdentity ){
+        Query query = getEntityManager().createNamedQuery("Client.findByCliIdentity");
+        query.setParameter("cliIdentity", cliIdentity);
+        List<Client> resuList = query.getResultList();
+        return resuList.size() > 0 ? resuList.get(0):null;
+    }
+    
+    public Client findByCliId( Long cliId ){
         Query query = getEntityManager().createNamedQuery("Client.findByCliId");
         query.setParameter("cliId", cliId);
         List<Client> resuList = query.getResultList();

@@ -54,24 +54,19 @@ public class Purchase implements Serializable {
     @Column(name = "purDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date purDate;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "purFinalAmount")
-    private double purFinalAmount;
-    @Basic(optional = false)
-    @NotNull
+    private Integer purFinalAmount;
     @Column(name = "purDiscount")
-    private int purDiscount;
+    private Integer purDiscount;
+    @Column(name = "purPayment")
+    private Integer purPayment;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "purPayment")
-    private int purPayment;
+    @Column(name = "purState")
+    private int purState;
     @JoinColumn(name = "cliId", referencedColumnName = "cliId")
     @ManyToOne
     private Client cliId;
-    @JoinColumn(name = "staId", referencedColumnName = "staId")
-    @ManyToOne(optional = false)
-    private Status staId;
     @JoinColumn(name = "usId", referencedColumnName = "usId")
     @ManyToOne(optional = false)
     private User usId;
@@ -85,12 +80,10 @@ public class Purchase implements Serializable {
         this.purId = purId;
     }
 
-    public Purchase(Long purId, Date purDate, double purFinalAmount, int purDiscount, int purPayment) {
+    public Purchase(Long purId, Date purDate, int purState) {
         this.purId = purId;
         this.purDate = purDate;
-        this.purFinalAmount = purFinalAmount;
-        this.purDiscount = purDiscount;
-        this.purPayment = purPayment;
+        this.purState = purState;
     }
 
     public Long getPurId() {
@@ -109,28 +102,36 @@ public class Purchase implements Serializable {
         this.purDate = purDate;
     }
 
-    public double getPurFinalAmount() {
+    public Integer getPurFinalAmount() {
         return purFinalAmount;
     }
 
-    public void setPurFinalAmount(double purFinalAmount) {
+    public void setPurFinalAmount(Integer purFinalAmount) {
         this.purFinalAmount = purFinalAmount;
     }
 
-    public int getPurDiscount() {
+    public Integer getPurDiscount() {
         return purDiscount;
     }
 
-    public void setPurDiscount(int purDiscount) {
+    public void setPurDiscount(Integer purDiscount) {
         this.purDiscount = purDiscount;
     }
 
-    public int getPurPayment() {
+    public Integer getPurPayment() {
         return purPayment;
     }
 
-    public void setPurPayment(int purPayment) {
+    public void setPurPayment(Integer purPayment) {
         this.purPayment = purPayment;
+    }
+
+    public int getPurState() {
+        return purState;
+    }
+
+    public void setPurState(int purState) {
+        this.purState = purState;
     }
 
     public Client getCliId() {
@@ -139,14 +140,6 @@ public class Purchase implements Serializable {
 
     public void setCliId(Client cliId) {
         this.cliId = cliId;
-    }
-
-    public Status getStaId() {
-        return staId;
-    }
-
-    public void setStaId(Status staId) {
-        this.staId = staId;
     }
 
     public User getUsId() {

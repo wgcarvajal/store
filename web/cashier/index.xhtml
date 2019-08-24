@@ -76,6 +76,26 @@
                                 </div>
                             </p:commandLink>
                             <p:commandLink
+                                action="#{cashRegisterController.openChangeQuantityProduct}"
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.changeQuantityLastProdut}"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="sale/changeQuantity.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                action="#{cashRegisterController.openRemoveProducto}"
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.removeProduct}"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="product/removeProduct.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
                                 tabindex="-1"
                                 rendered="#{cashRegisterController.searchProduct}"
                                 >
@@ -85,15 +105,7 @@
                                 </div>
                             </p:commandLink>
                             <p:commandLink
-                                tabindex="-1"
-                                rendered="#{cashRegisterController.searchClient}"
-                                >
-                                <div class="contentLeftItemMenu">
-                                    <p:graphicImage width="100%" 
-                                                    library="image" name="client/searchClient.png" />
-                                </div>
-                            </p:commandLink>
-                            <p:commandLink
+                                action="#{cashRegisterController.openAddClient}"
                                 tabindex="-1"
                                 rendered="#{cashRegisterController.addClient}"
                                 >
@@ -104,20 +116,11 @@
                             </p:commandLink>
                             <p:commandLink
                                 tabindex="-1"
-                                rendered="#{cashRegisterController.changeQuantityLastProdut}"
+                                rendered="#{cashRegisterController.searchClient}"
                                 >
                                 <div class="contentLeftItemMenu">
                                     <p:graphicImage width="100%" 
-                                                    library="image" name="sale/changeQuantity.png" />
-                                </div>
-                            </p:commandLink>
-                            <p:commandLink
-                                tabindex="-1"
-                                rendered="#{cashRegisterController.removeProduct}"
-                                >
-                                <div class="contentLeftItemMenu">
-                                    <p:graphicImage width="100%" 
-                                                    library="image" name="product/removeProduct.png" />
+                                                    library="image" name="client/searchClient.png" />
                                 </div>
                             </p:commandLink>
                             <div class="clearLeft">
@@ -147,7 +150,9 @@
                 </div>
                 <div class="contentRight">
                     <h:form id="formSaleDescription">
-                        <p:panelGrid style="width: 100%;margin-bottom: 10px;">
+                        <p:panelGrid style="width: 100%;margin-bottom: 10px;"
+                                     rendered="#{cashRegisterController.saleDescription}"
+                                     >
                             <p:row>
                                 <p:column style="font-size: 10pt;font-weight: bold;">
                                     <p:outputLabel 
@@ -157,8 +162,8 @@
                                 <p:column style="font-size: 10pt;font-weight: bold;text-align: right;">
                                     <p:outputLabel 
                                         rendered="#{cashRegisterController.saleDescription}"
-                                        value="Benito Carvajal Molina"
                                         class="label"
+                                        value="#{cashRegisterController.nameAndLastNameClient()}"
                                         />
                                     <br />
                                 </p:column>
@@ -298,6 +303,9 @@
                         </p:panelGrid>
                     </p:dialog>
                 </h:form>
+                <ui:include src="changeQuantityProduct.xhtml"/>
+                <ui:include src="addClient.xhtml"/>
+                <ui:include src="removeProduct.xhtml"/>
             </ui:define>
 
         </ui:composition>
