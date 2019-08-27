@@ -389,6 +389,16 @@ public class CashRegisterController implements Serializable {
                     openNoAction();
                 }
                 break;
+            case "29":
+                if(searchClient)
+                {
+                    openSearchClient();
+                }
+                else
+                {
+                    openNoAction();
+                }
+                break;
             default:
                 if(cancel)
                 {
@@ -855,6 +865,19 @@ public class CashRegisterController implements Serializable {
     public void closeSearchProduct()
     {
         Util.closeDialog("openSearchProduct");
+        Util.update(":formCode:focusCode");
+    }
+    
+    
+    public void openSearchClient()
+    {
+        Util.update(":formOpenSearchClient");
+        Util.openDialog("openSearchClient");
+    }
+    
+    public void closeSearchClient()
+    {
+        Util.closeDialog("openSearchClient");
         Util.update(":formCode:focusCode");
     }
     

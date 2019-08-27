@@ -26,6 +26,7 @@ public class ClientController implements Serializable {
     private String lastName;
     private String address;
     private String phones;
+    private String credit;
     
     @EJB private ClientFacade clientEJB;
     
@@ -104,6 +105,14 @@ public class ClientController implements Serializable {
     public void setPhones(String phones) {
         this.phones = phones;
     }
+
+    public String getCredit() {
+        return credit;
+    }
+
+    public void setCredit(String credit) {
+        this.credit = credit;
+    }
     
     public void editIdentification()
     {
@@ -138,6 +147,13 @@ public class ClientController implements Serializable {
         phones = client.getCliPhones();
         Util.update(":formEditPhones");
         Util.openDialog("editPhonesDialog");
+    }
+    
+    public void editCredit()
+    {
+        credit = client.getCliCredit()?"Si":"No";
+        Util.update(":formEditCredit");
+        Util.openDialog("editCreditDialog");
     }
     
     public void okIdentification()
@@ -274,5 +290,29 @@ public class ClientController implements Serializable {
             Util.closeDialog("editPhonesDialog");
         }
     }
+    
+    public void okEditCredit()
+    {
+        
+        String c = client.getCliCredit()?"Si":"No";
+        if(!c.equals(credit))
+        {
+            client.setCliCredit(credit.equals("Si"));
+            clientEJB.edit(client);
+            Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
 
+            Util.update(":formClient:panelClient");
+            Util.update(":formClient:messageGrowl");
+            Util.closeDialog("editCreditDialog");
+        }
+        else
+        {
+            Util.closeDialog("editCreditDialog");
+        }
+    }
+    
 }

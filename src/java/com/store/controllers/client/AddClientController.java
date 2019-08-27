@@ -78,6 +78,7 @@ public class AddClientController implements Serializable
         client.setCliLastName(Util.formatTextWithSapace(lastName));
         client.setCliAddress(address);
         client.setCliPhones(phones);
+        client.setCliCredit(false);
         
         clientEJB.create(client);
         

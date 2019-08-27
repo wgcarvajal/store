@@ -70,6 +70,10 @@ public class Client implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "cliAddress")
     private String cliAddress;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "cliCredit")
+    private boolean cliCredit;
     @OneToMany(mappedBy = "cliId")
     private List<Purchase> purchaseList;
 
@@ -80,13 +84,14 @@ public class Client implements Serializable {
         this.cliId = cliId;
     }
 
-    public Client(Long cliId, String cliIdentity, String cliName, String cliLastName, String cliPhones, String cliAddress) {
+    public Client(Long cliId, String cliIdentity, String cliName, String cliLastName, String cliPhones, String cliAddress, boolean cliCredit) {
         this.cliId = cliId;
         this.cliIdentity = cliIdentity;
         this.cliName = cliName;
         this.cliLastName = cliLastName;
         this.cliPhones = cliPhones;
         this.cliAddress = cliAddress;
+        this.cliCredit = cliCredit;
     }
 
     public Long getCliId() {
@@ -137,6 +142,14 @@ public class Client implements Serializable {
         this.cliAddress = cliAddress;
     }
 
+    public boolean getCliCredit() {
+        return cliCredit;
+    }
+
+    public void setCliCredit(boolean cliCredit) {
+        this.cliCredit = cliCredit;
+    }
+
     @XmlTransient
     public List<Purchase> getPurchaseList() {
         return purchaseList;
@@ -168,7 +181,7 @@ public class Client implements Serializable {
 
     @Override
     public String toString() {
-        return "com.store.entities.Client[ cliId=" + cliId + " ]";
+        return "com.Client[ cliId=" + cliId + " ]";
     }
     
 }

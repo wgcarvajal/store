@@ -123,6 +123,7 @@
                                 </div>
                             </p:commandLink>
                             <p:commandLink
+                                action="#{cashRegisterController.openSearchClient}"
                                 tabindex="-1"
                                 rendered="#{cashRegisterController.searchClient}"
                                 onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
@@ -317,6 +318,7 @@
                 <ui:include src="removeProduct.xhtml"/>
                 <ui:include src="payment.xhtml"/>
                 <ui:include src="product.xhtml"/>
+                <ui:include src="clients.xhtml"/>
             </ui:define>
 
         </ui:composition>
