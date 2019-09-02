@@ -66,7 +66,11 @@ public class ProductFacade extends AbstractFacade<Product> {
             Object filterValue = filters.get(filterProperty);
             Expression<String> x = root.<String>get(filterProperty);
             String pattern = filterValue+"%";
-            if(filterProperty.equals("brandId"))
+            if(filterProperty.equals("prodName"))
+            {
+                pattern = "%"+filterValue+"%";
+            }
+            else if(filterProperty.equals("brandId"))
             {
                 x = root.<String>get(filterProperty).<String>get("brandName");
             }
@@ -107,7 +111,11 @@ public class ProductFacade extends AbstractFacade<Product> {
             Object filterValue = filters.get(filterProperty);
             Expression<String> x = root.<String>get(filterProperty);
             String pattern = filterValue+"%";
-            if(filterProperty.equals("brandId"))
+            if(filterProperty.equals("prodName"))
+            {
+                pattern = "%"+filterValue+"%";
+            }
+            else if(filterProperty.equals("brandId"))
             {
                 x = root.<String>get(filterProperty).<String>get("brandName");
             }

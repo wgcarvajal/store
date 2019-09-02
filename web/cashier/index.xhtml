@@ -19,7 +19,9 @@
             </ui:define>
 
             <ui:define name="content">
-                
+                <h:form id="formGeneralMessage">
+                    <p:growl life="1500"/>
+                </h:form>
                 <div class="contentLeft">
                     <h:form id="formMenu">
                         <div class="contentLeftMenu">
@@ -76,6 +78,17 @@
                                 <div class="contentLeftItemMenu">
                                     <p:graphicImage width="100%" 
                                                     library="image" name="sale/payment.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                action="#{cashRegisterController.openSelectProduct()}"
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.selectProduct}"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="product/selectProduct.png" />
                                 </div>
                             </p:commandLink>
                             <p:commandLink
@@ -144,6 +157,8 @@
                             <p:outputLabel
                                 for="code" value="#{bundle.Code}:" />
                             <p:inputText 
+                                onfocus="this.value=this.value"
+                                maxlength="12"
                                 style="margin-bottom: 0px;margin-left: 5px;width: 82%;font-size: 16pt;"
                                 id="code" 
                                 autocomplete="off"
@@ -223,7 +238,9 @@
                         >
                         <p:panelGrid id="panelOpenCashPasswordRequest" styleClass="panelgrid" style="text-align:center" >
                             <p:focus for="password"/>
-                            <p:hotkey bind="esc" action="#{cashRegisterController.escKeyCashPasswordRequest}"/>
+                            <p:hotkey bind="esc" action="#{cashRegisterController.escKeyCashPasswordRequest}"
+                                      onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                      />
                             <p:row >
                                 <p:column style="background: #C8CDD6">
                                     #{bundle.Password}:
@@ -283,7 +300,9 @@
                         >
                         <p:panelGrid id="panelOpenCashPasswordRequest" styleClass="panelgrid" style="text-align:center" >
                             <p:focus for="cancelSalePassword"/>
-                            <p:hotkey bind="esc" action="#{cashRegisterController.escKeyCancelSalePasswordRequest}"/>
+                            <p:hotkey bind="esc" action="#{cashRegisterController.escKeyCancelSalePasswordRequest}"
+                                      onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                      />
                             <p:row>
                                 <p:column colspan="2">
                                     <p:messages />
@@ -319,6 +338,8 @@
                 <ui:include src="payment.xhtml"/>
                 <ui:include src="product.xhtml"/>
                 <ui:include src="clients.xhtml"/>
+                <ui:include src="addWeight.xhtml"/>
+                <ui:include src="selectProduct.xhtml"/>
             </ui:define>
 
         </ui:composition>

@@ -30,7 +30,7 @@
                                  rowsPerPageTemplate="5,10,15" selectionMode="single"  selection="#{productsController.selectedProduct}" id="productTable" lazy="true">
                         
                         <p:ajax event="rowSelect" listener="#{productsController.onRowSelect}" update=":form:msg"/>
-                        <p:column headerText="#{bundle.BarCode}" filterBy="#{prod.prodBarCode}">
+                        <p:column headerText="#{bundle.BarCode}" filterMaxLength="12" filterBy="#{prod.prodBarCode}">
                             <h:outputText value="#{prod.prodBarCode}" />
                         </p:column>
                         <p:column headerText="#{bundle.Name}"  filterBy="#{prod.prodName}">

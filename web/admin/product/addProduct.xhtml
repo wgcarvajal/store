@@ -21,7 +21,7 @@
             <ui:define name="content">
                 <div class="pageTitle">#{bundle.Add}</div>
                 
-                <h:form id="form">
+                <h:form id="form" onkeypress="if (event.keyCode == 13) { return false; }">
                     <p:messages id="message" showIcon="true" showDetail="true" />
                     <p:panelGrid id="panel" styleClass="panelgrid">
                         <p:row>
@@ -39,6 +39,7 @@
                             </p:column>
                             <p:column>
                                 <p:inputText 
+                                    maxlength="12"
                                     id="barCode" class="inputTextMedium"
                                     value="#{addProductController.barCode}" 
                                     required="true"  requiredMessage="#{bundle.FieldRequired}"

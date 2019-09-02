@@ -13,9 +13,11 @@
                 modal="true"
                 >
                 <p:panelGrid id="panelOpenPayment" styleClass="panelgrid" style="text-align:center" >
-                    <p:hotkey bind="esc" action="#{cashRegisterController.escKeyPayment}"/>
+                    <p:hotkey bind="esc" action="#{cashRegisterController.escKeyPayment}"
+                              onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                              />
                     <p:row>
-                        <p:column style="height: 50px;font-size: 15pt;" colspan="2">
+                        <p:column style="height: 50px;font-size: 15pt;" colspan="3">
                             <p:staticMessage severity="info" summary="#{bundle.Info}:" detail="#{bundle.SelectPaymentMethod}" />
                         </p:column>
                     </p:row>
@@ -24,6 +26,14 @@
                             <p:commandButton 
                                 action="#{cashRegisterController.okPaymentCash}"
                                 value="#{bundle.Cash}"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                />
+                        </p:column>
+                        <p:column >
+                            <p:commandButton 
+                                disabled="#{cashRegisterController.allowCredit()}"
+                                action="#{cashRegisterController.okCredit}"
+                                value="#{bundle.Credit}"
                                 onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
                                 />
                         </p:column>
@@ -48,7 +58,9 @@
                 >
                 <p:panelGrid id="panelOpenReceivedAmount" styleClass="panelgrid" style="text-align:center" >
                     <p:focus for="receivedAmount"/>
-                    <p:hotkey bind="esc" action="#{cashRegisterController.escKeyReceivedAmount}"/>
+                    <p:hotkey bind="esc" action="#{cashRegisterController.escKeyReceivedAmount}"
+                              onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                              />
                     <p:row >
                         <p:column>
                             #{bundle.ReceivedAmount}:

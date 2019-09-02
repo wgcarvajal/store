@@ -8,6 +8,7 @@ package com.store.entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -76,6 +77,10 @@ public class Client implements Serializable {
     private boolean cliCredit;
     @OneToMany(mappedBy = "cliId")
     private List<Purchase> purchaseList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliId")
+    private List<Pay> payList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliId")
+    private List<Lend> lendList;
 
     public Client() {
     }
@@ -159,6 +164,24 @@ public class Client implements Serializable {
         this.purchaseList = purchaseList;
     }
 
+    @XmlTransient
+    public List<Pay> getPayList() {
+        return payList;
+    }
+
+    public void setPayList(List<Pay> payList) {
+        this.payList = payList;
+    }
+
+    @XmlTransient
+    public List<Lend> getLendList() {
+        return lendList;
+    }
+
+    public void setLendList(List<Lend> lendList) {
+        this.lendList = lendList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -183,5 +206,4 @@ public class Client implements Serializable {
     public String toString() {
         return "com.Client[ cliId=" + cliId + " ]";
     }
-    
 }

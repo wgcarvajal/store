@@ -15,7 +15,9 @@
                 >
                 <p:panelGrid id="panelOpenRemoveProducto" styleClass="panelgrid" style="text-align:center" >
                     <p:focus for="removeProduct"/>
-                    <p:hotkey bind="esc" action="#{cashRegisterController.escKeyRemoveProducto}"/>
+                    <p:hotkey bind="esc" action="#{cashRegisterController.escKeyRemoveProducto}"
+                              onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                              />
                     <p:row >
                         <p:column style="background: #C8CDD6">
                                     #{bundle.BarCode}:

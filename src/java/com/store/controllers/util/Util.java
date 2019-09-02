@@ -88,6 +88,11 @@ public class Util {
         PrimeFaces.current().executeScript("PF('"+widgetVar+"').show()");
     }
     
+    public static void clearFilters(String widgetVar)
+    {
+        PrimeFaces.current().executeScript("PF('"+widgetVar+"').clearFilters()");
+    }
+    
     public static void closeDialog(String widgetVar)
     {
         PrimeFaces.current().executeScript("PF('"+widgetVar+"').hide()");

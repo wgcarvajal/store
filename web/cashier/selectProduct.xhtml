@@ -2,40 +2,46 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
     <ui:composition>
-        <h:form id="formOpenSearchProduct">
-            <p:hotkey bind="esc" action="#{cashRegisterController.closeSearchProduct}"
+        <h:form id="formOpenSelectProduct">
+            <p:focus for="formOpenSelectProduct:productTable:filterName" />
+            <p:hotkey bind="esc" action="#{cashRegisterController.closeSelectProduct}"
                       onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
                       />
             <p:dialog
                
-                header="#{bundle.Products}"
+                header="#{bundle.ProductSelect}"
                 resizable="false"
                 closable="false"
-                widgetVar="openSearchProduct"
+                widgetVar="openSelectProduct"
                 position="top"
                 modal="true"
                 height="500"
                 >
                 <p:dataTable style="margin-top: 20px;" var="prod" value="#{productsController.lazyModel}" paginator="true" rows="10"
+                             widgetVar="selectProductTable"
                                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                 rowsPerPageTemplate="5,10,15"  id="productTable" lazy="true">
-                        
-                    <p:column  headerText="#{bundle.BarCode}" filterMaxLength="12" filterBy="#{prod.prodBarCode}">
+                                 rowsPerPageTemplate="5,10,15"  id="productTable" lazy="true" selectionMode="single"  
+                                 selection="#{cashRegisterController.selectedProduct}">
+                       
+                    <p:ajax event="rowSelect" listener="#{cashRegisterController.onRowSelectedProduct(sessionUserController)}"
+                            onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                            />
+                        <p:column headerText="#{bundle.BarCode}">
                             <h:outputText value="#{prod.prodBarCode}" />
                         </p:column>
-                        <p:column headerText="#{bundle.Name}"  filterBy="#{prod.prodName}">
+                        <p:column headerText="#{bundle.Name}" id="filterName"  filterBy="#{prod.prodName}">
                             <h:outputText value="#{prod.prodName}" />
                         </p:column>
                         <p:column headerText="#{bundle.Presentation}">
                             <h:outputText value="#{prod.prodUnitValue} #{prod.uniId.uniAbbreviation}" />
                         </p:column>
-                        <p:column headerText="#{bundle.Category}"   filterBy="#{prod.catId}">
+                        <p:column headerText="#{bundle.Category}">
                             <h:outputText value="#{prod.catId.catName}" />
                         </p:column>
-                        <p:column headerText="#{bundle.Brand}"   filterBy="#{prod.brandId}">
+                        <p:column headerText="#{bundle.Brand}">
                             <h:outputText value="#{prod.brandId.brandName}" />
                         </p:column>
                         <p:column headerText="#{bundle.Price}">
@@ -45,7 +51,7 @@
                 
                 <div style="position: absolute;bottom:0; width: 99%; text-align: center;margin-bottom: 10px;">
                     <p:commandButton
-                        action="#{cashRegisterController.closeSearchProduct}"
+                        action="#{cashRegisterController.closeSelectProduct}"
                         value ="#{bundle.Close}"
                     />
                 </div>

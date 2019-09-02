@@ -6,7 +6,10 @@
       xmlns:p="http://primefaces.org/ui">
      <ui:composition>
         <h:form id="formOpenSearchClient">
-            <p:hotkey bind="esc" action="#{cashRegisterController.closeSearchClient}"/>
+            <p:focus for="formOpenSearchClient:clientTable:filterIdentification" />
+            <p:hotkey bind="esc" action="#{cashRegisterController.closeSearchClient}"
+                     onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                      />
             <p:dialog
                
                 header="#{bundle.Clients}"
@@ -18,6 +21,7 @@
                 height="500"
                 >
                 <p:dataTable 
+                    widgetVar="clientTable"
                     style="margin-top: 20px;"
                     var="client" value="#{clientsController.lazyModel}" paginator="true" rows="10"
                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
@@ -25,7 +29,7 @@
                     selection="#{clientsController.selectedClient}" id="clientTable" lazy="true">
                         
                         <p:ajax event="rowSelect" listener="#{clientsController.onRowSelect}"/>
-                        <p:column headerText="#{bundle.IdentificationNumber}" filterBy="#{client.cliIdentity}">
+                        <p:column id="filterIdentification" headerText="#{bundle.IdentificationNumber}" filterBy="#{client.cliIdentity}">
                             <h:outputText value="#{client.cliIdentity}" />
                         </p:column>
                         <p:column headerText="#{bundle.Names}"  filterBy="#{client.cliName}">
@@ -40,7 +44,7 @@
                         <p:column headerText="#{bundle.Phones}">
                             <h:outputText value="#{client.cliPhones}" />
                         </p:column>
-                        <p:column headerText="#{bundle.Credit}">
+                        <p:column headerText="#{bundle.Debtor}">
                             <h:outputText value="#{client.cliCredit? 'Si':'No'}" />
                         </p:column>
                     </p:dataTable>
