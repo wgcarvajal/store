@@ -36,6 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Lend.findByLendDate", query = "SELECT l FROM Lend l WHERE l.lendDate = :lendDate"),
     @NamedQuery(name = "Lend.findByLendValue", query = "SELECT l FROM Lend l WHERE l.lendValue = :lendValue"),
     @NamedQuery(name = "Lend.findByLendPayment", query = "SELECT l FROM Lend l WHERE l.lendPayment = :lendPayment"),
+    @NamedQuery(name = "Lend.findByCliId", query = "SELECT l FROM Lend l WHERE l.cliId.cliId = :cliId ORDER BY l.lendDate DESC"),
+    @NamedQuery(name = "Lend.findByCliIdAndStatePending", query = "SELECT l FROM Lend l WHERE l.cliId.cliId = :cliId AND l.lendState = 0 ORDER BY l.lendDate ASC"),
     @NamedQuery(name = "Lend.findByLendState", query = "SELECT l FROM Lend l WHERE l.lendState = :lendState")})
 public class Lend implements Serializable {
 
@@ -63,6 +65,9 @@ public class Lend implements Serializable {
     @JoinColumn(name = "cliId", referencedColumnName = "cliId")
     @ManyToOne(optional = false)
     private Client cliId;
+    @JoinColumn(name = "usId", referencedColumnName = "usId")
+    @ManyToOne(optional = false)
+    private User usId;
 
     public Lend() {
     }
@@ -124,6 +129,14 @@ public class Lend implements Serializable {
 
     public void setCliId(Client cliId) {
         this.cliId = cliId;
+    }
+
+    public User getUsId() {
+        return usId;
+    }
+
+    public void setUsId(User usId) {
+        this.usId = usId;
     }
 
     @Override

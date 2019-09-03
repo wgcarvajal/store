@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Pay.findAll", query = "SELECT p FROM Pay p"),
     @NamedQuery(name = "Pay.findByPayId", query = "SELECT p FROM Pay p WHERE p.payId = :payId"),
     @NamedQuery(name = "Pay.findByPayDate", query = "SELECT p FROM Pay p WHERE p.payDate = :payDate"),
+    @NamedQuery(name = "Pay.findByCliId", query = "SELECT p FROM Pay p WHERE p.cliId.cliId = :cliId ORDER BY p.payDate DESC"),
     @NamedQuery(name = "Pay.findByPayValue", query = "SELECT p FROM Pay p WHERE p.payValue = :payValue")})
 public class Pay implements Serializable {
 
@@ -55,6 +56,9 @@ public class Pay implements Serializable {
     @JoinColumn(name = "cliId", referencedColumnName = "cliId")
     @ManyToOne(optional = false)
     private Client cliId;
+    @JoinColumn(name = "usId", referencedColumnName = "usId")
+    @ManyToOne(optional = false)
+    private User usId;
 
     public Pay() {
     }
@@ -101,6 +105,14 @@ public class Pay implements Serializable {
         this.cliId = cliId;
     }
 
+    public User getUsId() {
+        return usId;
+    }
+
+    public void setUsId(User usId) {
+        this.usId = usId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -125,5 +137,6 @@ public class Pay implements Serializable {
     public String toString() {
         return "com.Pay[ payId=" + payId + " ]";
     }
+    
     
 }

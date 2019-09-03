@@ -7,9 +7,7 @@
     <ui:composition>
         <h:form id="formOpenSelectProduct">
             <p:focus for="formOpenSelectProduct:productTable:filterName" />
-            <p:hotkey bind="esc" action="#{cashRegisterController.closeSelectProduct}"
-                      onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
-                      />
+            
             <p:dialog
                
                 header="#{bundle.ProductSelect}"

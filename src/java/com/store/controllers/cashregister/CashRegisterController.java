@@ -8,18 +8,25 @@ package com.store.controllers.cashregister;
 import com.store.controllers.util.Encrypt;
 import com.store.controllers.util.Util;
 import com.store.entities.Client;
+import com.store.entities.Lend;
+import com.store.entities.Pay;
 import com.store.entities.Price;
 import com.store.entities.Product;
 import com.store.entities.Purchase;
 import com.store.entities.Purchaseitem;
 import com.store.entities.User;
 import com.store.facade.ClientFacade;
+import com.store.facade.LendFacade;
+import com.store.facade.PayFacade;
 import com.store.facade.PriceFacade;
 import com.store.facade.ProductFacade;
 import com.store.facade.PurchaseFacade;
 import com.store.facade.PurchaseitemFacade;
+import com.store.model.Debt;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -66,10 +73,20 @@ public class CashRegisterController implements Serializable {
     private String refund;
     private String action;
     private String weight;
+    private String debtsValue;
+    private String pays;
+    private String lends;
+    private String credits;
+    private String pay;
+    private String lend;
     private Product producWaitForWeight;
     private Product SelectedProduct;
+    private Client selectedClient;
     
     private List<Purchaseitem> purchaseitems;
+    private List<Pay> payList;
+    private List<Lend> lendList;
+    private List<Purchase> creditList;
     private Purchase purchase;
     
     private List<Purchaseitem> copyPrintPurchaseitems;
@@ -81,6 +98,8 @@ public class CashRegisterController implements Serializable {
     @EJB private ProductFacade productEJB;
     @EJB private PriceFacade priceEJB;
     @EJB private ClientFacade clientEJB;
+    @EJB private PayFacade payEJB;
+    @EJB private LendFacade lendEJB;
     
     public CashRegisterController()
     {
@@ -147,6 +166,90 @@ public class CashRegisterController implements Serializable {
         this.password = password;
     }
 
+    public String getPay() {
+        return pay;
+    }
+
+    public String getLend() {
+        return lend;
+    }
+
+    public void setLend(String lend) {
+        this.lend = lend;
+    }
+    
+    public void setPay(String pay) {
+        this.pay = pay;
+    }
+    
+    public String getDebtsValue() {
+        lendList =null;
+        payList = null;
+        creditList = null;
+        lends = "0";
+        pays = "0";
+        credits = "0";
+        
+        int dv = 0;
+        if(selectedClient!=null)
+        {
+            
+            lendList = lendEJB.findByCliId(selectedClient.getCliId());
+            if(lendList!=null)
+            {
+                int v = 0;
+                for(Lend l: lendList)
+                {
+                    v = v + l.getLendValue();
+                }
+                dv = v;
+                lends = Util.getFormatPrice(v);
+            }
+            
+            creditList = purchaseEJB.findByCliIdCredit(selectedClient.getCliId());
+            if(creditList!=null)
+            {
+                int v = 0;
+                for(Purchase p: creditList)
+                {
+                    v = v + p.getPurFinalAmount();
+                }
+                dv = dv + v;
+                credits = Util.getFormatPrice(v);
+            }
+            
+            
+            payList = payEJB.findByCliId(selectedClient.getCliId());
+            if(payList!=null)
+            {
+                int v = 0;
+                for(Pay p: payList)
+                {
+                    v = v + p.getPayValue();
+                }
+                dv = dv-v;
+                pays = Util.getFormatPrice(v);
+            }
+            
+        }
+        
+        
+        debtsValue = Util.getFormatPrice(dv);
+        return debtsValue;
+    }
+
+    public String getPays() {
+        return pays;
+    }
+
+    public String getLends() {
+        return lends;
+    }
+
+    public String getCredits() {
+        return credits;
+    }
+    
     public String getCode() {
         return code;
     }
@@ -222,6 +325,18 @@ public class CashRegisterController implements Serializable {
         return purchaseitems;
     }
 
+    public List<Pay> getPayList() {
+        return payList;
+    }
+
+    public List<Lend> getLendList() {
+        return lendList;
+    }
+
+    public List<Purchase> getCreditList() {
+        return creditList;
+    }
+
     public Purchase getPurchase() {
         return purchase;
     }
@@ -233,6 +348,15 @@ public class CashRegisterController implements Serializable {
     public void setSelectedProduct(Product SelectedProduct) {
         this.SelectedProduct = SelectedProduct;
     }
+
+    public Client getSelectedClient() {
+        return selectedClient;
+    }
+
+    public void setSelectedClient(Client selectedClient) {
+        this.selectedClient = selectedClient;
+    }
+    
     
     private void initFlags() {
         openCash = true;
@@ -941,6 +1065,7 @@ public class CashRegisterController implements Serializable {
     
     public void openSearchProduct()
     {
+        Util.clearFilters("searchProductTable");
         Util.update(":formOpenSearchProduct");
         Util.openDialog("openSearchProduct");
     }
@@ -954,6 +1079,7 @@ public class CashRegisterController implements Serializable {
     
     public void openSearchClient()
     {
+        selectedClient = null;
         Util.clearFilters("clientTable");
         Util.update(":formOpenSearchClient");
         Util.openDialog("openSearchClient");
@@ -983,6 +1109,21 @@ public class CashRegisterController implements Serializable {
         SelectedProduct = null;
         Util.closeDialog("openSelectProduct");
         searchAndAddProduct(onSesionUserController);
+        code = null;
+    }
+    
+    public void onRowSelectClient(SelectEvent event) {
+        Util.closeDialog("openSearchClient");
+        Util.update(":formOpenDebtor:panelDebtorHeader");
+        Util.update(":formOpenDebtor:panelDebtorCenter");
+        Util.update(":formOpenDebtor:panelDebtorBottom");
+        Util.openDialog("openDebtor");
+    }
+    
+    public void closeDebtor()
+    {
+        Util.closeDialog("openDebtor");
+        Util.update(":formCode:focusCode");
     }
     
     public boolean allowCredit()
@@ -1025,4 +1166,168 @@ public class CashRegisterController implements Serializable {
         Util.openDialog("openSuccessfulPayment");
     }
     
+    public void openMakeLoan()
+    {
+        lend = null;
+        Util.update(":formOpenMakeLoan");
+        Util.openDialog("openMakeLoan");
+    }
+    
+    public void escKeyopenMakeLoan()
+    {
+        Util.closeDialog("openMakeLoan");
+    }
+    
+    public void okMakeLoan(OnSesionUserController onSesionUserController)
+    {
+        if(!lend.isEmpty())
+        {
+            try{
+                int v = Integer.parseInt(lend);
+                Lend l = new Lend();
+                l.setCliId(selectedClient);
+                l.setUsId(onSesionUserController.getCurrentCashier());
+                l.setLendValue(v);
+                l.setLendState(0);
+                l.setLendDate(new Date());
+                lendEJB.create(l);
+                Util.closeDialog("openMakeLoan");
+                Util.update(":formOpenDebtor:panelDebtorHeader");
+                Util.update(":formOpenDebtor:panelDebtorCenter");
+                Util.update(":formOpenDebtor:panelDebtorBottom");
+            }catch(NumberFormatException e)
+            {
+
+            }
+        }
+    }
+    
+    public void openPay()
+    {
+        pay = null;
+        Util.update(":formOpenPay");
+        Util.openDialog("openPay");
+    }
+    
+    public void escKeyopenPay()
+    {
+        Util.closeDialog("openPay");
+    }
+    
+    public void okPay(OnSesionUserController onSesionUserController)
+    {
+        if(!pay.isEmpty())
+        {
+            try{
+                int v = Integer.parseInt(pay);
+                List<Purchase> pList = purchaseEJB.findByCliIdAndStatePending(selectedClient.getCliId());
+                List<Lend> lList = lendEJB.findByCliIdAndStatePending(selectedClient.getCliId());
+                List<Debt> dList = new ArrayList();
+                if(pList!=null || lList!=null)
+                {
+                    int pv=0;
+                    if (pList != null) {
+                        for (Purchase p : pList) {
+                            int finalAmount = p.getPurFinalAmount();
+                            if (p.getPurPayment() != null) {
+                                finalAmount = finalAmount - p.getPurPayment();
+                            }
+                            pv = pv + finalAmount;
+                            Debt d = new Debt();
+                            d.setDate(p.getPurDate());
+                            d.setObject(p);
+                            dList.add(d);
+                        }
+                    }
+                    if (lList != null) {
+                        for (Lend l : lList) {
+                            int finalAmount = l.getLendValue();
+                            if (l.getLendPayment() != null) {
+                                finalAmount = finalAmount - l.getLendPayment();
+                            }
+                            pv = pv + finalAmount;
+                            Debt d = new Debt();
+                            d.setDate(l.getLendDate());
+                            d.setObject(l);
+                            dList.add(d);
+                        }
+                    }
+                    if(pv>=v)
+                    {
+                        Collections.sort(dList, (Debt o1, Debt o2) -> o1.getDate().compareTo(o2.getDate()));
+                        makePay(v, dList,onSesionUserController);
+                    }
+                    else
+                    {
+                        //message
+                    }
+                }
+                else{
+                    //message
+                }
+                
+            }catch(NumberFormatException e)
+            {
+
+            }
+        }
+    }
+    
+    private void makePay(int value, List<Debt> dList,OnSesionUserController onSesionUserController) {
+        int v = value;
+        for (Debt d : dList) {
+            if (d.getObject() instanceof Purchase) {
+                Purchase p = (Purchase) d.getObject();
+                int totalDebts = p.getPurFinalAmount();
+                int totalPay = 0;
+                if (p.getPurPayment() != null) {
+                    totalPay = p.getPurPayment();
+                }
+                totalDebts = totalDebts - totalPay;
+                if (value >= totalDebts) {
+                    value = value - totalDebts;
+                    p.setPurPayment(p.getPurFinalAmount());
+                    p.setPurState(3);
+                } else {
+                    totalPay = totalPay + value;
+                    value = 0;
+                    p.setPurPayment(totalPay);
+                }
+                purchaseEJB.edit(p);
+            } else {
+                Lend l = (Lend) d.getObject();
+                int totalDebts = l.getLendValue();
+                int totalPay = 0;
+                if (l.getLendPayment() != null) {
+                    totalPay = l.getLendPayment();
+                }
+                totalDebts = totalDebts - totalPay;
+                if (value >= totalDebts) {
+                    value = value - totalDebts;
+                    l.setLendPayment(l.getLendValue());
+                    l.setLendState(1);
+                } else {
+                    totalPay = totalPay + value;
+                    value = 0;
+                    l.setLendPayment(totalPay);
+                }
+                lendEJB.edit(l);
+            }
+            if(value == 0)
+            {
+                break;
+            }
+        }
+        
+        Pay p = new Pay();
+        p.setCliId(selectedClient);
+        p.setPayValue(v);
+        p.setPayDate(new Date());
+        p.setUsId(onSesionUserController.getCurrentCashier());
+        payEJB.create(p);
+        Util.closeDialog("openPay");
+        Util.update(":formOpenDebtor:panelDebtorHeader");
+        Util.update(":formOpenDebtor:panelDebtorCenter");
+        Util.update(":formOpenDebtor:panelDebtorBottom");
+    }
 }

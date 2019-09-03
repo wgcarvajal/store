@@ -5,7 +5,7 @@
  */
 package com.store.facade;
 
-import com.store.entities.Purchase;
+import com.store.entities.Pay;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -17,7 +17,7 @@ import javax.persistence.Query;
  * @author aranda
  */
 @Stateless
-public class PurchaseFacade extends AbstractFacade<Purchase> {
+public class PayFacade extends AbstractFacade<Pay> {
 
     @PersistenceContext(unitName = "storePU")
     private EntityManager em;
@@ -27,24 +27,15 @@ public class PurchaseFacade extends AbstractFacade<Purchase> {
         return em;
     }
 
-    public PurchaseFacade() {
-        super(Purchase.class);
+    public PayFacade() {
+        super(Pay.class);
     }
     
-    public List<Purchase> findByCliIdCredit(long cliId)
+    public List<Pay> findByCliId(long cliId)
     {
-        Query query = getEntityManager().createNamedQuery("Purchase.findByCliIdCredit");
+        Query query = getEntityManager().createNamedQuery("Pay.findByCliId");
         query.setParameter("cliId", cliId);
-        List<Purchase> resuList = query.getResultList();
+        List<Pay> resuList = query.getResultList();
         return resuList.size() > 0 ? resuList:null;
     }
-    
-    public List<Purchase> findByCliIdAndStatePending(long cliId)
-    {
-        Query query = getEntityManager().createNamedQuery("Purchase.findByCliIdAndStatePending");
-        query.setParameter("cliId", cliId);
-        List<Purchase> resuList = query.getResultList();
-        return resuList.size() > 0 ? resuList:null;
-    }
-    
 }

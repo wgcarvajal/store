@@ -7,7 +7,6 @@
     <ui:composition>
         <h:form id="formOpenAddClient">
             <p:dialog
-                closable="false"
                 resizable="false"
                 widgetVar="openAddClient"
                 modal="true"
@@ -15,9 +14,7 @@
                 >
                 <p:panelGrid id="panelOpenAddClient" styleClass="panelgrid" style="text-align:center" >
                     <p:focus for="addIdentification"/>
-                    <p:hotkey bind="esc" action="#{cashRegisterController.escKeyOpenAddClient}"
-                              onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
-                              />
+                    
                     <p:row >
                         <p:column style="background: #C8CDD6">
                                     #{bundle.IdentificationNumber}:

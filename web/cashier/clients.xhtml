@@ -7,9 +7,6 @@
      <ui:composition>
         <h:form id="formOpenSearchClient">
             <p:focus for="formOpenSearchClient:clientTable:filterIdentification" />
-            <p:hotkey bind="esc" action="#{cashRegisterController.closeSearchClient}"
-                     onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
-                      />
             <p:dialog
                
                 header="#{bundle.Clients}"
@@ -26,9 +23,9 @@
                     var="client" value="#{clientsController.lazyModel}" paginator="true" rows="10"
                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                     rowsPerPageTemplate="5,10,15" selectionMode="single"  
-                    selection="#{clientsController.selectedClient}" id="clientTable" lazy="true">
+                    selection="#{cashRegisterController.selectedClient}" id="clientTable" lazy="true">
                         
-                        <p:ajax event="rowSelect" listener="#{clientsController.onRowSelect}"/>
+                        <p:ajax event="rowSelect" listener="#{cashRegisterController.onRowSelectClient}"/>
                         <p:column id="filterIdentification" headerText="#{bundle.IdentificationNumber}" filterBy="#{client.cliIdentity}">
                             <h:outputText value="#{client.cliIdentity}" />
                         </p:column>

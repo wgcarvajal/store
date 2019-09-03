@@ -7,7 +7,6 @@
     <ui:composition>
         <h:form id="formOpenChangeQuantityProduct">
             <p:dialog
-                closable="false"
                 resizable="false"
                 widgetVar="openChangeQuantityProduct"
                 modal="true"
@@ -15,9 +14,7 @@
                 >
                 <p:panelGrid id="panelOpenChangeQuantityProduct" styleClass="panelgrid" style="text-align:center" >
                     <p:focus for="changeQuantity"/>
-                    <p:hotkey bind="esc" action="#{cashRegisterController.escKeyChangeQuantityProduct}"
-                              onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
-                              />
+                    
                     <p:row >
                         <p:column style="background: #C8CDD6">
                                     #{bundle.Quantity}:

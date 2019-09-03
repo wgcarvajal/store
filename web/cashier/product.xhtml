@@ -6,9 +6,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <ui:composition>
         <h:form id="formOpenSearchProduct">
-            <p:hotkey bind="esc" action="#{cashRegisterController.closeSearchProduct}"
-                      onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
-                      />
+            <p:focus for="formOpenSearchProduct:searchProductTable:filterBarcode" />
+            
             <p:dialog
                
                 header="#{bundle.Products}"
@@ -21,9 +20,10 @@
                 >
                 <p:dataTable style="margin-top: 20px;" var="prod" value="#{productsController.lazyModel}" paginator="true" rows="10"
                                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                 rowsPerPageTemplate="5,10,15"  id="productTable" lazy="true">
+                                 widgetVar="searchProductTable"
+                                 rowsPerPageTemplate="5,10,15"  id="searchProductTable" lazy="true">
                         
-                    <p:column  headerText="#{bundle.BarCode}" filterMaxLength="12" filterBy="#{prod.prodBarCode}">
+                    <p:column id="filterBarcode" headerText="#{bundle.BarCode}" filterMaxLength="12" filterBy="#{prod.prodBarCode}">
                             <h:outputText value="#{prod.prodBarCode}" />
                         </p:column>
                         <p:column headerText="#{bundle.Name}"  filterBy="#{prod.prodName}">

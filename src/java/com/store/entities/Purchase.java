@@ -39,6 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Purchase.findByPurId", query = "SELECT p FROM Purchase p WHERE p.purId = :purId"),
     @NamedQuery(name = "Purchase.findByPurDate", query = "SELECT p FROM Purchase p WHERE p.purDate = :purDate"),
     @NamedQuery(name = "Purchase.findByPurFinalAmount", query = "SELECT p FROM Purchase p WHERE p.purFinalAmount = :purFinalAmount"),
+    @NamedQuery(name = "Purchase.findByCliIdCredit", query = "SELECT p FROM Purchase p WHERE p.cliId.cliId = :cliId AND (p.purState = 2 OR p.purState = 3) ORDER BY p.purDate DESC"),
+    @NamedQuery(name = "Purchase.findByCliIdAndStatePending", query = "SELECT p FROM Purchase p WHERE p.cliId.cliId = :cliId AND p.purState = 2 ORDER BY p.purDate ASC"),
     @NamedQuery(name = "Purchase.findByPurDiscount", query = "SELECT p FROM Purchase p WHERE p.purDiscount = :purDiscount"),
     @NamedQuery(name = "Purchase.findByPurPayment", query = "SELECT p FROM Purchase p WHERE p.purPayment = :purPayment")})
 public class Purchase implements Serializable {

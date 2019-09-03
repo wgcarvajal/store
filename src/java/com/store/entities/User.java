@@ -93,7 +93,11 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId")
     private List<Purchase> purchaseList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId")
+    private List<Pay> payList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId")
     private List<Usergroup> usergroupList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId")
+    private List<Lend> lendList;
 
     public User() {
     }
@@ -203,12 +207,30 @@ public class User implements Serializable {
     }
 
     @XmlTransient
+    public List<Pay> getPayList() {
+        return payList;
+    }
+
+    public void setPayList(List<Pay> payList) {
+        this.payList = payList;
+    }
+
+    @XmlTransient
     public List<Usergroup> getUsergroupList() {
         return usergroupList;
     }
 
     public void setUsergroupList(List<Usergroup> usergroupList) {
         this.usergroupList = usergroupList;
+    }
+
+    @XmlTransient
+    public List<Lend> getLendList() {
+        return lendList;
+    }
+
+    public void setLendList(List<Lend> lendList) {
+        this.lendList = lendList;
     }
 
     @Override
@@ -235,5 +257,4 @@ public class User implements Serializable {
     public String toString() {
         return "com.User[ usId=" + usId + " ]";
     }
-    
 }
