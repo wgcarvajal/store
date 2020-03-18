@@ -209,6 +209,11 @@
                             </p:row>
                         </p:panelGrid>
                         <p:dataTable 
+                            id="purchaseItemTable"
+                            selectionMode="single"
+                            rowKey="#{purchaseitem.purItemId}"
+                            selection ="#{cashRegisterController.selectedPurchaseItem}"
+                            scrollable="true" scrollHeight="300"
                             rendered="#{cashRegisterController.saleDescription and cashRegisterController.showList}"
                             value="#{cashRegisterController.purchaseitems}" var="purchaseitem" 
                                      >
@@ -225,6 +230,9 @@
                                 #{cashRegisterController.getTotal(purchaseitem)}
                             </p:column>
                         </p:dataTable>
+                        <script>
+                             $('.ui-datatable-scrollable-body').scrollTop(10000000000)
+                        </script>
                     </h:form>
                 </div>
                 <div class="clearLeft"></div>

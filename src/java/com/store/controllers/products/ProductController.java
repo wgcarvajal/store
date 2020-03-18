@@ -3,7 +3,9 @@ package com.store.controllers.products;
 import com.store.controllers.util.Util;
 import com.store.entities.Brand;
 import com.store.entities.Category;
+import com.store.entities.Owner;
 import com.store.entities.Price;
+import com.store.entities.Pricepurchase;
 import com.store.entities.Product;
 import com.store.entities.Productimage;
 import com.store.entities.Producttype;
@@ -12,7 +14,9 @@ import com.store.entities.Provides;
 import com.store.entities.Unity;
 import com.store.facade.BrandFacade;
 import com.store.facade.CategoryFacade;
+import com.store.facade.OwnerFacade;
 import com.store.facade.PriceFacade;
+import com.store.facade.PricepurchaseFacade;
 import com.store.facade.ProductFacade;
 import com.store.facade.ProductimageFacade;
 import com.store.facade.ProducttypeFacade;
@@ -54,8 +58,12 @@ public class ProductController implements Serializable
     private String unitValue;
     private Category category;
     private Brand brand;
+    private Owner owner;
     private Price price;
+    private Pricepurchase pricepurchase;
     private String priceValue;
+    private String pricepurchaseValue;
+    private String iva;
     private Producttype producttype;
     private Provides currentProvides;
     private Productimage productimage;
@@ -63,6 +71,7 @@ public class ProductController implements Serializable
     private List<Unity> unities;
     private List<Category> categories;
     private List<Brand> brands;
+    private List<Owner> owners;
     private List<Producttype> producttypes;
     private List<Provider> providers;
     private List<Productimage> productimages;
@@ -78,6 +87,8 @@ public class ProductController implements Serializable
     @EJB private ProducttypeFacade producttypeEJB;
     @EJB private ProviderFacade providerEJB;
     @EJB private ProductimageFacade productimageEJB;
+    @EJB private PricepurchaseFacade pricepurchaseEJB;
+    @EJB private OwnerFacade ownerEJB;
     
     @PostConstruct
     public void init()
@@ -140,6 +151,14 @@ public class ProductController implements Serializable
         this.unity = unity;
     }
 
+    public String getIva() {
+        return iva;
+    }
+
+    public void setIva(String iva) {
+        this.iva = iva;
+    }
+    
     public List<Unity> getUnities() {
         return unities;
     }
@@ -180,6 +199,22 @@ public class ProductController implements Serializable
         this.brand = brand;
     }
 
+    public Owner getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Owner owner) {
+        this.owner = owner;
+    }
+
+    public List<Owner> getOwners() {
+        return owners;
+    }
+
+    public void setOwners(List<Owner> owners) {
+        this.owners = owners;
+    }
+    
     public List<Brand> getBrands() {
         return brands;
     }
@@ -216,6 +251,20 @@ public class ProductController implements Serializable
         this.price = price;
     }
 
+    public Pricepurchase getPricepurchase() {
+        if(pricepurchase == null)
+        {
+            pricepurchase = pricepurchaseEJB.findCurrentByProdId(product.getProdId());
+        }
+        return pricepurchase;
+    }
+
+    public void setPricepurchase(Pricepurchase pricepurchase) {
+        this.pricepurchase = pricepurchase;
+    }
+    
+    
+
     public String getPriceValue() {
         return priceValue;
     }
@@ -224,6 +273,13 @@ public class ProductController implements Serializable
         this.priceValue = priceValue;
     }
 
+    public String getPricepurchaseValue() {
+        return pricepurchaseValue;
+    }
+
+    public void setPricepurchaseValue(String pricepurchaseValue) {
+        this.pricepurchaseValue = pricepurchaseValue;
+    }
     public Producttype getProducttype() {
         return producttype;
     }
@@ -327,6 +383,33 @@ public class ProductController implements Serializable
             brands = brandEJB.findAll();
         Util.update(":formBrand");
         Util.openDialog("editBrandDialog");
+    }
+    
+    public void editOwner()
+    {
+        owner = product.getOwnId();
+        if(owners==null)
+            owners = ownerEJB.findAll();
+        Util.update(":formOwner");
+        Util.openDialog("editOwnerDialog");
+    }
+    
+    public void editIVA()
+    {
+        iva=product.getProdIva() +"";
+        Util.update(":formEditIVA");
+        Util.openDialog("editIVADialog");
+    }
+    
+    public void editPricepurchase()
+    {
+        pricepurchaseValue=null;
+        if(pricepurchase!=null)
+        {
+            pricepurchaseValue = pricepurchase.getPricePurValue()+"";
+        }
+        Util.update(":formEditPricepurchase");
+        Util.openDialog("editPricepurchaseDialog");
     }
     
     public void editPrice()
@@ -527,6 +610,49 @@ public class ProductController implements Serializable
         }
     }
     
+    public void okEditOwner()
+    {
+        if(!product.getOwnId().getOwnId().equals(owner.getOwnId()))
+        {
+            product.setOwnId(owner);
+            productEJB.edit(product);
+            Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+
+            Util.update(":formProduct:panelProduct");
+            Util.update(":formProduct:messageGrowl");
+            Util.closeDialog("editOwnerDialog");
+        }
+        else
+        {
+            Util.closeDialog("editOwnerDialog");
+        }
+    }
+    
+    public void okEditIVA()
+    {
+        int i = Integer.parseInt(iva);
+        if(i != product.getProdIva())
+        {
+            product.setProdIva(i);
+            productEJB.edit(product);
+        }
+        Util.addInfoMessage(ResourceBundle.
+                getBundle("/Bundle").
+                getString("EditSuccessfull"),ResourceBundle.
+                getBundle("/Bundle").
+                getString("EditSuccessfull"));
+
+        Util.update(":formProduct:panelProduct");
+        Util.update(":formProduct:messageGrowl");
+        Util.closeDialog("editIVADialog");
+        
+    }
+    
+    
     public void okEditPrice()
     {
         int pv = Integer.parseInt(priceValue);
@@ -553,6 +679,39 @@ public class ProductController implements Serializable
         else
         {
             Util.closeDialog("editPriceDialog");
+        }
+    }
+    
+    
+    public void okEditPricepurchase()
+    {
+        int pv = Integer.parseInt(pricepurchaseValue);
+        if(pricepurchase ==null || pricepurchase.getPricePurValue() != pv)
+        {
+            Date date = new Date();
+            if(pricepurchase!=null)
+            {
+                pricepurchase.setPricePurFinalDate(date);
+                pricepurchaseEJB.edit(pricepurchase);
+            }
+            pricepurchase = new Pricepurchase();
+            pricepurchase.setProdId(product);
+            pricepurchase.setPricePurValue(pv);
+            pricepurchase.setPricePurInitialDate(date);
+            pricepurchaseEJB.create(pricepurchase);
+            Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+
+            Util.update(":formProduct:panelProduct");
+            Util.update(":formProduct:messageGrowl");
+            Util.closeDialog("editPricepurchaseDialog");
+        }
+        else
+        {
+            Util.closeDialog("editPricepurchaseDialog");
         }
     }
     

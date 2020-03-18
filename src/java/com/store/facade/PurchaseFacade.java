@@ -47,4 +47,15 @@ public class PurchaseFacade extends AbstractFacade<Purchase> {
         return resuList.size() > 0 ? resuList:null;
     }
     
+    public List findYears(){
+        Query query = getEntityManager().createNamedQuery("Purchase.findYears");
+        return  query.getResultList();
+    }
+    
+    public List findTotalEachMonthByYear(int year){
+        Query query = getEntityManager().createNamedQuery("Purchase.findTotalEachMonthByYear");
+        query.setParameter("year", year);
+        return query.getResultList();
+    }
+    
 }

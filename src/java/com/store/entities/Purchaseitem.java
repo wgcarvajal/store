@@ -53,6 +53,12 @@ public class Purchaseitem implements Serializable {
     @NotNull
     @Column(name = "priceValue")
     private int priceValue;
+    @Basic(optional = false)
+    @Column(name = "iva")
+    private int iva;
+    @Basic(optional = false)
+    @Column(name = "pricePurValue")
+    private int pricePurValue;
 
     public Purchaseitem() {
     }
@@ -61,9 +67,12 @@ public class Purchaseitem implements Serializable {
         this.purItemId = purItemId;
     }
 
-    public Purchaseitem(Long purItemId, int purItemQuantity) {
+    public Purchaseitem(Long purItemId, int purItemQuantity, int priceValue, int iva, int pricePurValue) {
         this.purItemId = purItemId;
         this.purItemQuantity = purItemQuantity;
+        this.priceValue = priceValue;
+        this.iva = iva;
+        this.pricePurValue = pricePurValue;
     }
 
     public Long getPurItemId() {
@@ -104,6 +113,22 @@ public class Purchaseitem implements Serializable {
 
     public void setPriceValue(int priceValue) {
         this.priceValue = priceValue;
+    }
+    
+    public int getIva() {
+        return iva;
+    }
+
+    public void setIva(int iva) {
+        this.iva = iva;
+    }
+
+    public int getPricePurValue() {
+        return pricePurValue;
+    }
+
+    public void setPricePurValue(int pricePurValue) {
+        this.pricePurValue = pricePurValue;
     }
     
     @Override

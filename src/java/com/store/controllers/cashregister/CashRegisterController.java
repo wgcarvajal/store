@@ -9,30 +9,34 @@ import com.store.controllers.util.Encrypt;
 import com.store.controllers.util.Util;
 import com.store.entities.Client;
 import com.store.entities.Lend;
+import com.store.entities.Owner;
 import com.store.entities.Pay;
 import com.store.entities.Price;
+import com.store.entities.Pricepurchase;
 import com.store.entities.Product;
 import com.store.entities.Purchase;
 import com.store.entities.Purchaseitem;
+import com.store.entities.Purchasetotal;
 import com.store.entities.User;
 import com.store.facade.ClientFacade;
 import com.store.facade.LendFacade;
 import com.store.facade.PayFacade;
 import com.store.facade.PriceFacade;
+import com.store.facade.PricepurchaseFacade;
 import com.store.facade.ProductFacade;
 import com.store.facade.PurchaseFacade;
 import com.store.facade.PurchaseitemFacade;
+import com.store.facade.PurchasetotalFacade;
 import com.store.model.Debt;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -40,7 +44,7 @@ import org.primefaces.event.SelectEvent;
  * @author Wilson Carvajal
  */
 @ManagedBean(name = "cashRegisterController")
-@SessionScoped
+@ViewScoped
 public class CashRegisterController implements Serializable {
     
     public interface OnSesionUserController
@@ -81,6 +85,7 @@ public class CashRegisterController implements Serializable {
     private String lend;
     private Product producWaitForWeight;
     private Product SelectedProduct;
+    private Purchaseitem SelectedPurchaseItem;
     private Client selectedClient;
     
     private List<Purchaseitem> purchaseitems;
@@ -92,14 +97,18 @@ public class CashRegisterController implements Serializable {
     private List<Purchaseitem> copyPrintPurchaseitems;
     private Purchase copyPrintPurchase;
     
+    private List<Purchasetotal> purchasetotals;
+    
     
     @EJB private PurchaseFacade purchaseEJB;
     @EJB private PurchaseitemFacade purchaseItemEJB;
     @EJB private ProductFacade productEJB;
     @EJB private PriceFacade priceEJB;
+    @EJB private PricepurchaseFacade pricePurchaseEJB;
     @EJB private ClientFacade clientEJB;
     @EJB private PayFacade payEJB;
     @EJB private LendFacade lendEJB;
+    @EJB private PurchasetotalFacade purchasetotalEJB;
     
     public CashRegisterController()
     {
@@ -315,13 +324,13 @@ public class CashRegisterController implements Serializable {
     }
     
     public List<Purchaseitem> getPurchaseitems() {
-        if(purchaseitems!=null)
+        /*if(purchaseitems!=null)
         {
             if(purchaseitems.size()>15)
             {
                 return purchaseitems.subList(purchaseitems.size() - 15, purchaseitems.size());
             }
-        }
+    }*/
         return purchaseitems;
     }
 
@@ -348,6 +357,16 @@ public class CashRegisterController implements Serializable {
     public void setSelectedProduct(Product SelectedProduct) {
         this.SelectedProduct = SelectedProduct;
     }
+
+    public Purchaseitem getSelectedPurchaseItem() {
+        return SelectedPurchaseItem;
+    }
+
+    public void setSelectedPurchaseItem(Purchaseitem SelectedPurchaseItem) {
+        this.SelectedPurchaseItem = SelectedPurchaseItem;
+    }
+    
+    
 
     public Client getSelectedClient() {
         return selectedClient;
@@ -454,6 +473,7 @@ public class CashRegisterController implements Serializable {
         switch(code)
         {
             case "001":
+                //purchaseEJB.findTotalEachMonthByYear(2015);
                 if(openCash)
                 {
                     openCashPasswordRequest();
@@ -550,7 +570,7 @@ public class CashRegisterController implements Serializable {
                     openNoAction();
                 }
                 break;
-            case "060":
+            case "006":
                 if(selectProduct)
                 {
                     openSelectProduct();
@@ -672,6 +692,7 @@ public class CashRegisterController implements Serializable {
     private void addProduct(Product product,OnSesionUserController onSesionUserController,boolean productType)
     {
         Price price = priceEJB.findCurrentByProdId(product.getProdId());
+        Pricepurchase pricepurchase = pricePurchaseEJB.findCurrentByProdId(product.getProdId());
             if (purchaseitems == null || purchaseitems.isEmpty()) {
                 purchase = new Purchase();
                 purchase.setPurDate(new Date());
@@ -715,6 +736,11 @@ public class CashRegisterController implements Serializable {
                     purchaseitem.setPurItemQuantity(1);
                 }
                 purchaseitem.setPriceValue(price.getPriceValue());
+                if(pricepurchase!=null)
+                    purchaseitem.setPricePurValue(pricepurchase.getPricePurValue());
+                else
+                    purchaseitem.setPricePurValue(price.getPriceValue());
+                purchaseitem.setIva(product.getProdIva());
                 purchaseitems.add(purchaseitem);
                 purchaseitem.setPurId(purchase);
                 purchaseItemEJB.create(purchaseitem);
@@ -817,23 +843,94 @@ public class CashRegisterController implements Serializable {
     
     public int getAmountTotalIntegerFormat()
     {
+        purchasetotals = new ArrayList();
         int amount = 0;
         if (purchaseitems != null) {
             for (Purchaseitem purchaseitem : purchaseitems) {
+                Purchasetotal purchasetotal = getPurchasetotal(purchaseitem.getProdId().getOwnId());
+                float iva = 0.0f;
+                int vIva = 0;
+                int gain = 0;
+                int v = 0;
+                if(purchaseitem.getIva()== 5)
+                {
+                    iva = 1.05f;
+                }
+                else if(purchaseitem.getIva()== 19)
+                {
+                    iva = 1.19f;
+                }
+                
+                if(purchasetotal == null)
+                {
+                    purchasetotal = new Purchasetotal();
+                    purchasetotal.setOwnId(purchaseitem.getProdId().getOwnId());
+                    purchasetotal.setPurId(purchase);
+                    purchasetotal.setPurToTotal(0);
+                    purchasetotal.setPurToGain(0);
+                    purchasetotal.setPurToIva(0);
+                    purchasetotals.add(purchasetotal);
+                }
                 if (purchaseitem.getProdId().getProdtypeId().getProdtypeValue().equals("Sin empaquetar")) {
                     String unity = purchaseitem.getProdId().getUniId().getUniAbbreviation();
                     switch (unity) {
                         case "gr":
                             float fv = (float)purchaseitem.getPurItemQuantity() / 1000.0f;
                             fv = fv * purchaseitem.getPriceValue();
-                            amount = amount + Math.round(fv);
+                            float pfv= fv * purchaseitem.getPricePurValue();
+                            v = Math.round(fv);
+                            int pv = Math.round(pfv);
+                            gain = v - pv;
+                            
+                            if(purchaseitem.getIva() > 0)
+                            {
+                                float vWIva = gain / iva;
+                                vIva = gain - Math.round(vWIva);
+                            }
+                            else
+                            {
+                                vIva = 0;
+                            }
+                            amount = amount + v;
+                           
                     }
                 }
-                else
-                    amount = amount + (purchaseitem.getPurItemQuantity() * purchaseitem.getPriceValue());
+                else{
+                    v = purchaseitem.getPurItemQuantity() * purchaseitem.getPriceValue();
+                    int pv = purchaseitem.getPurItemQuantity() * purchaseitem.getPricePurValue();
+                    gain = v - pv;
+                    if(purchaseitem.getIva() > 0)
+                    {
+                        float vWIva = gain/iva;
+                        vIva = gain - Math.round(vWIva);
+                    }
+                    else
+                    {
+                        vIva = 0;
+                    }
+                    amount = amount + v;
+                }
+                purchasetotal.setPurToTotal(purchasetotal.getPurToTotal() + v);
+                purchasetotal.setPurToGain(purchasetotal.getPurToGain()+ gain);
+                purchasetotal.setPurToIva(purchasetotal.getPurToIva()+ vIva);
             }
         }
         return amount;
+    }
+    
+    private Purchasetotal getPurchasetotal(Owner owner)
+    {
+        if(purchasetotals.size()>0)
+        {
+            for(Purchasetotal pt: purchasetotals)
+            {
+                if(pt.getOwnId().getOwnId() == owner.getOwnId())
+                {
+                    return pt;
+                }
+            }
+        }
+        return null;
     }
     
     public int getSimulatedBalance()
@@ -1006,6 +1103,10 @@ public class CashRegisterController implements Serializable {
                         purchase.setPurFinalAmount(amount);
                         purchase.setPurState(1);
                         purchaseEJB.edit(purchase);
+                        for(Purchasetotal pt : purchasetotals)
+                        {
+                            purchasetotalEJB.create(pt);
+                        }
                         openCash = false;
                         closeCash = true;
                         start = true;

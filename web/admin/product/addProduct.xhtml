@@ -140,6 +140,28 @@
                         
                         <p:row>
                             <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Owner}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="owner"  style="width:160px" required="true"
+                                                 requiredMessage="#{bundle.FieldRequired}" 
+                                                 value="#{addProductController.owner}"
+                                                 filter="true" filterMatchMode="startsWith"
+                                                 converter="selectOneMenuConverter"
+                                                 >
+                                    <f:selectItems value="#{addProductController.owners}" var="owner" 
+                                                   itemLabel="#{owner.ownName}" itemValue="#{owner}"/>
+
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="type"/>  
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.Presentation}:" />
                                 <h:outputLabel class="asterisk" value="*"/>
                             </p:column>
@@ -177,6 +199,42 @@
                             </p:column>
                             <p:column>
                                     <p:message for="valuePresentation"/>
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Iva} (%):" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="iva"  style="width:100px"
+                                                 value="#{addProductController.iva}"
+                                                 >
+                                    <f:selectItem itemLabel="0" itemValue="0"/>
+                                    <f:selectItem itemLabel="5" itemValue="5"/>
+                                    <f:selectItem itemLabel="19" itemValue="19"/>
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="iva"/>  
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.PricePurchase}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="pricePurchase" class="inputTextShort"
+                                             required="true" requiredMessage="#{bundle.FieldRequired}"
+                                             value="#{addProductController.pricePurchase}">
+                                    <f:validator validatorId="integerValidator" />
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="pricePurchase"/>
                             </p:column>
                         </p:row>
                         
@@ -269,7 +327,10 @@
                     
 
                 </h:form>
-                
+                <br />
+                <br />
+                <br />
+                <br />
                 
          
             </ui:define>

@@ -20,8 +20,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -48,29 +46,31 @@ public class Product implements Serializable {
     @Basic(optional = false)
     @Column(name = "prodId")
     private Long prodId;
-    @Size(max = 50)
     @Column(name = "prodBarCode")
     private String prodBarCode;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
     @Column(name = "prodName")
     private String prodName;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "prodStock")
     private int prodStock;
     @Basic(optional = false)
-    @NotNull
+    @Column(name = "prodIva")
+    private int prodIva;
+    @Basic(optional = false)
     @Column(name = "prodBaseNumber")
     private int prodBaseNumber;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "prodUnitValue")
     private int prodUnitValue;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
+    private List<Pricepurchase> pricepurchaseList;
     @JoinColumn(name = "brandId", referencedColumnName = "brandId")
     @ManyToOne
     private Brand brandId;
+    @JoinColumn(name = "ownId", referencedColumnName = "ownId")
+    @ManyToOne(optional = false)
+    private Owner ownId;
     @JoinColumn(name = "prodtypeId", referencedColumnName = "prodtypeId")
     @ManyToOne(optional = false)
     private Producttype prodtypeId;
@@ -96,10 +96,11 @@ public class Product implements Serializable {
         this.prodId = prodId;
     }
 
-    public Product(Long prodId, String prodName, int prodStock, int prodBaseNumber, int prodUnitValue) {
+    public Product(Long prodId, String prodName, int prodStock, int prodIva, int prodBaseNumber, int prodUnitValue) {
         this.prodId = prodId;
         this.prodName = prodName;
         this.prodStock = prodStock;
+        this.prodIva = prodIva;
         this.prodBaseNumber = prodBaseNumber;
         this.prodUnitValue = prodUnitValue;
     }
@@ -136,6 +137,14 @@ public class Product implements Serializable {
         this.prodStock = prodStock;
     }
 
+    public int getProdIva() {
+        return prodIva;
+    }
+
+    public void setProdIva(int prodIva) {
+        this.prodIva = prodIva;
+    }
+
     public int getProdBaseNumber() {
         return prodBaseNumber;
     }
@@ -152,12 +161,29 @@ public class Product implements Serializable {
         this.prodUnitValue = prodUnitValue;
     }
 
+    @XmlTransient
+    public List<Pricepurchase> getPricepurchaseList() {
+        return pricepurchaseList;
+    }
+
+    public void setPricepurchaseList(List<Pricepurchase> pricepurchaseList) {
+        this.pricepurchaseList = pricepurchaseList;
+    }
+
     public Brand getBrandId() {
         return brandId;
     }
 
     public void setBrandId(Brand brandId) {
         this.brandId = brandId;
+    }
+
+    public Owner getOwnId() {
+        return ownId;
+    }
+
+    public void setOwnId(Owner ownId) {
+        this.ownId = ownId;
     }
 
     public Producttype getProdtypeId() {
@@ -242,7 +268,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "test.Product[ prodId=" + prodId + " ]";
+        return "entities.Product[ prodId=" + prodId + " ]";
     }
     
 }

@@ -127,6 +127,57 @@
                         </p:row>
                         <p:row>
                             <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Owner}:"/>
+                            </p:column>
+                            <p:column>
+                                #{productController.product.ownId.ownName}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink
+                                    action="#{productController.editOwner}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Iva} (%):"/>
+                            </p:column>
+                            <p:column>
+                                #{productController.formatPrice(productController.product.prodIva)}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink
+                                    action="#{productController.editIVA}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.PricePurchase}:"/>
+                            </p:column>
+                            <p:column>
+                                #{productController.formatPrice(productController.pricepurchase.pricePurValue)}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink
+                                    action="#{productController.editPricepurchase}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.Price}:"/>
                             </p:column>
                             <p:column>
@@ -573,6 +624,164 @@
                                         style="font-style: italic;font-weight: normal;"
                                         value="#{bundle.Ok}"
                                         update="formBrand:brandPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formOwner">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Owner}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editOwnerDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="ownerPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Owner}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu style="width:160px" 
+                                                     value="#{productController.owner}"
+                                                     filter="true" filterMatchMode="startsWith"
+                                                     converter="selectOneMenuConverter"
+                                                     >
+                                        <f:selectItems value="#{productController.owners}" var="owner" 
+                                                       itemLabel="#{owner.ownName}" itemValue="#{owner}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton
+                                        action="#{productController.okEditOwner}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formOwner:ownerPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditIVA">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Iva}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editIVADialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="ivaPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Iva}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu style="width:160px" 
+                                                     value="#{productController.iva}"
+                                                     >
+                                        <f:selectItem itemLabel="0" itemValue="0"/>
+                                        <f:selectItem itemLabel="5" itemValue="5"/>
+                                        <f:selectItem itemLabel="19" itemValue="19"/>
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton
+                                        action="#{productController.okEditIVA}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditIVA:ivaPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditPricepurchase">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.PricePurchase}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editPricepurchaseDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="pricepurchasePanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.PricePurchase}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                <p:inputText class="inputTextShort"
+                                             required="true" requiredMessage="#{bundle.FieldRequired}"
+                                             value="#{productController.pricepurchaseValue}">
+                                    <f:validator validatorId="integerValidator" />
+                                </p:inputText>
+                            </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton
+                                        action="#{productController.okEditPricepurchase}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditPricepurchase:pricepurchasePanel"
                                         onstart="PF('efectoCarga').show()"  
                                         onsuccess="PF('efectoCarga').hide()"
                                         />

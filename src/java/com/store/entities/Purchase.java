@@ -42,9 +42,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Purchase.findByCliIdCredit", query = "SELECT p FROM Purchase p WHERE p.cliId.cliId = :cliId AND (p.purState = 2 OR p.purState = 3) ORDER BY p.purDate DESC"),
     @NamedQuery(name = "Purchase.findByCliIdAndStatePending", query = "SELECT p FROM Purchase p WHERE p.cliId.cliId = :cliId AND p.purState = 2 ORDER BY p.purDate ASC"),
     @NamedQuery(name = "Purchase.findByPurDiscount", query = "SELECT p FROM Purchase p WHERE p.purDiscount = :purDiscount"),
+    @NamedQuery(name = "Purchase.findYears", query = "SELECT EXTRACT(YEAR FROM p.purDate) FROM Purchase p GROUP BY EXTRACT(YEAR FROM p.purDate)"),
+    @NamedQuery(name = "Purchase.findTotalEachMonthByYear", query = "SELECT EXTRACT(MONTH FROM p.purDate), SUM(p.purFinalAmount) FROM Purchase p WHERE EXTRACT(YEAR FROM p.purDate) =:year  GROUP BY EXTRACT(MONTH FROM p.purDate)"),
     @NamedQuery(name = "Purchase.findByPurPayment", query = "SELECT p FROM Purchase p WHERE p.purPayment = :purPayment")})
 public class Purchase implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +53,6 @@ public class Purchase implements Serializable {
     @Column(name = "purId")
     private Long purId;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "purDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date purDate;
@@ -63,7 +63,6 @@ public class Purchase implements Serializable {
     @Column(name = "purPayment")
     private Integer purPayment;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "purState")
     private int purState;
     @JoinColumn(name = "cliId", referencedColumnName = "cliId")
@@ -74,6 +73,8 @@ public class Purchase implements Serializable {
     private User usId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "purId")
     private List<Purchaseitem> purchaseitemList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "purId")
+    private List<Purchasetotal> purchasetotalList;
 
     public Purchase() {
     }
@@ -161,6 +162,15 @@ public class Purchase implements Serializable {
         this.purchaseitemList = purchaseitemList;
     }
 
+    @XmlTransient
+    public List<Purchasetotal> getPurchasetotalList() {
+        return purchasetotalList;
+    }
+
+    public void setPurchasetotalList(List<Purchasetotal> purchasetotalList) {
+        this.purchasetotalList = purchasetotalList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -183,8 +193,6 @@ public class Purchase implements Serializable {
 
     @Override
     public String toString() {
-        return "com.Purchase[ purId=" + purId + " ]";
+        return "entities.Purchase[ purId=" + purId + " ]";
     }
-    
-    
 }

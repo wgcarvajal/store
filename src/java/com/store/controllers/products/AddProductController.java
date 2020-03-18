@@ -8,7 +8,9 @@ package com.store.controllers.products;
 import com.store.controllers.util.Util;
 import com.store.entities.Brand;
 import com.store.entities.Category;
+import com.store.entities.Owner;
 import com.store.entities.Price;
+import com.store.entities.Pricepurchase;
 import com.store.entities.Product;
 import com.store.entities.Producttype;
 import com.store.entities.Provider;
@@ -16,7 +18,9 @@ import com.store.entities.Provides;
 import com.store.entities.Unity;
 import com.store.facade.BrandFacade;
 import com.store.facade.CategoryFacade;
+import com.store.facade.OwnerFacade;
 import com.store.facade.PriceFacade;
+import com.store.facade.PricepurchaseFacade;
 import com.store.facade.ProductFacade;
 import com.store.facade.ProducttypeFacade;
 import com.store.facade.ProviderFacade;
@@ -47,27 +51,33 @@ public class AddProductController implements Serializable
     private String barCode;
     private String name;
     private String price;
+    private String pricePurchase;
     private String unitValue;
     private String stock;
     private String baseNumber;
+    private String iva;
     private Brand brand;
     private Category category;
     private Unity unity;
     private Provider provider;
     private Producttype producttype;
+    private Owner owner;
     private List<Brand> brands;
     private List<Category> categories;
     private List<Unity> unities;
     private List<Provider> providers;
     private List<Producttype> producttypes;
+    private List<Owner> owners;
     @EJB private ProductFacade productEJB;
     @EJB private BrandFacade brandEJB;
     @EJB private CategoryFacade categoryEJB;
     @EJB private UnityFacade unityEJB;
     @EJB private ProviderFacade providerEJB;
     @EJB private PriceFacade priceEJB;
+    @EJB private PricepurchaseFacade pricepurchaseEJB;
     @EJB private ProvidesFacade providesEJB;
     @EJB private ProducttypeFacade producttiypeEJB;
+    @EJB private OwnerFacade ownerEJB;
 
     public String getBarCode() {
         return barCode;
@@ -91,6 +101,14 @@ public class AddProductController implements Serializable
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getPricePurchase() {
+        return pricePurchase;
+    }
+
+    public void setPricePurchase(String pricePurchase) {
+        this.pricePurchase = pricePurchase;
     }
 
     public String getUnitValue() {
@@ -137,6 +155,14 @@ public class AddProductController implements Serializable
         this.brands = brands;
     }
 
+    public Owner getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Owner owner) {
+        this.owner = owner;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -164,6 +190,16 @@ public class AddProductController implements Serializable
     public void setUnity(Unity unity) {
         this.unity = unity;
     }
+
+    public String getIva() {
+        return iva;
+    }
+
+    public void setIva(String iva) {
+        this.iva = iva;
+    }
+    
+    
 
     public List<Unity> getUnities() {
         if(unities == null)
@@ -216,6 +252,18 @@ public class AddProductController implements Serializable
     public void setProducttypes(List<Producttype> producttypes) {
         this.producttypes = producttypes;
     }
+
+    public List<Owner> getOwners() {
+        if(owners == null)
+        {
+            owners = ownerEJB.findAll();
+        }
+        return owners;
+    }
+
+    public void setOwners(List<Owner> owners) {
+        this.owners = owners;
+    }
     
     public void add()
     {
@@ -228,6 +276,8 @@ public class AddProductController implements Serializable
         product.setUniId(unity);
         product.setProdUnitValue(Integer.parseInt(unitValue));
         product.setProdtypeId(producttype);
+        product.setProdIva(Integer.parseInt(iva));
+        product.setOwnId(owner);
         
         if(stock!=null && !stock.isEmpty())
             product.setProdStock(Integer.parseInt(stock));
@@ -245,6 +295,12 @@ public class AddProductController implements Serializable
         p.setPriceValue(Integer.parseInt(price));
         p.setPriceInitialDate(date);
         priceEJB.create(p);
+        
+        Pricepurchase pp = new Pricepurchase();
+        pp.setProdId(product);
+        pp.setPricePurValue(Integer.parseInt(pricePurchase));
+        pp.setPricePurInitialDate(date);
+        pricepurchaseEJB.create(pp);
         
         if(provider != null)
         {
