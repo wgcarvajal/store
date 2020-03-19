@@ -30,6 +30,7 @@ import com.store.facade.PurchasetotalFacade;
 import com.store.model.Debt;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -87,11 +88,13 @@ public class CashRegisterController implements Serializable {
     private Product SelectedProduct;
     private Purchaseitem SelectedPurchaseItem;
     private Client selectedClient;
+    private Purchase selectedPurchaseResume;
     
     private List<Purchaseitem> purchaseitems;
     private List<Pay> payList;
     private List<Lend> lendList;
     private List<Purchase> creditList;
+    private List<Purchase> resumeSaleList;
     private Purchase purchase;
     
     private List<Purchaseitem> copyPrintPurchaseitems;
@@ -350,6 +353,14 @@ public class CashRegisterController implements Serializable {
         return purchase;
     }
 
+    public List<Purchase> getResumeSaleList() {
+        return resumeSaleList;
+    }
+
+    public void setResumeSaleList(List<Purchase> resumeSaleList) {
+        this.resumeSaleList = resumeSaleList;
+    }
+
     public Product getSelectedProduct() {
         return SelectedProduct;
     }
@@ -374,6 +385,14 @@ public class CashRegisterController implements Serializable {
 
     public void setSelectedClient(Client selectedClient) {
         this.selectedClient = selectedClient;
+    }
+
+    public Purchase getSelectedPurchaseResume() {
+        return selectedPurchaseResume;
+    }
+
+    public void setSelectedPurchaseResume(Purchase selectedPurchaseResume) {
+        this.selectedPurchaseResume = selectedPurchaseResume;
     }
     
     
@@ -580,6 +599,25 @@ public class CashRegisterController implements Serializable {
                     openNoAction();
                 }
                 break;
+            case "007":
+                if(start)
+                {
+                    resumeSale(onSesionUserController);
+                }
+                else
+                {
+                    openNoAction();
+                }
+                break;
+            case "008":
+                if(start)
+                {
+                    openCurrentDayTotal();
+                }
+                else{
+                    openNoAction();
+                }
+                    break;
             default:
                 if(cancel)
                 {
@@ -610,6 +648,21 @@ public class CashRegisterController implements Serializable {
         Util.update(":formCode:focusCode");
         Util.update(":formMenu");
         Util.update(":formSaleDescription");
+    }
+    
+    public void resumeSale(OnSesionUserController onSesionUserController)
+    {
+        Long usId = onSesionUserController.getCurrentCashier().getUsId();
+        resumeSaleList = purchaseEJB.findSaleForResume(usId);
+        Util.update(":formResumePurchase");
+        Util.openDialog("openResumePurchase");
+    }
+    
+    public void closeResumeSale()
+    {
+        Util.update(":formCode:focusCode");
+        Util.update(":formMenu");
+        Util.closeDialog("openResumePurchase");
     }
     
     public void openCancelSalePasswordRequest()
@@ -1186,6 +1239,39 @@ public class CashRegisterController implements Serializable {
         Util.openDialog("openSearchClient");
     }
     
+    public void openCurrentDayTotal()
+    {
+        Util.update("formTotalPurchase");
+        Util.openDialog("totalPurchase");
+    }
+    
+    public String getPurchaseTotal(OnSesionUserController onSesionUserController)
+    {
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.HOUR_OF_DAY, 0);
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        Date initial = now.getTime();
+        now.set(Calendar.HOUR_OF_DAY, 23);
+        now.set(Calendar.MINUTE, 59);
+        now.set(Calendar.SECOND, 59);
+        Date end = now.getTime();
+        List<Purchase> plist= purchaseEJB.findPurshaseUsIdAndDay(onSesionUserController.getCurrentCashier().getUsId(), initial, end);
+        int amount = 0;
+        for(Purchase p: plist)
+        {
+            amount = amount + p.getPurFinalAmount();
+        }
+        
+        return Util.getFormatPrice(amount);
+    }
+    
+    public void closeCurrentDayTotal()
+    {
+        Util.closeDialog("totalPurchase");
+        Util.update(":formCode:focusCode");
+    }
+    
     public void closeSearchClient()
     {
         Util.closeDialog("openSearchClient");
@@ -1211,6 +1297,24 @@ public class CashRegisterController implements Serializable {
         Util.closeDialog("openSelectProduct");
         searchAndAddProduct(onSesionUserController);
         code = null;
+    }
+    
+    public void onRowSelectedResumePurchase() {
+        start = false;
+        cancel = true;
+        saleDescription = true;
+        closeCash = false;
+        selectProduct = true;
+        addClient = true;
+        showList = true;
+        removeProduct = true;
+        payment = true;
+        purchase = selectedPurchaseResume;
+        purchaseitems = purchaseItemEJB.findByPurId(purchase.getPurId());
+        Util.update(":formCode:focusCode");
+        Util.update(":formMenu");
+        Util.update(":formSaleDescription");
+        Util.closeDialog("openResumePurchase");
     }
     
     public void onRowSelectClient(SelectEvent event) {

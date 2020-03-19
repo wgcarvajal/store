@@ -59,6 +59,17 @@
                                 </div>
                             </p:commandLink>
                             <p:commandLink
+                                tabindex="-1"
+                                action="#{cashRegisterController.resumeSale(sessionUserController)}"
+                                rendered="#{cashRegisterController.start}"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="sale/resumeToBasket.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
                                 action="#{cashRegisterController.openCancelSalePasswordRequest}"
                                 tabindex="-1"
                                 rendered="#{cashRegisterController.cancel}"
@@ -144,6 +155,17 @@
                                 <div class="contentLeftItemMenu">
                                     <p:graphicImage width="100%" 
                                                     library="image" name="client/searchClient.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                action="#{cashRegisterController.openCurrentDayTotal}"
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.start}"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="sale/total.png" />
                                 </div>
                             </p:commandLink>
                             <div class="clearLeft">
@@ -332,6 +354,30 @@
                         </p:panelGrid>
                     </p:dialog>
                 </h:form>
+                <h:form id="formTotalPurchase">
+                    <p:dialog resizable="false" width="250"
+                              widgetVar="totalPurchase" closable="false"
+                              modal="true" 
+                              style="background: #C8CDD6"
+                              >
+                        <p:panelGrid styleClass="panelgrid" style="text-align:center" >
+                            <p:row >
+                                <p:column  style="background: #C8CDD6">
+                                    <p:outputLabel value="Total: #{cashRegisterController.getPurchaseTotal(sessionUserController)}" />            
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column  style="background: #C8CDD6">
+                                    <p:commandButton
+                                        id="btnTotalPurchase"
+                                        value="#{bundle.Ok}" 
+                                        action="#{cashRegisterController.closeCurrentDayTotal}"
+                                                     />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
                 <ui:include src="changeQuantityProduct.xhtml"/>
                 <ui:include src="addClient.xhtml"/>
                 <ui:include src="removeProduct.xhtml"/>
@@ -341,6 +387,7 @@
                 <ui:include src="addWeight.xhtml"/>
                 <ui:include src="selectProduct.xhtml"/>
                 <ui:include src="debtor.xhtml"/>
+                <ui:include src="resumeSale.xhtml"/>
             </ui:define>
 
         </ui:composition>

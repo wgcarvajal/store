@@ -6,6 +6,8 @@
 package com.store.facade;
 
 import com.store.entities.Purchase;
+import com.store.entities.Purchasetotal;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -56,6 +58,34 @@ public class PurchaseFacade extends AbstractFacade<Purchase> {
         Query query = getEntityManager().createNamedQuery("Purchase.findTotalEachMonthByYear");
         query.setParameter("year", year);
         return query.getResultList();
+    }
+    public List findSaleForResume(Long  cashierId)
+    {
+        Query query = getEntityManager().createNamedQuery("Purchase.findSaleForResume");
+        query.setParameter("cashierId", cashierId);
+        return query.getResultList();
+    }
+    
+    public List findPurshaseUsIdAndDay(Long cashierId,Date initialDate, Date endDate)
+    {
+       Query query = getEntityManager().createNamedQuery("Purchase.findPurshaseUsIdAndDay");
+       query.setParameter("cashierId", cashierId);
+       query.setParameter("initialDate", initialDate);
+       query.setParameter("endDate", endDate);
+       return query.getResultList(); 
+    }
+    
+    public List findPurshaseTotalInitialDayEndDay(Date initialDate, Date endDate)
+    {
+       Query query = getEntityManager().createNamedQuery("Purchase.findPurshaseTotalInitialDayEndDay");
+       query.setParameter("initialDate", initialDate);
+       query.setParameter("endDate", endDate);
+       List list = query.getResultList();
+       if(list!=null && list.size()>0)
+       {
+           return list;
+       }
+       return null;
     }
     
 }

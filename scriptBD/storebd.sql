@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 18-03-2020 a las 06:09:30
+-- Tiempo de generación: 19-03-2020 a las 06:29:24
 -- Versión del servidor: 5.7.28
 -- Versión de PHP: 7.3.9
 
@@ -398,7 +398,11 @@ CREATE TABLE `purchase` (
 --
 
 INSERT INTO `purchase` (`purId`, `purDate`, `purFinalAmount`, `purDiscount`, `purPayment`, `cliId`, `usId`, `purState`) VALUES
-(5, '2020-03-18 00:55:29', NULL, NULL, NULL, NULL, 3, 0);
+(9, '2020-03-18 15:53:55', 7200, NULL, NULL, NULL, 3, 1),
+(10, '2020-03-18 15:56:30', 8700, NULL, NULL, NULL, 3, 1),
+(11, '2020-03-18 20:30:15', 1500, NULL, NULL, NULL, 3, 1),
+(12, '2020-03-18 20:35:07', 3500, NULL, NULL, NULL, 3, 1),
+(13, '2020-03-19 01:15:43', 5700, NULL, NULL, NULL, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -421,8 +425,20 @@ CREATE TABLE `purchaseitem` (
 --
 
 INSERT INTO `purchaseitem` (`purItemId`, `purItemQuantity`, `prodId`, `purId`, `priceValue`, `iva`, `pricePurValue`) VALUES
-(13, 1, 1, 5, 1500, 5, 1200),
-(14, 1, 2, 5, 2200, 0, 2000);
+(21, 1, 1, 9, 1500, 5, 1200),
+(22, 1, 2, 9, 2200, 0, 2000),
+(23, 1, 3, 9, 2000, 0, 1800),
+(24, 1, 1, 9, 1500, 5, 1200),
+(25, 1, 1, 10, 1500, 5, 1200),
+(26, 1, 2, 10, 2200, 0, 2000),
+(27, 1, 3, 10, 2000, 0, 1800),
+(28, 2, 1, 10, 1500, 5, 1200),
+(29, 1, 1, 11, 1500, 5, 1200),
+(30, 1, 1, 12, 1500, 5, 1200),
+(31, 1, 3, 12, 2000, 0, 1800),
+(32, 1, 1, 13, 1500, 5, 1200),
+(33, 1, 2, 13, 2200, 0, 2000),
+(34, 1, 3, 13, 2000, 0, 1800);
 
 -- --------------------------------------------------------
 
@@ -438,6 +454,21 @@ CREATE TABLE `purchasetotal` (
   `purToGain` int(11) NOT NULL,
   `purToIva` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `purchasetotal`
+--
+
+INSERT INTO `purchasetotal` (`purToId`, `purId`, `ownId`, `purToTotal`, `purToGain`, `purToIva`) VALUES
+(1, 9, 2, 3000, 600, 28),
+(2, 9, 1, 4200, 400, 0),
+(3, 10, 2, 4500, 900, 43),
+(4, 10, 1, 4200, 400, 0),
+(5, 11, 2, 1500, 300, 14),
+(6, 12, 2, 1500, 300, 14),
+(7, 12, 1, 2000, 200, 0),
+(8, 13, 2, 1500, 300, 14),
+(9, 13, 1, 4200, 400, 0);
 
 -- --------------------------------------------------------
 
@@ -745,19 +776,19 @@ ALTER TABLE `provides`
 -- AUTO_INCREMENT de la tabla `purchase`
 --
 ALTER TABLE `purchase`
-  MODIFY `purId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `purId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `purchaseitem`
 --
 ALTER TABLE `purchaseitem`
-  MODIFY `purItemId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `purItemId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `purchasetotal`
 --
 ALTER TABLE `purchasetotal`
-  MODIFY `purToId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `purToId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `unity`

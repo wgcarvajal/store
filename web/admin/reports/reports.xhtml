@@ -19,6 +19,65 @@
 
             <ui:define name="content">
                 <div class="pageTitle">#{bundle.Reports}</div>
+                <h:form>
+                    <p:calendar>
+                        <p:ajax event="dateSelect" listener="#{dailyReportController.onDateSelect}" 
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                />
+                    </p:calendar>
+                </h:form>
+                <h:form id="formTotal">
+                    <p:outputLabel value="Total: #{dailyReportController.total}" /><br/>
+                    <p:outputLabel value="Ganancia con iva: #{dailyReportController.gain}" /><br/>
+                    <p:outputLabel value="Iva: #{dailyReportController.iva}" />
+                </h:form>
+                
+                <h:form id="formOwner">
+                    
+                    <p:dataView var="ownerTotals" value="#{dailyReportController.ownerTotals}">
+                        <p:dataViewListItem>
+                            <p:panelGrid>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="#{ownerTotals.owner.ownName}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputPanel>
+                                            <p:panelGrid>
+                                                <p:row>
+                                                    <p:column>
+                                                        <p:outputLabel value="Total:" />
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:outputLabel value="#{ownerTotals.total}" style="font-weight: bold"/>
+                                                    </p:column>
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column>
+                                                        <p:outputLabel value="Ganacia:" />
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:outputLabel value="#{ownerTotals.gain}" style="font-weight: bold"/>
+                                                    </p:column>
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column>
+                                                        <p:outputLabel value="IVA:" />
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:outputLabel value="#{ownerTotals.iva}" style="font-weight: bold"/>
+                                                    </p:column>
+                                                </p:row>
+                                            </p:panelGrid>
+                                        </p:outputPanel>
+                                    </p:column>
+                                </p:row>
+                                
+                            </p:panelGrid>
+                        </p:dataViewListItem>
+                    </p:dataView>
+                </h:form>
+                
                 
             </ui:define>
 

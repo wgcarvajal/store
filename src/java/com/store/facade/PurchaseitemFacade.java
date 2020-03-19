@@ -11,6 +11,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.Expression;
@@ -34,6 +35,13 @@ public class PurchaseitemFacade extends AbstractFacade<Purchaseitem> {
 
     public PurchaseitemFacade() {
         super(Purchaseitem.class);
+    }
+    
+    public List findByPurId(Long purId)
+    {
+        Query query = getEntityManager().createNamedQuery("Purchaseitem.findByPurId");
+        query.setParameter("purId", purId);
+        return query.getResultList();
     }
     
     public int deleteByPurIdAndProdId(Long purId,Long prodId)

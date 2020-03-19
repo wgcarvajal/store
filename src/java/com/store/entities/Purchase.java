@@ -44,6 +44,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Purchase.findByPurDiscount", query = "SELECT p FROM Purchase p WHERE p.purDiscount = :purDiscount"),
     @NamedQuery(name = "Purchase.findYears", query = "SELECT EXTRACT(YEAR FROM p.purDate) FROM Purchase p GROUP BY EXTRACT(YEAR FROM p.purDate)"),
     @NamedQuery(name = "Purchase.findTotalEachMonthByYear", query = "SELECT EXTRACT(MONTH FROM p.purDate), SUM(p.purFinalAmount) FROM Purchase p WHERE EXTRACT(YEAR FROM p.purDate) =:year  GROUP BY EXTRACT(MONTH FROM p.purDate)"),
+    @NamedQuery(name = "Purchase.findSaleForResume", query = "SELECT p FROM Purchase p WHERE p.purState = 0 and p.usId.usId = :cashierId"),
+    @NamedQuery(name = "Purchase.findPurshaseUsIdAndDay", query = "SELECT p FROM Purchase p WHERE p.purDate >= :initialDate and p.purDate <= :endDate and p.usId.usId = :cashierId and p.purState = 1"),
+    @NamedQuery(name = "Purchase.findPurshaseTotalInitialDayEndDay", query = "SELECT pt.ownId,SUM(pt.purToTotal) AS total, SUM(pt.purToGain) AS gain,SUM(pt.purToIva) AS iva FROM Purchase p INNER JOIN Purchasetotal pt WHERE p.purDate >= :initialDate and p.purDate <= :endDate and p.purState = 1 and p.purId = pt.purId.purId group by pt.ownId"),
     @NamedQuery(name = "Purchase.findByPurPayment", query = "SELECT p FROM Purchase p WHERE p.purPayment = :purPayment")})
 public class Purchase implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -57,7 +60,7 @@ public class Purchase implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date purDate;
     @Column(name = "purFinalAmount")
-    private Integer purFinalAmount;
+    private int purFinalAmount;
     @Column(name = "purDiscount")
     private Integer purDiscount;
     @Column(name = "purPayment")
@@ -105,11 +108,11 @@ public class Purchase implements Serializable {
         this.purDate = purDate;
     }
 
-    public Integer getPurFinalAmount() {
+    public int getPurFinalAmount() {
         return purFinalAmount;
     }
 
-    public void setPurFinalAmount(Integer purFinalAmount) {
+    public void setPurFinalAmount(int purFinalAmount) {
         this.purFinalAmount = purFinalAmount;
     }
 
