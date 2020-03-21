@@ -6,7 +6,9 @@
 package com.store.controllers.util;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Currency;
+import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.primefaces.PrimeFaces;
@@ -20,6 +22,7 @@ public class Util {
     
     public static String projectPath = "/store";
     public static String PRODUCTIMAGEDIR= "/Users/aranda/filesStore/productImage/";
+    public static String BILLDIR= "/Users/aranda/filesStore/bill/";
     
     
     public static String formatText(String value)
@@ -46,12 +49,20 @@ public class Util {
         return value;
     }
     
-    public static String getFormatPrice(int price)
+    public static String getFormatPrice(long price)
     {
         NumberFormat format = NumberFormat.getInstance();
         Currency currency = Currency.getInstance("COP");
         format.setCurrency(currency);
         return format.format(price);
+    }
+    
+    public static String getFormatPrice(double price)
+    {
+        NumberFormat format = NumberFormat.getInstance();
+        Currency currency = Currency.getInstance("COP");
+        format.setCurrency(currency);
+        return format.format(Math.round(price));
     }
     
     public static void addErrorMessage(String message,String messageDetail)
@@ -108,6 +119,45 @@ public class Util {
         {
             return false;
         }
+    }
+    
+    public static String getFormatDate(Date date)
+    {        
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy");
+        String fecha = formato.format(date);
+        return fecha;
+    }
+    
+    public static String getFormatHour(Date date)
+    {        
+        SimpleDateFormat formato = new SimpleDateFormat("HH:mm:ss");
+        String hora = formato.format(date);
+        return hora;
+    }
+    
+    public static String getFormatCurrentDate(Date date)
+    {
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+        String hora = formato.format(date);
+        return hora;
+    }
+    
+    public static String evaluateIva(int iva)
+    {
+        if(iva == 5)
+        {
+            return "A";
+        }
+        else if(iva == 19)
+        {
+            return "B";
+        }
+        return "+";
+    }
+    
+    public static String upperCase(String string)
+    {
+        return string.toUpperCase();
     }
     
 }

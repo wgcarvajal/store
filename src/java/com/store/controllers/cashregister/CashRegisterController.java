@@ -5,6 +5,10 @@
  */
 package com.store.controllers.cashregister;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.store.controllers.util.Encrypt;
 import com.store.controllers.util.Util;
 import com.store.entities.Client;
@@ -28,7 +32,12 @@ import com.store.facade.PurchaseFacade;
 import com.store.facade.PurchaseitemFacade;
 import com.store.facade.PurchasetotalFacade;
 import com.store.model.Debt;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -84,11 +93,15 @@ public class CashRegisterController implements Serializable {
     private String credits;
     private String pay;
     private String lend;
+    private String html;
     private Product producWaitForWeight;
     private Product SelectedProduct;
     private Purchaseitem SelectedPurchaseItem;
     private Client selectedClient;
     private Purchase selectedPurchaseResume;
+    private long totalProductIva0;
+    private long totalProductIva5;
+    private long totalProductIva19;
     
     private List<Purchaseitem> purchaseitems;
     private List<Pay> payList;
@@ -101,6 +114,7 @@ public class CashRegisterController implements Serializable {
     private Purchase copyPrintPurchase;
     
     private List<Purchasetotal> purchasetotals;
+    private int sizeHeightPage;
     
     
     @EJB private PurchaseFacade purchaseEJB;
@@ -796,6 +810,7 @@ public class CashRegisterController implements Serializable {
                 purchaseitem.setIva(product.getProdIva());
                 purchaseitems.add(purchaseitem);
                 purchaseitem.setPurId(purchase);
+                purchaseitem.setOwnId(product.getOwnId());
                 purchaseItemEJB.create(purchaseitem);
             }
             changeQuantityLastProdut = !productType;
@@ -898,11 +913,15 @@ public class CashRegisterController implements Serializable {
     {
         purchasetotals = new ArrayList();
         int amount = 0;
+        totalProductIva0=0;
+        totalProductIva5=0;
+        totalProductIva19=0;
         if (purchaseitems != null) {
             for (Purchaseitem purchaseitem : purchaseitems) {
+                secondStringHtml(purchaseitem);
                 Purchasetotal purchasetotal = getPurchasetotal(purchaseitem.getProdId().getOwnId());
                 float iva = 0.0f;
-                int vIva = 0;
+                float vIva = 0;
                 int gain = 0;
                 int v = 0;
                 if(purchaseitem.getIva()== 5)
@@ -929,8 +948,8 @@ public class CashRegisterController implements Serializable {
                     switch (unity) {
                         case "gr":
                             float fv = (float)purchaseitem.getPurItemQuantity() / 1000.0f;
-                            fv = fv * purchaseitem.getPriceValue();
                             float pfv= fv * purchaseitem.getPricePurValue();
+                            fv = fv * purchaseitem.getPriceValue();
                             v = Math.round(fv);
                             int pv = Math.round(pfv);
                             gain = v - pv;
@@ -938,7 +957,7 @@ public class CashRegisterController implements Serializable {
                             if(purchaseitem.getIva() > 0)
                             {
                                 float vWIva = gain / iva;
-                                vIva = gain - Math.round(vWIva);
+                                vIva = gain - vWIva;
                             }
                             else
                             {
@@ -955,13 +974,26 @@ public class CashRegisterController implements Serializable {
                     if(purchaseitem.getIva() > 0)
                     {
                         float vWIva = gain/iva;
-                        vIva = gain - Math.round(vWIva);
+                        vIva = gain - vWIva;
                     }
                     else
                     {
                         vIva = 0;
                     }
                     amount = amount + v;
+                }
+                
+                if(purchaseitem.getIva()==0)
+                {
+                    totalProductIva0=totalProductIva0 + v;
+                }
+                else if(purchaseitem.getIva()==5)
+                {
+                    totalProductIva5=totalProductIva5+v;
+                }
+                else if(purchaseitem.getIva()==19)
+                {
+                    totalProductIva19=totalProductIva19+v;
                 }
                 purchasetotal.setPurToTotal(purchasetotal.getPurToTotal() + v);
                 purchasetotal.setPurToGain(purchasetotal.getPurToGain()+ gain);
@@ -1146,10 +1178,13 @@ public class CashRegisterController implements Serializable {
                 int rm = Integer.parseInt(receivedAmount);
                 if(rm>0)
                 {
+                    firstStringHtml();
                     int amount = getAmountTotalIntegerFormat();
                     if(rm>=amount)
                     {
                         int r = rm-amount;
+                        thirdStringHtml(amount, rm, r);
+                        generatePdf();
                         refund = Util.getFormatPrice(r);
                         receivedAmount = Util.getFormatPrice(rm);
                         total = Util.getFormatPrice(amount);
@@ -1534,5 +1569,199 @@ public class CashRegisterController implements Serializable {
         Util.update(":formOpenDebtor:panelDebtorHeader");
         Util.update(":formOpenDebtor:panelDebtorCenter");
         Util.update(":formOpenDebtor:panelDebtorBottom");
+    }
+    
+    
+    
+    
+    public void generatePdf()
+    {
+        Document document = new Document(new Rectangle(0,0,385,sizeHeightPage));
+        try
+        {
+            Date date = purchase.getPurDate();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH)+1;
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            String path = Util.BILLDIR + year+"/"+month+"/"+day+"/";
+            File file = new File(path);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            purchase.setPurBill(year+"/"+month+"/"+day+"/"+purchase.getPurId()+".pdf");
+            purchaseEJB.edit(purchase);
+            FileOutputStream ficheroPdf = new FileOutputStream(path+purchase.getPurId()+".pdf");
+            PdfWriter pdfWriter = PdfWriter.getInstance(document, ficheroPdf);
+            document.open();
+            InputStream is = new ByteArrayInputStream(html.getBytes("UTF-8"));
+            XMLWorkerHelper.getInstance().parseXHtml(pdfWriter, document,is,Charset.forName("UTF-8"));
+        }
+        catch(Exception ex)
+        {
+            System.out.println("error:"+ex.getMessage());
+            
+        }
+        document.close();
+        
+    }
+    
+    private void firstStringHtml()
+    {
+        sizeHeightPage = 360;
+        html = "<html>" +
+                      "<head>"                      
+                    + "</head>"
+                    + "<body>"
+                        +"<div style='font-size: 10pt;text-align:center;font-weight:bold;'>TIENDA DE LUCHO</div>"
+                        +"<div style='font-size: 8pt;text-align:center;'>EL CORTIJO CRA 5B N. 63-07</div>"
+                        +"<div style='font-size: 8pt;text-align:center;'>NIT 1.075.220.291</div>"
+                        +"<div style='height:15px;'></div>"
+                        +"<div style='font-size: 8pt;text-align:center;'>GERENTE: WILSON G. CARVAJAL</div>"
+                        +"<div style='font-size: 8pt;text-align:center;'>TELEFONO: 8351005</div>"
+			+"<div style='font-size: 8pt;text-align:center;'>FECHA DE EXPEDICION: "+Util.getFormatDate(purchase.getPurDate())+"</div>"
+                        +"<div style='width:100%;'>"
+                            +"<div style='font-size: 8pt;width:60%;float:left;text-align:center;'>Descripción</div>"
+                            +"<div style='font-size: 8pt;width:30%;float:left;text-align:center;'>Cnt</div>"
+                            +"<div style='font-size: 8pt;width:100%;float:left;text-align:center;'>Valor</div>"
+                            +"<div style='clear:left;'></div>"
+                            +"<div style='font-size: 8pt;width:60%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-------------------------------------------------------------------------------------------------</div>"
+                            +"<div style='font-size: 8pt;width:30%;float:left;height:20px;padding-right:1px;padding-left:1px;'>----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:90%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'></div>"
+                            +"<div style='clear:left;'></div>";
+    }
+    
+    private void secondStringHtml(Purchaseitem purchaseitem)
+    {
+        sizeHeightPage = sizeHeightPage +16;
+        html =html
+        +"<div style='text-align:center;font-size: 8pt;width:60%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.upperCase(purchaseitem.getProdId().getProdName())+" "+purchaseitem.getProdId().getProdUnitValue()+" "+purchaseitem.getProdId().getUniId().getUniAbbreviation()+"</div>"
+        +"<div style='text-align:center;font-size: 8pt;width:30%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+purchaseitem.getPurItemQuantity()+"</div>";
+        long precio=purchaseitem.getPriceValue();
+        boolean productType = purchaseitem.getProdId().getProdtypeId().getProdtypeValue().equals("Empaquetado");
+        if(productType)
+        {
+            precio = precio * purchaseitem.getPurItemQuantity();
+        }
+        else{
+            float fv = (float)purchaseitem.getPurItemQuantity()/1000.0f;
+            fv = fv * precio;
+            precio= Math.round(fv);
+        }
+        html = html+"<div style='text-align:center;font-size: 8pt;width:90%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(precio)+"</div>"
+        +"<div style='text-align:center;font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.evaluateIva(purchaseitem.getIva())+"</div>"
+        +"<div style='clear:left;'></div>";
+    }
+    
+    private void thirdStringHtml(int amount,int ra,int change)
+    {
+        html = html + "<div style='font-weight:bold;font-size: 8pt;width:70%;float:left;padding-right:1px;padding-left:1px;'>+ +SUBTOTAL/TOTAL - - - ></div>"
+                            +"<div style='font-weight:bold;font-size: 8pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>$ "+Util.getFormatPrice(amount)+"</div>"
+                            +"<div style='clear:left;'></div>"
+                            +"<div style='text-align:center;font-size: 8pt;width:70%;float:left;padding-right:1px;padding-left:1px;'>PAGO/EFECTIVO</div>"
+                            +"<div style='font-size: 8pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>$ "+Util.getFormatPrice(ra)+"</div>"
+                            +"<div style='clear:left;'></div>"
+                            +"<div style='text-align:center;font-size: 8pt;width:70%;float:left;padding-right:1px;padding-left:1px;'>CAMBIO</div>"
+                            +"<div style='font-size: 8pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>$ "+Util.getFormatPrice(change)+"</div>"
+                            +"<div style='clear:left;'></div>"
+                            +"<div style='font-size: 8pt;width:100%;padding-right:1px;padding-left:1px;height:20px;'>= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =</div>";
+                            if(purchase.getCliId()!=null)
+                            {
+                                sizeHeightPage = sizeHeightPage +16;
+                                html=html+"<div style='font-size: 8pt;'>Nombre Cte: "+Util.upperCase(purchase.getCliId().getCliName()+" "+purchase.getCliId().getCliName())+"</div>";
+                            }
+                            
+                            html=html+"<div style='font-size: 8pt;width:100%;padding-right:1px;padding-left:1px;height:20px;'>= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =</div>"
+                            +"<div style='text-align:center;font-size: 8pt;width:100%;padding-right:1px;padding-left:1px;height:20px;'>+ + IMPUESTOS + +</div>"
+                            +"<div style='font-size: 8pt;width:25%;float:left;text-align:center;'>Tipo</div>"
+                            +"<div style='font-size: 8pt;width:33%;float:left;text-align:center;'>Compra</div>"
+                            +"<div style='font-size: 8pt;width:50%;float:left;text-align:center;'>Base/Imp</div>"
+                            +"<div style='font-size: 8pt;width:100%;float:left;text-align:center;'>Imp</div>"
+                            +"<div style='clear:left;'></div>"
+                            +"<div style='font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='clear:left;'></div>"
+                            +"<div style='font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='clear:left;'></div>";
+                            long totalBaseImp =0;
+                            long totalImp =0;
+                            if(totalProductIva5>0)
+                            {
+                                sizeHeightPage = sizeHeightPage +16;
+                               html=html+"<div style='text-align:center;font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>A= 5%</div>"+
+                                        "<div style='text-align:center;font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva5)+"</div>";
+                                        float iva = totalProductIva5 / 1.05f;
+                                        long iva5 = totalProductIva5 - Math.round(iva);
+                                        totalBaseImp = (totalProductIva5 - iva5);
+                                        totalImp = iva5;
+                                        html=html+"<div style='text-align:center;font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva5 - iva5)+"</div>"+
+                                        "<div style='text-align:center;font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(iva5)+"</div>"+
+                                        "<div style='clear:left;'></div>";
+                            }
+                            
+                            if(totalProductIva19>0)
+                            {
+                                sizeHeightPage = sizeHeightPage +16;
+                               html=html+"<div style='text-align:center;font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>B= 19%</div>"+
+                                        "<div style='text-align:center;font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva19)+"</div>";
+                                        float iva = totalProductIva5 / 1.19f;
+                                        long iva19 = totalProductIva5 - Math.round(iva);
+                                        totalBaseImp = totalBaseImp +(totalProductIva5 - iva19);
+                                        totalImp = totalImp +iva19;
+                                        html=html+"<div style='text-align:center;font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva19 - iva19)+"</div>"+
+                                        "<div style='text-align:center;font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(iva19)+"</div>"+
+                                        "<div style='clear:left;'></div>";
+                            }
+                            
+                            if(totalProductIva0>0)
+                            {
+                               sizeHeightPage = sizeHeightPage +16;
+                               html=html+"<div style='text-align:center;font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>+SIN IVA</div>"+
+                                        "<div style='text-align:center;font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva0)+"</div>"+
+                                        "<div style='text-align:center;font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'></div>"+
+                                        "<div style='text-align:center;font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'></div>"+
+                                        "<div style='clear:left;'></div>";
+                            }
+                            
+                             html=html+"<div style='font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='clear:left;'></div>"
+                            +"<div style='text-align:center;font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>+TOTAL+</div>"
+                            +"<div style='text-align:center;font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(amount)+"</div>";
+                            
+                            String totalBaseImpString = "";
+                            String totalImpString = "";
+                            if(totalBaseImp>0)
+                            {
+                                totalBaseImpString = Util.getFormatPrice(totalBaseImp);
+                            }
+                            
+                            if(totalImp>0)
+                            {
+                                totalImpString = Util.getFormatPrice(totalImp);
+                            }
+                            html=html+"<div style='text-align:center;font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+totalBaseImpString+"</div>"
+                            +"<div style='text-align:center;font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+totalImpString+"</div>"
+                            +"<div style='clear:left;'></div>"
+                            +"<div style='font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='clear:left;'></div>"
+                            +"<div style='font-size: 8pt;'>Lo Atentidió: "+Util.upperCase(purchase.getUsId().getUsName()+" "+purchase.getUsId().getUsLastName())+"</div>"
+                            +"<div style='width:100%;text-align:center;font-size: 8pt;height:20px;'>No."+purchase.getPurId()+"</div>"
+                            +"<div style='text-align:center;font-size: 8pt;'>"+Util.getFormatCurrentDate(new Date())+"</div>"
+                        + "</div>"
+                    + "</body>"
+                + "</html>";
     }
 }

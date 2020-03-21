@@ -49,6 +49,8 @@ public class Owner implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownId")
     private List<Product> productList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownId")
+    private List<Purchaseitem> purchaseitemList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownId")
     private List<Purchasetotal> purchasetotalList;
 
     public Owner() {
@@ -95,6 +97,15 @@ public class Owner implements Serializable {
 
     public void setProductList(List<Product> productList) {
         this.productList = productList;
+    }
+
+    @XmlTransient
+    public List<Purchaseitem> getPurchaseitemList() {
+        return purchaseitemList;
+    }
+
+    public void setPurchaseitemList(List<Purchaseitem> purchaseitemList) {
+        this.purchaseitemList = purchaseitemList;
     }
 
     @XmlTransient

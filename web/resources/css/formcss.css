@@ -5,6 +5,12 @@
     margin-top: 20px;
 }
 
+.panelgridReports , .panelgridReports tr , .panelgridReports td
+{
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
 .messageFieldRequired
 {
     font-style: italic;
@@ -58,6 +64,11 @@
 
 .column{
     text-align: right;
+}
+
+.columnReport{
+    width: 200px !important;
+    text-align: center;
 }
 
 .button

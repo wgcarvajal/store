@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 19-03-2020 a las 06:29:24
+-- Tiempo de generación: 21-03-2020 a las 16:25:12
 -- Versión del servidor: 5.7.28
 -- Versión de PHP: 7.3.9
 
@@ -127,13 +127,6 @@ CREATE TABLE `lend` (
   `lendState` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `lend`
---
-
-INSERT INTO `lend` (`lendId`, `cliId`, `usId`, `lendDate`, `lendValue`, `lendPayment`, `lendState`) VALUES
-(21, 1, 2, '2019-09-03 13:26:00', 2000, 2000, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -244,7 +237,8 @@ INSERT INTO `pricepurchase` (`pricePurId`, `pricePurValue`, `pricePurInitialDate
 (6, 500, '2020-03-09 17:18:52', NULL, 4),
 (7, 1200, '2020-03-16 00:18:46', NULL, 1),
 (8, 1800, '2020-03-16 00:19:08', NULL, 3),
-(9, 1000, '2020-03-17 20:51:13', NULL, 14);
+(9, 1000, '2020-03-17 20:51:13', NULL, 14),
+(10, 2300, '2020-03-20 19:21:35', NULL, 11);
 
 -- --------------------------------------------------------
 
@@ -390,19 +384,16 @@ CREATE TABLE `purchase` (
   `purPayment` int(11) DEFAULT NULL,
   `cliId` bigint(20) DEFAULT NULL,
   `usId` bigint(20) NOT NULL,
-  `purState` int(1) NOT NULL
+  `purState` int(1) NOT NULL,
+  `purBill` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `purchase`
 --
 
-INSERT INTO `purchase` (`purId`, `purDate`, `purFinalAmount`, `purDiscount`, `purPayment`, `cliId`, `usId`, `purState`) VALUES
-(9, '2020-03-18 15:53:55', 7200, NULL, NULL, NULL, 3, 1),
-(10, '2020-03-18 15:56:30', 8700, NULL, NULL, NULL, 3, 1),
-(11, '2020-03-18 20:30:15', 1500, NULL, NULL, NULL, 3, 1),
-(12, '2020-03-18 20:35:07', 3500, NULL, NULL, NULL, 3, 1),
-(13, '2020-03-19 01:15:43', 5700, NULL, NULL, NULL, 3, 1);
+INSERT INTO `purchase` (`purId`, `purDate`, `purFinalAmount`, `purDiscount`, `purPayment`, `cliId`, `usId`, `purState`, `purBill`) VALUES
+(113, '2020-03-21 00:41:04', 44500, NULL, NULL, 2, 3, 1, '2020/3/21/113.pdf');
 
 -- --------------------------------------------------------
 
@@ -417,28 +408,39 @@ CREATE TABLE `purchaseitem` (
   `purId` bigint(20) NOT NULL,
   `priceValue` int(11) NOT NULL,
   `iva` int(11) NOT NULL,
-  `pricePurValue` int(11) NOT NULL
+  `pricePurValue` int(11) NOT NULL,
+  `ownId` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `purchaseitem`
 --
 
-INSERT INTO `purchaseitem` (`purItemId`, `purItemQuantity`, `prodId`, `purId`, `priceValue`, `iva`, `pricePurValue`) VALUES
-(21, 1, 1, 9, 1500, 5, 1200),
-(22, 1, 2, 9, 2200, 0, 2000),
-(23, 1, 3, 9, 2000, 0, 1800),
-(24, 1, 1, 9, 1500, 5, 1200),
-(25, 1, 1, 10, 1500, 5, 1200),
-(26, 1, 2, 10, 2200, 0, 2000),
-(27, 1, 3, 10, 2000, 0, 1800),
-(28, 2, 1, 10, 1500, 5, 1200),
-(29, 1, 1, 11, 1500, 5, 1200),
-(30, 1, 1, 12, 1500, 5, 1200),
-(31, 1, 3, 12, 2000, 0, 1800),
-(32, 1, 1, 13, 1500, 5, 1200),
-(33, 1, 2, 13, 2200, 0, 2000),
-(34, 1, 3, 13, 2000, 0, 1800);
+INSERT INTO `purchaseitem` (`purItemId`, `purItemQuantity`, `prodId`, `purId`, `priceValue`, `iva`, `pricePurValue`, `ownId`) VALUES
+(322, 1, 1, 113, 1500, 5, 1200, 2),
+(323, 1, 3, 113, 2000, 0, 1800, 1),
+(324, 1, 2, 113, 2200, 0, 2000, 1),
+(325, 1, 3, 113, 2000, 0, 1800, 1),
+(326, 1, 1, 113, 1500, 5, 1200, 2),
+(327, 1, 3, 113, 2000, 0, 1800, 1),
+(328, 1, 2, 113, 2200, 0, 2000, 1),
+(329, 1, 3, 113, 2000, 0, 1800, 1),
+(330, 1, 1, 113, 1500, 5, 1200, 2),
+(331, 1, 3, 113, 2000, 0, 1800, 1),
+(332, 1, 1, 113, 1500, 5, 1200, 2),
+(333, 1, 2, 113, 2200, 0, 2000, 1),
+(334, 1, 3, 113, 2000, 0, 1800, 1),
+(335, 740, 11, 113, 2500, 0, 2300, 1),
+(336, 1, 14, 113, 1200, 5, 1000, 3),
+(337, 1, 1, 113, 1500, 5, 1200, 2),
+(338, 1, 3, 113, 2000, 0, 1800, 1),
+(339, 1, 2, 113, 2200, 0, 2000, 1),
+(340, 1, 3, 113, 2000, 0, 1800, 1),
+(341, 1, 1, 113, 1500, 5, 1200, 2),
+(342, 1, 3, 113, 2000, 0, 1800, 1),
+(343, 860, 11, 113, 2500, 0, 2300, 1),
+(344, 1, 1, 113, 1500, 5, 1200, 2),
+(345, 1, 3, 113, 2000, 0, 1800, 1);
 
 -- --------------------------------------------------------
 
@@ -452,7 +454,7 @@ CREATE TABLE `purchasetotal` (
   `ownId` int(11) NOT NULL,
   `purToTotal` int(11) NOT NULL,
   `purToGain` int(11) NOT NULL,
-  `purToIva` int(11) NOT NULL
+  `purToIva` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -460,15 +462,9 @@ CREATE TABLE `purchasetotal` (
 --
 
 INSERT INTO `purchasetotal` (`purToId`, `purId`, `ownId`, `purToTotal`, `purToGain`, `purToIva`) VALUES
-(1, 9, 2, 3000, 600, 28),
-(2, 9, 1, 4200, 400, 0),
-(3, 10, 2, 4500, 900, 43),
-(4, 10, 1, 4200, 400, 0),
-(5, 11, 2, 1500, 300, 14),
-(6, 12, 2, 1500, 300, 14),
-(7, 12, 1, 2000, 200, 0),
-(8, 13, 2, 1500, 300, 14),
-(9, 13, 1, 4200, 400, 0);
+(169, 113, 2, 10500, 2100, 99.9999),
+(170, 113, 1, 32800, 3120, 0),
+(171, 113, 3, 1200, 200, 9.5238);
 
 -- --------------------------------------------------------
 
@@ -660,7 +656,8 @@ ALTER TABLE `purchase`
 ALTER TABLE `purchaseitem`
   ADD PRIMARY KEY (`purItemId`),
   ADD KEY `fk_purchaseitem_product` (`prodId`),
-  ADD KEY `fk_purchaseitem_purchase` (`purId`);
+  ADD KEY `fk_purchaseitem_purchase` (`purId`),
+  ADD KEY `fk_purchaseitem_owner` (`ownId`);
 
 --
 -- Indices de la tabla `purchasetotal`
@@ -716,7 +713,7 @@ ALTER TABLE `client`
 -- AUTO_INCREMENT de la tabla `lend`
 --
 ALTER TABLE `lend`
-  MODIFY `lendId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `lendId` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `owner`
@@ -740,7 +737,7 @@ ALTER TABLE `price`
 -- AUTO_INCREMENT de la tabla `pricepurchase`
 --
 ALTER TABLE `pricepurchase`
-  MODIFY `pricePurId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `pricePurId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `product`
@@ -776,19 +773,19 @@ ALTER TABLE `provides`
 -- AUTO_INCREMENT de la tabla `purchase`
 --
 ALTER TABLE `purchase`
-  MODIFY `purId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `purId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT de la tabla `purchaseitem`
 --
 ALTER TABLE `purchaseitem`
-  MODIFY `purItemId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `purItemId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=346;
 
 --
 -- AUTO_INCREMENT de la tabla `purchasetotal`
 --
 ALTER TABLE `purchasetotal`
-  MODIFY `purToId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `purToId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
 
 --
 -- AUTO_INCREMENT de la tabla `unity`
@@ -872,6 +869,7 @@ ALTER TABLE `purchase`
 -- Filtros para la tabla `purchaseitem`
 --
 ALTER TABLE `purchaseitem`
+  ADD CONSTRAINT `fk_purchaseitem_owner` FOREIGN KEY (`ownId`) REFERENCES `owner` (`ownId`),
   ADD CONSTRAINT `fk_purchaseitem_product` FOREIGN KEY (`prodId`) REFERENCES `product` (`prodId`),
   ADD CONSTRAINT `fk_purchaseitem_purchase` FOREIGN KEY (`purId`) REFERENCES `purchase` (`purId`);
 

@@ -23,7 +23,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -47,6 +46,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Purchase.findSaleForResume", query = "SELECT p FROM Purchase p WHERE p.purState = 0 and p.usId.usId = :cashierId"),
     @NamedQuery(name = "Purchase.findPurshaseUsIdAndDay", query = "SELECT p FROM Purchase p WHERE p.purDate >= :initialDate and p.purDate <= :endDate and p.usId.usId = :cashierId and p.purState = 1"),
     @NamedQuery(name = "Purchase.findPurshaseTotalInitialDayEndDay", query = "SELECT pt.ownId,SUM(pt.purToTotal) AS total, SUM(pt.purToGain) AS gain,SUM(pt.purToIva) AS iva FROM Purchase p INNER JOIN Purchasetotal pt WHERE p.purDate >= :initialDate and p.purDate <= :endDate and p.purState = 1 and p.purId = pt.purId.purId group by pt.ownId"),
+    @NamedQuery(name = "Purchase.findProductQuantityInitialDayEndDay", query = "SELECT pi.prodId,SUM(pi.purItemQuantity) As quantity,SUM(pi.priceValue * pi.purItemQuantity),SUM(pi.iva * pi.purItemQuantity),SUM(pi.pricePurValue * pi.purItemQuantity) FROM Purchase p INNER JOIN Purchaseitem pi WHERE p.purDate >= :initialDate and p.purDate <= :endDate and p.purState = 1 and p.purId = pi.purId.purId and pi.ownId.ownId = :ownId group by pi.prodId order by quantity DESC"),
     @NamedQuery(name = "Purchase.findByPurPayment", query = "SELECT p FROM Purchase p WHERE p.purPayment = :purPayment")})
 public class Purchase implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -60,7 +60,7 @@ public class Purchase implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date purDate;
     @Column(name = "purFinalAmount")
-    private int purFinalAmount;
+    private Integer purFinalAmount;
     @Column(name = "purDiscount")
     private Integer purDiscount;
     @Column(name = "purPayment")
@@ -68,6 +68,8 @@ public class Purchase implements Serializable {
     @Basic(optional = false)
     @Column(name = "purState")
     private int purState;
+    @Column(name = "purBill")
+    private String purBill;
     @JoinColumn(name = "cliId", referencedColumnName = "cliId")
     @ManyToOne
     private Client cliId;
@@ -108,11 +110,11 @@ public class Purchase implements Serializable {
         this.purDate = purDate;
     }
 
-    public int getPurFinalAmount() {
+    public Integer getPurFinalAmount() {
         return purFinalAmount;
     }
 
-    public void setPurFinalAmount(int purFinalAmount) {
+    public void setPurFinalAmount(Integer purFinalAmount) {
         this.purFinalAmount = purFinalAmount;
     }
 
@@ -138,6 +140,14 @@ public class Purchase implements Serializable {
 
     public void setPurState(int purState) {
         this.purState = purState;
+    }
+
+    public String getPurBill() {
+        return purBill;
+    }
+
+    public void setPurBill(String purBill) {
+        this.purBill = purBill;
     }
 
     public Client getCliId() {

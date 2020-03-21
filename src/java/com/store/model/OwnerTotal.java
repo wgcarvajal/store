@@ -16,7 +16,7 @@ public class OwnerTotal {
     private Owner owner;
     private long total;
     private long gain;
-    private long iva;
+    private double iva;
 
     public Owner getOwner() {
         return owner;
@@ -42,11 +42,11 @@ public class OwnerTotal {
         this.gain = gain;
     }
 
-    public long getIva() {
+    public double getIva() {
         return iva;
     }
 
-    public void setIva(long iva) {
+    public void setIva(double iva) {
         this.iva = iva;
     }
     

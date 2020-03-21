@@ -35,8 +35,14 @@ public class DailyReportController implements Serializable {
     private PurchaseFacade purchaseEJB;
     private long total;
     private long gain;
-    private long iva;
+    private double iva;
     private List<OwnerTotal> ownerTotals = new ArrayList<>();
+    List<Object[]> products = new ArrayList<>();
+    private Date initDate;
+    private Date finishDate;
+    private Date maxiVisibleDate;
+    private boolean endDate =false;
+    private Date dateSelected;
 
     public List<Purchase> getPurchases() {
         return purchases;
@@ -62,11 +68,11 @@ public class DailyReportController implements Serializable {
         this.gain = gain;
     }
 
-    public long getIva() {
+    public double getIva() {
         return iva;
     }
 
-    public void setIva(long iva) {
+    public void setIva(double iva) {
         this.iva = iva;
     }
 
@@ -77,37 +83,141 @@ public class DailyReportController implements Serializable {
     public void setOwnerTotals(List<OwnerTotal> ownerTotals) {
         this.ownerTotals = ownerTotals;
     }
+
+    public List<Object[]> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Object[]> products) {
+        this.products = products;
+    }
+
+    public boolean isEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(boolean endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getInitDate() {
+        return initDate;
+    }
+
+    public void setInitDate(Date initDate) {
+        this.initDate = initDate;
+    }
+
+    public Date getDateSelected() {
+        return dateSelected;
+    }
+
+    public void setDateSelected(Date dateSelected) {
+        this.dateSelected = dateSelected;
+    }
     
-    public void onDateSelect(SelectEvent event) {
+    public void onInitDataSelect(SelectEvent event)
+    {
         Date initialDate = (Date) event.getObject();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(initialDate);
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE,59);
-        calendar.set(Calendar.SECOND, 59);
-        Date endDate = calendar.getTime();
-        List<Object[]> list =purchaseEJB.findPurshaseTotalInitialDayEndDay(initialDate, endDate);
+        total = 0;
+        gain = 0;
+        iva = 0;
+        endDate = false;
+        ownerTotals = new ArrayList<>();
+        dateSelected = null;
+        if (initialDate != null) {
+            initDate = initialDate;
+            endDate = true;
+        }
+        Util.update("formCalendar");
+        Util.update(":formTotal");
+        Util.update(":formOwner");
+    }
+    
+    public void onEndDateSelect(SelectEvent event) {
+        Date eDate = (Date) event.getObject();
         total = 0;
         gain = 0;
         iva = 0;
         ownerTotals = new ArrayList<>();
-        if (list != null) {
-            for (Object[] object : list) {
-                if (object[0] != null && object[1] != null && object[2] != null && object[2] != null) {
-                    OwnerTotal ownerTotal = new OwnerTotal();
-                    ownerTotal.setOwner((Owner) object[0]);
-                    ownerTotal.setTotal((long) object[1]);
-                    ownerTotal.setGain((long) object[2]);
-                    ownerTotal.setIva((long) object[3]);
-                    ownerTotals.add(ownerTotal);
-                    total = total + (long) object[1];
-                    gain = gain + (long) object[2];
-                    iva = iva + (long) object[3];
+        if (eDate != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(eDate);
+            calendar.set(Calendar.HOUR_OF_DAY, 23);
+            calendar.set(Calendar.MINUTE, 59);
+            calendar.set(Calendar.SECOND, 59);
+            finishDate = calendar.getTime();
+            List<Object[]> list = purchaseEJB.findPurshaseTotalInitialDayEndDay(initDate, finishDate);
+            if (list != null) {
+                for (Object[] object : list) {
+                    if (object[0] != null && object[1] != null && object[2] != null && object[2] != null) {
+                        OwnerTotal ownerTotal = new OwnerTotal();
+                        ownerTotal.setOwner((Owner) object[0]);
+                        ownerTotal.setTotal((long) object[1]);
+                        ownerTotal.setGain((long) object[2]);
+                        ownerTotal.setIva((double) object[3]);
+                        ownerTotals.add(ownerTotal);
+                        total = total + (long) object[1];
+                        gain = gain + (long) object[2];
+                        iva = iva + (double) object[3];
+                    }
                 }
             }
         }
         Util.update(":formTotal");
         Util.update(":formOwner");
+    }
+    
+    
+    public void showProductList(Owner owner)
+    {
+        products = purchaseEJB.findProductQuantityInitialDayEndDay(initDate, finishDate,owner);
+        if(products==null)
+        {
+            products = new ArrayList<>();
+        }
+        
+        Util.update(":formProductTable");
+        Util.openDialog("dialongProductTable");
+    }
+    
+    public String returnIVA(long iva, long quantity)
+    {
+        long i = iva / quantity;
+        return i+"%";
+    }
+    
+    public String returnPrice(long price, long quantity)
+    {
+        long p = price / quantity;
+        return priceFormat(p);
+    }
+    
+    public String priceFormat(long value)
+    {
+        return "$"+Util.getFormatPrice(value);
+    }
+    
+    public String priceFloatFormat(double value)
+    {
+        return "$"+Util.getFormatPrice(value);
+    }
+    
+    public Date maxVisibleDate()
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        maxiVisibleDate =  calendar.getTime();
+        return maxiVisibleDate;
+    }
+    
+    
+    public Date minVisibleDate()
+    {
+        return null;
     }
     
 }

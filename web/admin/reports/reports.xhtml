@@ -10,7 +10,7 @@
         <ui:composition template="./../../plantillas/admin.xhtml">
 
             <ui:define name="cssPage">
-                
+                <h:outputStylesheet name="./css/formcss.css"/>
             </ui:define>
 
             <ui:define name="title">
@@ -18,58 +18,119 @@
             </ui:define>
 
             <ui:define name="content">
+                
+                
                 <div class="pageTitle">#{bundle.Reports}</div>
-                <h:form>
-                    <p:calendar>
-                        <p:ajax event="dateSelect" listener="#{dailyReportController.onDateSelect}" 
-                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
-                                />
-                    </p:calendar>
+                <h:form id="formCalendar">
+                    <p:panelGrid id="panelCalendar" styleClass="panelgrid">
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="#{bundle.DateInit}:"/>
+                            </p:column>
+                            <p:column>
+                                <p:calendar maxdate="#{dailyReportController.maxVisibleDate()}">
+                                    <p:ajax event="dateSelect" listener="#{dailyReportController.onInitDataSelect}" 
+                                            onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                            />
+
+                                </p:calendar>
+                            </p:column>
+                            <p:column rendered="#{dailyReportController.endDate}">
+                                <p:outputLabel value="#{bundle.DateEnd}:"/>
+                            </p:column>
+                            <p:column rendered="#{dailyReportController.endDate}">
+                                <p:calendar value="#{dailyReportController.dateSelected}" mindate="#{dailyReportController.initDate}"
+                                            maxdate="#{dailyReportController.maxVisibleDate()}"
+                                            >
+                                    <p:ajax event="dateSelect" listener="#{dailyReportController.onEndDateSelect}" 
+                                            onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                            />
+                                </p:calendar>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
                 </h:form>
                 <h:form id="formTotal">
-                    <p:outputLabel value="Total: #{dailyReportController.total}" /><br/>
-                    <p:outputLabel value="Ganancia con iva: #{dailyReportController.gain}" /><br/>
-                    <p:outputLabel value="Iva: #{dailyReportController.iva}" />
+                    <p:panelGrid styleClass="panelgrid">
+                        <p:row>
+                            <p:column class="column">
+                                <p:outputLabel value="#{bundle.Total}:" 
+                                               style="font-size: 16pt;font-weight: bold;"/>
+                            </p:column>
+                            <p:column>
+                                <p:outputLabel value="#{dailyReportController.priceFormat(dailyReportController.total)}" 
+                                               style="font-size: 15pt;"  />
+                            </p:column>
+                            <p:column class="column">
+                                <p:outputLabel value="#{bundle.GainWithIva}:" style="font-size: 16pt;font-weight: bold;"/>
+                            </p:column>
+                            <p:column>
+                                <p:outputLabel value="#{dailyReportController.priceFormat(dailyReportController.gain)}" 
+                                               style="font-size: 15pt;"/>
+                            </p:column>
+                            <p:column class="column">
+                                <p:outputLabel value="#{bundle.Iva}:" style="font-size: 16pt;font-weight: bold;"/>
+                            </p:column>
+                            <p:column>
+                                <p:outputLabel value="#{dailyReportController.priceFloatFormat(dailyReportController.iva)}" 
+                                               style="font-size: 15pt;"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
                 </h:form>
-                
+                <br />
+                <br />
                 <h:form id="formOwner">
                     
-                    <p:dataView var="ownerTotals" value="#{dailyReportController.ownerTotals}">
+                    <p:dataView var="ownerTotals" value="#{dailyReportController.ownerTotals}"
+                                listIcon="pi pi-bars"
+                                >
                         <p:dataViewListItem>
-                            <p:panelGrid>
+                            <p:panelGrid styleClass="panelgridReports">
                                 <p:row>
-                                    <p:column>
-                                        <p:outputLabel value="#{ownerTotals.owner.ownName}"/>
+                                    <p:column class="columnReport">
+                                        <p:outputLabel value="#{ownerTotals.owner.ownName}"
+                                                       style="font-size: 15pt;font-weight: bold;"/>
                                     </p:column>
                                     <p:column>
                                         <p:outputPanel>
-                                            <p:panelGrid>
+                                            <p:panelGrid styleClass="panelgridReports">
                                                 <p:row>
                                                     <p:column>
-                                                        <p:outputLabel value="Total:" />
+                                                        <p:outputLabel value="#{bundle.Total}:" 
+                                                                       style="font-size: 10pt;font-weight: bold;" />
                                                     </p:column>
                                                     <p:column>
-                                                        <p:outputLabel value="#{ownerTotals.total}" style="font-weight: bold"/>
+                                                        <p:outputLabel value="#{dailyReportController.priceFormat(ownerTotals.total)}"/>
                                                     </p:column>
                                                 </p:row>
                                                 <p:row>
                                                     <p:column>
-                                                        <p:outputLabel value="Ganacia:" />
+                                                        <p:outputLabel value="#{bundle.GainWithIva}:"
+                                                                       style="font-size: 10pt;font-weight: bold;"/>
                                                     </p:column>
                                                     <p:column>
-                                                        <p:outputLabel value="#{ownerTotals.gain}" style="font-weight: bold"/>
+                                                        <p:outputLabel value="#{dailyReportController.priceFormat(ownerTotals.gain)}"/>
                                                     </p:column>
                                                 </p:row>
                                                 <p:row>
                                                     <p:column>
-                                                        <p:outputLabel value="IVA:" />
+                                                        <p:outputLabel value="#{bundle.Iva}:" 
+                                                                       style="font-size: 10pt;font-weight: bold;"/>
                                                     </p:column>
                                                     <p:column>
-                                                        <p:outputLabel value="#{ownerTotals.iva}" style="font-weight: bold"/>
+                                                        <p:outputLabel value="#{dailyReportController.priceFloatFormat(ownerTotals.iva)}"/>
                                                     </p:column>
                                                 </p:row>
                                             </p:panelGrid>
                                         </p:outputPanel>
+                                    </p:column>
+                                    <p:column>
+                                        <p:commandLink action="#{dailyReportController.showProductList(ownerTotals.owner)}"
+                                                       onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                                       >
+                                           <i class="pi pi-bars"></i>
+                                        </p:commandLink>
                                     </p:column>
                                 </p:row>
                                 
@@ -78,6 +139,40 @@
                     </p:dataView>
                 </h:form>
                 
+                <h:form id="formProductTable">
+                    <p:dialog
+                        header="Productos"
+                        modal="true"
+                        widgetVar="dialongProductTable"
+                        >
+                        
+                        <p:dataTable var="object" value="#{dailyReportController.products}">
+                            <p:column headerText="#{bundle.BarCode}">
+                                #{object[0].prodBarCode}
+                            </p:column>
+                            <p:column headerText="#{bundle.Name}">
+                                #{object[0].prodName}
+                            </p:column>
+                            <p:column headerText="#{bundle.Quantity}">
+                                #{object[1]}
+                            </p:column>
+                            <p:column headerText="#{bundle.PricePurchase}">
+                                #{dailyReportController.returnPrice(object[4],object[1])}
+                            </p:column>
+                            <p:column headerText="#{bundle.Iva}">
+                                #{dailyReportController.returnIVA(object[3], object[1])}
+                            </p:column>
+                            <p:column headerText="#{bundle.Price}">
+                                #{dailyReportController.returnPrice(object[2],object[1])}
+                            </p:column>
+                        </p:dataTable>
+                        
+                        
+                    </p:dialog>
+                    
+                </h:form>
+                <br />
+                <br></br>
                 
             </ui:define>
 

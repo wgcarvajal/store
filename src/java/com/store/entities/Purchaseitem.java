@@ -41,17 +41,9 @@ public class Purchaseitem implements Serializable {
     @Column(name = "purItemId")
     private Long purItemId;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "purItemQuantity")
     private int purItemQuantity;
-    @JoinColumn(name = "prodId", referencedColumnName = "prodId")
-    @ManyToOne(optional = false)
-    private Product prodId;
-    @JoinColumn(name = "purId", referencedColumnName = "purId")
-    @ManyToOne(optional = false)
-    private Purchase purId;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "priceValue")
     private int priceValue;
     @Basic(optional = false)
@@ -60,6 +52,15 @@ public class Purchaseitem implements Serializable {
     @Basic(optional = false)
     @Column(name = "pricePurValue")
     private int pricePurValue;
+    @JoinColumn(name = "ownId", referencedColumnName = "ownId")
+    @ManyToOne(optional = false)
+    private Owner ownId;
+    @JoinColumn(name = "prodId", referencedColumnName = "prodId")
+    @ManyToOne(optional = false)
+    private Product prodId;
+    @JoinColumn(name = "purId", referencedColumnName = "purId")
+    @ManyToOne(optional = false)
+    private Purchase purId;
 
     public Purchaseitem() {
     }
@@ -92,6 +93,38 @@ public class Purchaseitem implements Serializable {
         this.purItemQuantity = purItemQuantity;
     }
 
+    public int getPriceValue() {
+        return priceValue;
+    }
+
+    public void setPriceValue(int priceValue) {
+        this.priceValue = priceValue;
+    }
+
+    public int getIva() {
+        return iva;
+    }
+
+    public void setIva(int iva) {
+        this.iva = iva;
+    }
+
+    public int getPricePurValue() {
+        return pricePurValue;
+    }
+
+    public void setPricePurValue(int pricePurValue) {
+        this.pricePurValue = pricePurValue;
+    }
+
+    public Owner getOwnId() {
+        return ownId;
+    }
+
+    public void setOwnId(Owner ownId) {
+        this.ownId = ownId;
+    }
+
     public Product getProdId() {
         return prodId;
     }
@@ -108,30 +141,6 @@ public class Purchaseitem implements Serializable {
         this.purId = purId;
     }
 
-    public int getPriceValue() {
-        return priceValue;
-    }
-
-    public void setPriceValue(int priceValue) {
-        this.priceValue = priceValue;
-    }
-    
-    public int getIva() {
-        return iva;
-    }
-
-    public void setIva(int iva) {
-        this.iva = iva;
-    }
-
-    public int getPricePurValue() {
-        return pricePurValue;
-    }
-
-    public void setPricePurValue(int pricePurValue) {
-        this.pricePurValue = pricePurValue;
-    }
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -154,7 +163,7 @@ public class Purchaseitem implements Serializable {
 
     @Override
     public String toString() {
-        return "com.store.entities.Purchaseitem[ purItemId=" + purItemId + " ]";
+        return "entities.Purchaseitem[ purItemId=" + purItemId + " ]";
     }
     
 }

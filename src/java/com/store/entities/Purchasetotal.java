@@ -44,7 +44,7 @@ public class Purchasetotal implements Serializable {
     private int purToGain;
     @Basic(optional = false)
     @Column(name = "purToIva")
-    private int purToIva;
+    private float purToIva;
     @JoinColumn(name = "ownId", referencedColumnName = "ownId")
     @ManyToOne(optional = false)
     private Owner ownId;
@@ -90,11 +90,11 @@ public class Purchasetotal implements Serializable {
         this.purToGain = purToGain;
     }
 
-    public int getPurToIva() {
+    public float getPurToIva() {
         return purToIva;
     }
 
-    public void setPurToIva(int purToIva) {
+    public void setPurToIva(float purToIva) {
         this.purToIva = purToIva;
     }
 

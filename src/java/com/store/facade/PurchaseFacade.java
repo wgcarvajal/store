@@ -5,6 +5,7 @@
  */
 package com.store.facade;
 
+import com.store.entities.Owner;
 import com.store.entities.Purchase;
 import com.store.entities.Purchasetotal;
 import java.util.Date;
@@ -80,6 +81,20 @@ public class PurchaseFacade extends AbstractFacade<Purchase> {
        Query query = getEntityManager().createNamedQuery("Purchase.findPurshaseTotalInitialDayEndDay");
        query.setParameter("initialDate", initialDate);
        query.setParameter("endDate", endDate);
+       List list = query.getResultList();
+       if(list!=null && list.size()>0)
+       {
+           return list;
+       }
+       return null;
+    }
+    
+    public List findProductQuantityInitialDayEndDay(Date initialDate, Date endDate,Owner ownId)
+    {
+       Query query = getEntityManager().createNamedQuery("Purchase.findProductQuantityInitialDayEndDay");
+       query.setParameter("initialDate", initialDate);
+       query.setParameter("endDate", endDate);
+       query.setParameter("ownId", ownId.getOwnId());
        List list = query.getResultList();
        if(list!=null && list.size()>0)
        {
