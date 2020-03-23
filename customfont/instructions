@@ -1,0 +1,1 @@
+Colocar el archivo fakereceipt.ttf en /Users/[nameuser]/fileStore/font/ y cambiar la ruta BILLDIR en la clase Util

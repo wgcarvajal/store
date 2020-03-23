@@ -6,8 +6,12 @@
 package com.store.controllers.cashregister;
 
 import com.itextpdf.text.Document;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.FontProvider;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.XMLWorkerFontProvider;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.store.controllers.util.Encrypt;
 import com.store.controllers.util.Util;
@@ -37,6 +41,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,6 +52,7 @@ import java.util.ResourceBundle;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -114,7 +120,7 @@ public class CashRegisterController implements Serializable {
     private Purchase copyPrintPurchase;
     
     private List<Purchasetotal> purchasetotals;
-    private int sizeHeightPage;
+    private float sizeHeightPage;
     
     
     @EJB private PurchaseFacade purchaseEJB;
@@ -1590,13 +1596,18 @@ public class CashRegisterController implements Serializable {
             if (!file.exists()) {
                 file.mkdirs();
             }
+            String css = "@font-face{font-family: 'fakereceipt'; src: url('fakereceipt.ttf');}body{font-family:'fakereceipt';}div{padding:0px 0px 0px 0px;margin: 0px 0px 0px 0px;}";
+            XMLWorkerFontProvider fontProvider = new XMLWorkerFontProvider(Util.FONTDIR);
+            fontProvider.register(Util.FONTDIR + "fakereceipt.ttf", "fakereceipt");
             purchase.setPurBill(year+"/"+month+"/"+day+"/"+purchase.getPurId()+".pdf");
             purchaseEJB.edit(purchase);
             FileOutputStream ficheroPdf = new FileOutputStream(path+purchase.getPurId()+".pdf");
             PdfWriter pdfWriter = PdfWriter.getInstance(document, ficheroPdf);
             document.open();
             InputStream is = new ByteArrayInputStream(html.getBytes("UTF-8"));
-            XMLWorkerHelper.getInstance().parseXHtml(pdfWriter, document,is,Charset.forName("UTF-8"));
+            InputStream cis = new ByteArrayInputStream(css.getBytes("UTF-8"));
+            XMLWorkerHelper xMLWorkerHelper = XMLWorkerHelper.getInstance();
+            xMLWorkerHelper.parseXHtml(pdfWriter, document,is,cis,Charset.forName("UTF-8"),fontProvider);
         }
         catch(Exception ex)
         {
@@ -1614,31 +1625,30 @@ public class CashRegisterController implements Serializable {
                       "<head>"                      
                     + "</head>"
                     + "<body>"
-                        +"<div style='font-size: 10pt;text-align:center;font-weight:bold;'>TIENDA DE LUCHO</div>"
-                        +"<div style='font-size: 8pt;text-align:center;'>EL CORTIJO CRA 5B N. 63-07</div>"
-                        +"<div style='font-size: 8pt;text-align:center;'>NIT 1.075.220.291</div>"
-                        +"<div style='height:15px;'></div>"
-                        +"<div style='font-size: 8pt;text-align:center;'>GERENTE: WILSON G. CARVAJAL</div>"
-                        +"<div style='font-size: 8pt;text-align:center;'>TELEFONO: 8351005</div>"
-			+"<div style='font-size: 8pt;text-align:center;'>FECHA DE EXPEDICION: "+Util.getFormatDate(purchase.getPurDate())+"</div>"
+                        +"<div style='font-size: 11pt;text-align:center;font-weight:bold;'>"+Util.nameStore+"</div>"
+                        +"<div style='font-size: 9pt;text-align:center;'>"+Util.addressStore+"</div>"
+                        +"<div style='font-size: 9pt;text-align:center;'>NIT "+Util.nitStore+"</div>"
+                        +"<div style='font-size: 9pt;text-align:center;'>GERENTE: "+Util.bossStore+"</div>"
+                        +"<div style='font-size: 9pt;text-align:center;'>TELEFONO: "+Util.phoneStore+"</div>"
+			+"<div style='font-size: 9pt;text-align:center;'>FECHA DE EXPEDICION: "+Util.getFormatDate(purchase.getPurDate())+"</div>"
                         +"<div style='width:100%;'>"
-                            +"<div style='font-size: 8pt;width:60%;float:left;text-align:center;'>Descripción</div>"
-                            +"<div style='font-size: 8pt;width:30%;float:left;text-align:center;'>Cnt</div>"
-                            +"<div style='font-size: 8pt;width:100%;float:left;text-align:center;'>Valor</div>"
+                            +"<div style='font-size: 9pt;width:60%;float:left;text-align:center;'>Descripción</div>"
+                            +"<div style='font-size: 9pt;width:30%;float:left;text-align:center;'>Cnt</div>"
+                            +"<div style='font-size: 9pt;width:100%;float:left;text-align:center;'>Valor</div>"
                             +"<div style='clear:left;'></div>"
-                            +"<div style='font-size: 8pt;width:60%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-------------------------------------------------------------------------------------------------</div>"
-                            +"<div style='font-size: 8pt;width:30%;float:left;height:20px;padding-right:1px;padding-left:1px;'>----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:90%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'></div>"
+                            +"<div style='font-size: 9pt;width:60%;float:left;padding-right:1px;padding-left:1px;'>------------------------------</div>"
+                            +"<div style='font-size: 9pt;width:30%;float:left;padding-right:1px;padding-left:1px;'>-----</div>"
+                            +"<div style='font-size: 9pt;width:90%;float:left;padding-right:1px;padding-left:1px;'>------------</div>"
+                            +"<div style='font-size: 9pt;width:100%;float:left;padding-right:1px;padding-left:1px;'></div>"
                             +"<div style='clear:left;'></div>";
     }
     
     private void secondStringHtml(Purchaseitem purchaseitem)
     {
-        sizeHeightPage = sizeHeightPage +16;
+        sizeHeightPage = sizeHeightPage +13.3333f;
         html =html
-        +"<div style='text-align:center;font-size: 8pt;width:60%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.upperCase(purchaseitem.getProdId().getProdName())+" "+purchaseitem.getProdId().getProdUnitValue()+" "+purchaseitem.getProdId().getUniId().getUniAbbreviation()+"</div>"
-        +"<div style='text-align:center;font-size: 8pt;width:30%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+purchaseitem.getPurItemQuantity()+"</div>";
+        +"<div style='text-align:center;font-size: 9pt;width:60%;float:left;padding-right:1px;padding-left:1px;'>"+Util.upperCase(purchaseitem.getProdId().getProdName())+" "+purchaseitem.getProdId().getProdUnitValue()+" "+purchaseitem.getProdId().getUniId().getUniAbbreviation()+"</div>"
+        +"<div style='text-align:center;font-size: 9pt;width:30%;float:left;padding-right:1px;padding-left:1px;'>"+purchaseitem.getPurItemQuantity()+"</div>";
         long precio=purchaseitem.getPriceValue();
         boolean productType = purchaseitem.getProdId().getProdtypeId().getProdtypeValue().equals("Empaquetado");
         if(productType)
@@ -1650,93 +1660,88 @@ public class CashRegisterController implements Serializable {
             fv = fv * precio;
             precio= Math.round(fv);
         }
-        html = html+"<div style='text-align:center;font-size: 8pt;width:90%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(precio)+"</div>"
-        +"<div style='text-align:center;font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.evaluateIva(purchaseitem.getIva())+"</div>"
+        html = html+"<div style='text-align:center;font-size: 9pt;width:90%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(precio)+"</div>"
+        +"<div style='text-align:center;font-size: 9pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>"+Util.evaluateIva(purchaseitem.getIva())+"</div>"
         +"<div style='clear:left;'></div>";
     }
     
     private void thirdStringHtml(int amount,int ra,int change)
     {
-        html = html + "<div style='font-weight:bold;font-size: 8pt;width:70%;float:left;padding-right:1px;padding-left:1px;'>+ +SUBTOTAL/TOTAL - - - ></div>"
-                            +"<div style='font-weight:bold;font-size: 8pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>$ "+Util.getFormatPrice(amount)+"</div>"
+        html = html + "<div style='font-weight:bold;font-size: 9pt;width:70%;float:left;padding-right:1px;padding-left:1px;'>+ +SUBTOTAL/TOTAL - - - ></div>"
+                            +"<div style='font-weight:bold;font-size: 9pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>$ "+Util.getFormatPrice(amount)+"</div>"
                             +"<div style='clear:left;'></div>"
-                            +"<div style='text-align:center;font-size: 8pt;width:70%;float:left;padding-right:1px;padding-left:1px;'>PAGO/EFECTIVO</div>"
-                            +"<div style='font-size: 8pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>$ "+Util.getFormatPrice(ra)+"</div>"
+                            +"<div style='text-align:center;font-size: 9pt;width:70%;float:left;padding-right:1px;padding-left:1px;'>PAGO/EFECTIVO</div>"
+                            +"<div style='font-size: 9pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>$ "+Util.getFormatPrice(ra)+"</div>"
                             +"<div style='clear:left;'></div>"
-                            +"<div style='text-align:center;font-size: 8pt;width:70%;float:left;padding-right:1px;padding-left:1px;'>CAMBIO</div>"
-                            +"<div style='font-size: 8pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>$ "+Util.getFormatPrice(change)+"</div>"
+                            +"<div style='text-align:center;font-size: 9pt;width:70%;float:left;padding-right:1px;padding-left:1px;'>CAMBIO</div>"
+                            +"<div style='font-size: 9pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>$ "+Util.getFormatPrice(change)+"</div>"
                             +"<div style='clear:left;'></div>"
-                            +"<div style='font-size: 8pt;width:100%;padding-right:1px;padding-left:1px;height:20px;'>= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =</div>";
+                            +"<div style='font-size: 9pt;width:100%;padding-right:1px;padding-left:1px;'>= = = = = = = = = = = = = = = = = = = = = = = = = =</div>";
                             if(purchase.getCliId()!=null)
                             {
-                                sizeHeightPage = sizeHeightPage +16;
-                                html=html+"<div style='font-size: 8pt;'>Nombre Cte: "+Util.upperCase(purchase.getCliId().getCliName()+" "+purchase.getCliId().getCliName())+"</div>";
+                                sizeHeightPage = sizeHeightPage +13.3333f;
+                                html=html+"<div style='font-size: 9pt;'>Nombre Cte: "+Util.upperCase(purchase.getCliId().getCliName()+" "+purchase.getCliId().getCliName())+"</div>";
                             }
                             
-                            html=html+"<div style='font-size: 8pt;width:100%;padding-right:1px;padding-left:1px;height:20px;'>= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =</div>"
-                            +"<div style='text-align:center;font-size: 8pt;width:100%;padding-right:1px;padding-left:1px;height:20px;'>+ + IMPUESTOS + +</div>"
-                            +"<div style='font-size: 8pt;width:25%;float:left;text-align:center;'>Tipo</div>"
-                            +"<div style='font-size: 8pt;width:33%;float:left;text-align:center;'>Compra</div>"
-                            +"<div style='font-size: 8pt;width:50%;float:left;text-align:center;'>Base/Imp</div>"
-                            +"<div style='font-size: 8pt;width:100%;float:left;text-align:center;'>Imp</div>"
+                            html=html+"<div style='font-size: 9pt;width:100%;padding-right:1px;padding-left:1px;'>= = = = = = = = = = = = = = = = = = = = = = = = = =</div>"
+                            +"<div style='text-align:center;font-size: 9pt;width:100%;padding-right:1px;padding-left:1px;'>+ + IMPUESTOS + +</div>"
+                            +"<div style='font-size: 9pt;width:25%;float:left;text-align:center;'>Tipo</div>"
+                            +"<div style='font-size: 9pt;width:33%;float:left;text-align:center;'>Compra</div>"
+                            +"<div style='font-size: 9pt;width:50%;float:left;text-align:center;'>Base/Imp</div>"
+                            +"<div style='font-size: 9pt;width:100%;float:left;text-align:center;'>Imp</div>"
                             +"<div style='clear:left;'></div>"
-                            +"<div style='font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
-                            +"<div style='clear:left;'></div>"
-                            +"<div style='font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='font-size: 9pt;width:25%;float:left;padding-left:1px;'>------------</div>"
+                            +"<div style='font-size: 9pt;width:33%;float:left;padding-left:1px;'>------------</div>"
+                            +"<div style='font-size: 9pt;width:50%;float:left;padding-left:1px;'>------------</div>"
+                            +"<div style='font-size: 9pt;width:100%;float:left;padding-left:1px;'>------------</div>"
                             +"<div style='clear:left;'></div>";
                             long totalBaseImp =0;
                             long totalImp =0;
                             if(totalProductIva5>0)
                             {
-                                sizeHeightPage = sizeHeightPage +16;
-                               html=html+"<div style='text-align:center;font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>A= 5%</div>"+
-                                        "<div style='text-align:center;font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva5)+"</div>";
+                               sizeHeightPage = sizeHeightPage +13.3333f;
+                               html=html+"<div style='text-align:center;font-size: 9pt;width:25%;float:left;padding-right:1px;padding-left:1px;'>A= 5%</div>"+
+                                        "<div style='text-align:center;font-size: 9pt;width:33%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva5)+"</div>";
                                         float iva = totalProductIva5 / 1.05f;
                                         long iva5 = totalProductIva5 - Math.round(iva);
                                         totalBaseImp = (totalProductIva5 - iva5);
                                         totalImp = iva5;
-                                        html=html+"<div style='text-align:center;font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva5 - iva5)+"</div>"+
-                                        "<div style='text-align:center;font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(iva5)+"</div>"+
+                                        html=html+"<div style='text-align:center;font-size: 9pt;width:50%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva5 - iva5)+"</div>"+
+                                        "<div style='text-align:center;font-size: 9pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(iva5)+"</div>"+
                                         "<div style='clear:left;'></div>";
                             }
                             
                             if(totalProductIva19>0)
                             {
-                                sizeHeightPage = sizeHeightPage +16;
-                               html=html+"<div style='text-align:center;font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>B= 19%</div>"+
-                                        "<div style='text-align:center;font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva19)+"</div>";
+                               sizeHeightPage = sizeHeightPage +13.3333f;
+                               html=html+"<div style='text-align:center;font-size: 9pt;width:25%;float:left;padding-right:1px;padding-left:1px;'>B= 19%</div>"+
+                                        "<div style='text-align:center;font-size: 9pt;width:33%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva19)+"</div>";
                                         float iva = totalProductIva5 / 1.19f;
                                         long iva19 = totalProductIva5 - Math.round(iva);
                                         totalBaseImp = totalBaseImp +(totalProductIva5 - iva19);
                                         totalImp = totalImp +iva19;
-                                        html=html+"<div style='text-align:center;font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva19 - iva19)+"</div>"+
-                                        "<div style='text-align:center;font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(iva19)+"</div>"+
+                                        html=html+"<div style='text-align:center;font-size: 9pt;width:50%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva19 - iva19)+"</div>"+
+                                        "<div style='text-align:center;font-size: 9pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(iva19)+"</div>"+
                                         "<div style='clear:left;'></div>";
                             }
                             
                             if(totalProductIva0>0)
                             {
-                               sizeHeightPage = sizeHeightPage +16;
-                               html=html+"<div style='text-align:center;font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>+SIN IVA</div>"+
-                                        "<div style='text-align:center;font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva0)+"</div>"+
-                                        "<div style='text-align:center;font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'></div>"+
-                                        "<div style='text-align:center;font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'></div>"+
+                               sizeHeightPage = sizeHeightPage +13.3333f;
+                               html=html+"<div style='text-align:center;font-size: 9pt;width:25%;float:left;padding-right:1px;padding-left:1px;'>+SIN IVA</div>"+
+                                        "<div style='text-align:center;font-size: 9pt;width:33%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva0)+"</div>"+
+                                        "<div style='text-align:center;font-size: 9pt;width:50%;float:left;padding-right:1px;padding-left:1px;'></div>"+
+                                        "<div style='text-align:center;font-size: 9pt;width:100%;float:left;padding-right:1px;padding-left:1px;'></div>"+
                                         "<div style='clear:left;'></div>";
                             }
                             
-                             html=html+"<div style='font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                             html=html+"<div style='font-size: 9pt;width:25%;float:left;padding-left:1px;'>------------</div>"
+                            +"<div style='font-size: 9pt;width:33%;float:left;padding-left:1px;'>------------</div>"
+                            +"<div style='font-size: 9pt;width:50%;float:left;padding-left:1px;'>------------</div>"
+                            +"<div style='font-size: 9pt;width:100%;float:left;padding-left:1px;'>------------</div>"
                             +"<div style='clear:left;'></div>"
-                            +"<div style='text-align:center;font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>+TOTAL+</div>"
-                            +"<div style='text-align:center;font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(amount)+"</div>";
+                            +"<div style='text-align:center;font-size: 9pt;width:25%;float:left;padding-right:1px;padding-left:1px;'>+TOTAL+</div>"
+                            +"<div style='text-align:center;font-size: 9pt;width:33%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(amount)+"</div>";
                             
                             String totalBaseImpString = "";
                             String totalImpString = "";
@@ -1749,17 +1754,17 @@ public class CashRegisterController implements Serializable {
                             {
                                 totalImpString = Util.getFormatPrice(totalImp);
                             }
-                            html=html+"<div style='text-align:center;font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+totalBaseImpString+"</div>"
-                            +"<div style='text-align:center;font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>"+totalImpString+"</div>"
+                            html=html+"<div style='text-align:center;font-size: 9pt;width:50%;float:left;padding-right:1px;padding-left:1px;'>"+totalBaseImpString+"</div>"
+                            +"<div style='text-align:center;font-size: 9pt;width:100%;float:left;padding-right:1px;padding-left:1px;'>"+totalImpString+"</div>"
                             +"<div style='clear:left;'></div>"
-                            +"<div style='font-size: 8pt;width:25%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:33%;float:left;height:20px;padding-right:1px;padding-left:1px;'>----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:50%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
-                            +"<div style='font-size: 8pt;width:100%;float:left;height:20px;padding-right:1px;padding-left:1px;'>-----------------------------</div>"
+                            +"<div style='font-size: 9pt;width:25%;float:left;padding-left:1px;'>------------</div>"
+                            +"<div style='font-size: 9pt;width:33%;float:left;padding-left:1px;'>------------</div>"
+                            +"<div style='font-size: 9pt;width:50%;float:left;padding-left:1px;'>------------</div>"
+                            +"<div style='font-size: 9pt;width:100%;float:left;padding-left:1px;'>------------</div>"
                             +"<div style='clear:left;'></div>"
-                            +"<div style='font-size: 8pt;'>Lo Atentidió: "+Util.upperCase(purchase.getUsId().getUsName()+" "+purchase.getUsId().getUsLastName())+"</div>"
-                            +"<div style='width:100%;text-align:center;font-size: 8pt;height:20px;'>No."+purchase.getPurId()+"</div>"
-                            +"<div style='text-align:center;font-size: 8pt;'>"+Util.getFormatCurrentDate(new Date())+"</div>"
+                            +"<div style='font-size: 9pt;'>Lo Atentidió: "+Util.upperCase(purchase.getUsId().getUsName()+" "+purchase.getUsId().getUsLastName())+"</div>"
+                            +"<div style='width:100%;text-align:center;font-size: 9pt;'>No."+purchase.getPurId()+"</div>"
+                            +"<div style='text-align:center;font-size: 9pt;'>"+Util.getFormatCurrentDate(new Date())+"</div>"
                         + "</div>"
                     + "</body>"
                 + "</html>";

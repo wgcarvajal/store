@@ -19,10 +19,16 @@ import org.primefaces.PrimeFaces;
  */
 public class Util {
     
+    public static String nameStore = "TIENDA DE LUCHO";
+    public static String addressStore = "EL CORTIJO CRA 5B N. 63-07";
+    public static String nitStore = "1.075.220.291";
+    public static String bossStore = "WILSON G. CARVAJAL";
+    public static String phoneStore = "8351005";
     
     public static String projectPath = "/store";
     public static String PRODUCTIMAGEDIR= "/Users/aranda/filesStore/productImage/";
     public static String BILLDIR= "/Users/aranda/filesStore/bill/";
+    public static String FONTDIR= "/Users/aranda/filesStore/font/";
     
     
     public static String formatText(String value)
@@ -62,7 +68,7 @@ public class Util {
         NumberFormat format = NumberFormat.getInstance();
         Currency currency = Currency.getInstance("COP");
         format.setCurrency(currency);
-        return format.format(Math.round(price));
+        return format.format(price);
     }
     
     public static void addErrorMessage(String message,String messageDetail)

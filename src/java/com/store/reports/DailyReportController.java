@@ -43,8 +43,14 @@ public class DailyReportController implements Serializable {
     private Date maxiVisibleDate;
     private boolean endDate =false;
     private Date dateSelected;
+    private String billSelected;
 
     public List<Purchase> getPurchases() {
+        if(initDate!=null && finishDate!=null)
+        {
+            purchases = purchaseEJB.findPurchaseBetweenInitDateAndEndDate(initDate, finishDate);
+        }
+        
         return purchases;
     }
 
@@ -115,9 +121,18 @@ public class DailyReportController implements Serializable {
     public void setDateSelected(Date dateSelected) {
         this.dateSelected = dateSelected;
     }
+
+    public String getBillSelected() {
+        return billSelected;
+    }
+
+    public void setBillSelected(String billSelected) {
+        this.billSelected = billSelected;
+    }
     
     public void onInitDataSelect(SelectEvent event)
     {
+        finishDate = null;
         Date initialDate = (Date) event.getObject();
         total = 0;
         gain = 0;
@@ -125,6 +140,8 @@ public class DailyReportController implements Serializable {
         endDate = false;
         ownerTotals = new ArrayList<>();
         dateSelected = null;
+        purchases = null;
+        billSelected = null;
         if (initialDate != null) {
             initDate = initialDate;
             endDate = true;
@@ -132,6 +149,7 @@ public class DailyReportController implements Serializable {
         Util.update("formCalendar");
         Util.update(":formTotal");
         Util.update(":formOwner");
+        Util.update(":formPurchase");
     }
     
     public void onEndDateSelect(SelectEvent event) {
@@ -166,6 +184,7 @@ public class DailyReportController implements Serializable {
         }
         Util.update(":formTotal");
         Util.update(":formOwner");
+        Util.update(":formPurchase");
     }
     
     
@@ -218,6 +237,27 @@ public class DailyReportController implements Serializable {
     public Date minVisibleDate()
     {
         return null;
+    }
+    
+    public String formatDate(Date date)
+    {
+        return Util.getFormatCurrentDate(date);
+    }
+    
+    public void selectBillPurchase(Purchase p)
+    {
+        billSelected = p.getPurBill();
+        Util.update(":formBill");
+        Util.openDialog("dialogBill");
+    }
+    
+    public boolean billSelectedPurchase()
+    {
+        if(billSelected!=null && !billSelected.isEmpty())
+        {
+            return true;
+        }
+        return false;
     }
     
 }

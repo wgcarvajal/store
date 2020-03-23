@@ -76,6 +76,14 @@ public class PurchaseFacade extends AbstractFacade<Purchase> {
        return query.getResultList(); 
     }
     
+    public List findPurchaseBetweenInitDateAndEndDate(Date initialDate, Date endDate)
+    {
+       Query query = getEntityManager().createNamedQuery("Purchase.findPurchaseBetweenInitDateAndEndDate");
+       query.setParameter("initialDate", initialDate);
+       query.setParameter("endDate", endDate);
+       return query.getResultList(); 
+    }
+    
     public List findPurshaseTotalInitialDayEndDay(Date initialDate, Date endDate)
     {
        Query query = getEntityManager().createNamedQuery("Purchase.findPurshaseTotalInitialDayEndDay");

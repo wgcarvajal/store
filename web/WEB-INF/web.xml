@@ -33,6 +33,14 @@
         <servlet-name>ProductImageServlet</servlet-name>
         <url-pattern>/image</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>PDFServlet</servlet-name>
+        <servlet-class>com.store.servlets.PDFServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PDFServlet</servlet-name>
+        <url-pattern>/pdf</url-pattern>
+    </servlet-mapping>
     <security-constraint>
         <display-name>administrator</display-name>
         <web-resource-collection>

@@ -173,7 +173,49 @@
                 </h:form>
                 <br />
                 <br></br>
+                <h:form id="formPurchase">
+                    <p:dataTable paginator="true" rows="10"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 var="purchase" value="#{dailyReportController.purchases}">
+                        <p:column headerText="#{bundle.Date}">
+                            #{dailyReportController.formatDate(purchase.purDate)}
+                        </p:column>
+                        <p:column filterBy="#{purchase.purId}" headerText="#{bundle.Code}">
+                            #{purchase.purId}
+                        </p:column>
+                        <p:column headerText="#{bundle.Total}">
+                            #{purchase.purFinalAmount}
+                        </p:column>
+                        <p:column headerText="#{bundle.Cashier}">
+                            #{purchase.usId.usName} #{purchase.usId.usLastName}
+                        </p:column>
+                        <p:column headerText="#{bundle.Actions}">
+                            <div style="text-align: center;">
+                                <p:commandLink action="#{dailyReportController.selectBillPurchase(purchase)}">
+                                    <i class="pi pi-bars"/>
+                                </p:commandLink>
+                            </div>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
                 
+                <br />
+                <br></br>
+                <h:form id="formBill">
+                    <p:dialog 
+                        position="top"
+                        width="100%"
+                        height="500"
+                        header="#{bundle.Bill}"
+                        modal="true" widgetVar="dialogBill">
+                        <p:media rendered="#{dailyReportController.billSelectedPurchase()}" 
+                                 value="/pdf?pdf=#{dailyReportController.billSelected}" 
+                                 width="100%" height="100%" 
+                                 >
+                                <h:outputText value="No renderer available..." />
+                        </p:media>
+                    </p:dialog>
+                </h:form>
             </ui:define>
 
         </ui:composition>
