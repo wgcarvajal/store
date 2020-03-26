@@ -33,6 +33,7 @@ public class PDFServlet extends HttpServlet {
                 in.read(bytes);
                 in.close();
                 // Write image contents to response.
+                response.setContentType("application/pdf");
                 response.getOutputStream().write(bytes);
 
             } catch (IOException e) {

@@ -208,7 +208,9 @@
                         height="500"
                         header="#{bundle.Bill}"
                         modal="true" widgetVar="dialogBill">
-                        <p:media rendered="#{dailyReportController.billSelectedPurchase()}" 
+                        <p:media 
+                            id="media"
+                            rendered="#{dailyReportController.billSelectedPurchase()}" 
                                  value="/pdf?pdf=#{dailyReportController.billSelected}" 
                                  width="100%" height="100%" 
                                  >
