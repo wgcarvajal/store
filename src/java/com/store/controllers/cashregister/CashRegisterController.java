@@ -5,6 +5,7 @@
  */
 package com.store.controllers.cashregister;
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
@@ -15,7 +16,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerFontProvider;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.store.controllers.util.Encrypt;
+import com.store.controllers.util.PrintPdf;
 import com.store.controllers.util.Util;
+import com.store.entities.Cash;
 import com.store.entities.Client;
 import com.store.entities.Lend;
 import com.store.entities.Owner;
@@ -27,6 +30,7 @@ import com.store.entities.Purchase;
 import com.store.entities.Purchaseitem;
 import com.store.entities.Purchasetotal;
 import com.store.entities.User;
+import com.store.facade.CashFacade;
 import com.store.facade.ClientFacade;
 import com.store.facade.LendFacade;
 import com.store.facade.PayFacade;
@@ -50,9 +54,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -100,6 +107,7 @@ public class CashRegisterController implements Serializable {
     private String pay;
     private String lend;
     private String html;
+    private String printReceipt;
     private Product producWaitForWeight;
     private Product SelectedProduct;
     private Purchaseitem SelectedPurchaseItem;
@@ -122,6 +130,7 @@ public class CashRegisterController implements Serializable {
     private List<Purchasetotal> purchasetotals;
     private float sizeHeightPage;
     private float lineLenght;
+    private Cash currentCash;
     
     
     @EJB private PurchaseFacade purchaseEJB;
@@ -133,6 +142,23 @@ public class CashRegisterController implements Serializable {
     @EJB private PayFacade payEJB;
     @EJB private LendFacade lendEJB;
     @EJB private PurchasetotalFacade purchasetotalEJB;
+    @EJB private CashFacade cashEJB;
+    
+    @PostConstruct
+    public void init()
+    {
+       FacesContext fc = FacesContext.getCurrentInstance();
+       HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();
+       String ip = req.getRemoteAddr();
+       currentCash = cashEJB.findByCashIP(ip);
+       if(currentCash==null)
+       {
+           System.out.println("ip no valida");
+       }
+       else{
+           System.out.println("ip valida");
+       }
+    }
     
     public CashRegisterController()
     {
@@ -1246,13 +1272,27 @@ public class CashRegisterController implements Serializable {
         {
             try{
                 int a = Integer.parseInt(action);
-                if(a==1)
+                PrintPdf printPdf = new PrintPdf();
+                if(a==1)//print
                 {
+                    
+                    if(currentCash!=null)
+                    {
+                       //print
+                       printPdf.imprimirTicket(currentCash.getCashPrintName(),printReceipt);
+                       printPdf.openCashDrawer(currentCash.getCashPrintName(), currentCash.getCashPrintCommandOpenCashDrawer());
+                    }
+                    printReceipt = null;
                     Util.update(":formCode:focusCode");
                     Util.closeDialog("openSuccessfulPayment");
                 }
-                else if(a == 2)
+                else if(a == 2)//end
                 {
+                   if(currentCash!=null)
+                   {
+                       printPdf.openCashDrawer(currentCash.getCashPrintName(), currentCash.getCashPrintCommandOpenCashDrawer());
+                   }
+                   printReceipt = null;
                    Util.update(":formCode:focusCode");
                    Util.closeDialog("openSuccessfulPayment");         
                 }
@@ -1595,6 +1635,9 @@ public class CashRegisterController implements Serializable {
         float top = 30;
         float bottom = 20;
         Document document = new Document(new Rectangle(0,0,sizeWidthPage,sizeHeightPage));
+        if(sizeHeightPage>850)
+            document = new Document(new Rectangle(0,0,sizeWidthPage,850));
+        
         document.setMargins(left, right, top, bottom);
         try
         {
@@ -1614,7 +1657,8 @@ public class CashRegisterController implements Serializable {
             fontProvider.register(Util.FONTDIR + "fakereceipt.ttf", "fakereceipt");
             purchase.setPurBill(year+"/"+month+"/"+day+"/"+purchase.getPurId()+".pdf");
             purchaseEJB.edit(purchase);
-            FileOutputStream ficheroPdf = new FileOutputStream(path+purchase.getPurId()+".pdf");
+            printReceipt = path+purchase.getPurId()+".pdf";
+            FileOutputStream ficheroPdf = new FileOutputStream(printReceipt);
             PdfWriter pdfWriter = PdfWriter.getInstance(document, ficheroPdf);
             document.open();
             InputStream is = new ByteArrayInputStream(html.getBytes("UTF-8"));
@@ -1626,7 +1670,8 @@ public class CashRegisterController implements Serializable {
             barcode128.setCodeType(Barcode128.CODE128);
             barcode128.setFont(null);
             PdfContentByte pdfContentByte = pdfWriter.getDirectContent();
-            Image code128Image = barcode128.createImageWithBarcode(pdfContentByte, null, null);
+            BaseColor baseColor = new BaseColor(46, 46, 46);
+            Image code128Image = barcode128.createImageWithBarcode(pdfContentByte, baseColor, null);
             code128Image.scaleAbsolute(sizeWidthPage -(right+left) ,20);
             xMLWorkerHelper.parseXHtml(pdfWriter, document,is,cis,Charset.forName("UTF-8"),fontProvider);
             document.add(code128Image);
@@ -1647,7 +1692,7 @@ public class CashRegisterController implements Serializable {
         html = "<html>" +
                       "<head>"                      
                     + "</head>"
-                    + "<body>"
+                    + "<body style='color: #2E2E2E;'>"
                         +"<div style='font-size: 10pt;text-align:center;font-weight:bold;'>"+Util.nameStore+"</div>"
                         +"<div style='font-size: 8pt;text-align:center;'>"+Util.addressStore+"</div>"
                         +"<div style='font-size: 8pt;text-align:center;'>NIT "+Util.nitStore+"</div>"
