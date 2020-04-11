@@ -45,12 +45,9 @@ public class Category implements Serializable {
     @Column(name = "catId")
     private Long catId;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
     @Column(name = "catName")
     private String catName;
     @Lob
-    @Size(max = 65535)
     @Column(name = "catDescription")
     private String catDescription;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "catId")
@@ -123,7 +120,7 @@ public class Category implements Serializable {
 
     @Override
     public String toString() {
-        return "com.store.entities.Category[ catId=" + catId + " ]";
+        return "entities.Category[ catId=" + catId + " ]";
     }
     
 }

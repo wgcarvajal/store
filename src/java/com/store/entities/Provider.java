@@ -48,27 +48,18 @@ public class Provider implements Serializable {
     @Column(name = "provId")
     private Long provId;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
     @Column(name = "provName")
     private String provName;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 200)
     @Column(name = "provPhones")
     private String provPhones;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 200)
     @Column(name = "provAddress")
     private String provAddress;
-    @Size(max = 50)
     @Column(name = "provRut")
     private String provRut;
-    @Size(max = 50)
     @Column(name = "provNit")
     private String provNit;
-    @Size(max = 300)
     @Column(name = "provWeb")
     private String provWeb;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "provId")
@@ -175,7 +166,7 @@ public class Provider implements Serializable {
 
     @Override
     public String toString() {
-        return "com.store.entities.Provider[ provId=" + provId + " ]";
+        return "entities.Provider[ provId=" + provId + " ]";
     }
     
 }

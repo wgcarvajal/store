@@ -48,18 +48,15 @@ public class Lend implements Serializable {
     @Column(name = "lendId")
     private Long lendId;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "lendDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lendDate;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "lendValue")
     private int lendValue;
     @Column(name = "lendPayment")
     private Integer lendPayment;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "lendState")
     private int lendState;
     @JoinColumn(name = "cliId", referencedColumnName = "cliId")
@@ -161,7 +158,7 @@ public class Lend implements Serializable {
 
     @Override
     public String toString() {
-        return "com.Lend[ lendId=" + lendId + " ]";
+        return "entities.Lend[ lendId=" + lendId + " ]";
     }
     
 }

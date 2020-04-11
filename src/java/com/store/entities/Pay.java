@@ -45,12 +45,10 @@ public class Pay implements Serializable {
     @Column(name = "payId")
     private Long payId;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "payDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date payDate;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "payValue")
     private int payValue;
     @JoinColumn(name = "cliId", referencedColumnName = "cliId")
@@ -135,8 +133,7 @@ public class Pay implements Serializable {
 
     @Override
     public String toString() {
-        return "com.Pay[ payId=" + payId + " ]";
+        return "entities.Pay[ payId=" + payId + " ]";
     }
-    
     
 }

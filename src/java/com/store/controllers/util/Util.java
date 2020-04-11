@@ -23,7 +23,7 @@ public class Util {
     public static String addressStore = "EL CORTIJO CRA 5B N. 63-07";
     public static String nitStore = "1.075.220.291";
     public static String bossStore = "WILSON G. CARVAJAL";
-    public static String phoneStore = "8351005";
+    public static String phoneStore = "8624840";
     
     public static String projectPath = "/store";
     public static String PRODUCTIMAGEDIR= "/Users/aranda/filesStore/productImage/";

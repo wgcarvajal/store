@@ -52,6 +52,7 @@ public class ProductController implements Serializable
     private Provider provider;
     private String barCode;
     private String name;
+    private String billName;
     private String stock;
     private String baseNumber;
     private Unity unity;
@@ -143,6 +144,14 @@ public class ProductController implements Serializable
         this.name = name;
     }
 
+    public String getBillName() {
+        return billName;
+    }
+
+    public void setBillName(String billName) {
+        this.billName = billName;
+    }
+    
     public Unity getUnity() {
         return unity;
     }
@@ -367,6 +376,13 @@ public class ProductController implements Serializable
         Util.openDialog("editPresentationDialog");
     }
     
+    public void editBillName()
+    {
+        billName = product.getProdNameBill();
+        Util.update(":formEditNameBill");
+        Util.openDialog("editNameBillDialog");
+    }
+    
     public void editCategory()
     {
         category = product.getCatId();
@@ -517,6 +533,28 @@ public class ProductController implements Serializable
         else
         {
             Util.closeDialog("editNameDialog");
+        }
+    }
+    
+    public void okEditNameBill()
+    {
+        if(!billName.equals(product.getProdNameBill()))
+        {
+            product.setProdNameBill(billName);
+            productEJB.edit(product);
+            Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+
+            Util.update(":formProduct:panelProduct");
+            Util.update(":formProduct:messageGrowl");
+            Util.closeDialog("editNameBillDialog");
+        }
+        else
+        {
+            Util.closeDialog("editNameBillDialog");
         }
     }
     

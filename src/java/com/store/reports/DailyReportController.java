@@ -246,7 +246,7 @@ public class DailyReportController implements Serializable {
     
     public void selectBillPurchase(Purchase p)
     {
-        billSelected = p.getPurBill();
+        //billSelected = p.getPurBill();
         Util.update(":formBill");
         Util.openDialog("dialogBill");
     }

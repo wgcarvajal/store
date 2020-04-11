@@ -56,6 +56,7 @@ public class AddProductController implements Serializable
     private String stock;
     private String baseNumber;
     private String iva;
+    private String prodNameBill;
     private Brand brand;
     private Category category;
     private Unity unity;
@@ -117,6 +118,14 @@ public class AddProductController implements Serializable
 
     public void setUnitValue(String unitValue) {
         this.unitValue = unitValue;
+    }
+
+    public String getProdNameBill() {
+        return prodNameBill;
+    }
+
+    public void setProdNameBill(String prodNameBill) {
+        this.prodNameBill = prodNameBill;
     }
 
     public String getStock() {
@@ -271,6 +280,7 @@ public class AddProductController implements Serializable
         Product product = new Product();
         product.setProdBarCode(barCode);
         product.setProdName(Util.formatText(name));
+        product.setProdNameBill(prodNameBill);
         product.setBrandId(brand);
         product.setCatId(category);
         product.setUniId(unity);

@@ -43,8 +43,6 @@ public class Producttype implements Serializable {
     @Column(name = "prodtypeId")
     private Integer prodtypeId;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 20)
     @Column(name = "prodtypeValue")
     private String prodtypeValue;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodtypeId")
@@ -109,7 +107,7 @@ public class Producttype implements Serializable {
 
     @Override
     public String toString() {
-        return "test.Producttype[ prodtypeId=" + prodtypeId + " ]";
+        return "entities.Producttype[ prodtypeId=" + prodtypeId + " ]";
     }
     
 }

@@ -45,7 +45,6 @@ public class Provides implements Serializable {
     @Column(name = "providesId")
     private Long providesId;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "providesInitialDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date providesInitialDate;
@@ -133,7 +132,7 @@ public class Provides implements Serializable {
 
     @Override
     public String toString() {
-        return "com.store.entities.Provides[ providesId=" + providesId + " ]";
+        return "entities.Provides[ providesId=" + providesId + " ]";
     }
     
 }

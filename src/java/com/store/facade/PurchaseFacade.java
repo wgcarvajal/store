@@ -63,6 +63,7 @@ public class PurchaseFacade extends AbstractFacade<Purchase> {
     public List findSaleForResume(Long  cashierId)
     {
         Query query = getEntityManager().createNamedQuery("Purchase.findSaleForResume");
+        query.setHint("eclipselink.refresh", true);
         query.setParameter("cashierId", cashierId);
         return query.getResultList();
     }

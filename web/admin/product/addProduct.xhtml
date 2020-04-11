@@ -204,6 +204,24 @@
                         
                         <p:row>
                             <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.BillName}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="billName" class="inputTextLong"
+                                             required="true" requiredMessage="#{bundle.FieldRequired}"
+                                             value="#{addProductController.prodNameBill}"
+                                             maxlength="18"
+                                             >
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                <p:message for="billName"/>
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.Iva} (%):" />
                                 <h:outputLabel class="asterisk" value="*"/>
                             </p:column>

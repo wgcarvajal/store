@@ -37,11 +37,8 @@ public class Groupp implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 20)
     @Column(name = "grouId")
     private String grouId;
-    @Size(max = 256)
     @Column(name = "grouDescription")
     private String grouDescription;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "grouId")
@@ -101,7 +98,7 @@ public class Groupp implements Serializable {
 
     @Override
     public String toString() {
-        return "com.Groupp[ grouId=" + grouId + " ]";
+        return "entities.Groupp[ grouId=" + grouId + " ]";
     }
     
 }

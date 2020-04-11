@@ -43,8 +43,6 @@ public class Brand implements Serializable {
     @Column(name = "brandId")
     private Long brandId;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
     @Column(name = "brandName")
     private String brandName;
     @OneToMany(mappedBy = "brandId")
@@ -109,7 +107,7 @@ public class Brand implements Serializable {
 
     @Override
     public String toString() {
-        return "com.store.entities.Brand[ brandId=" + brandId + " ]";
+        return "entities.Brand[ brandId=" + brandId + " ]";
     }
     
 }

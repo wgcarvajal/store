@@ -51,6 +51,8 @@ public class Product implements Serializable {
     @Basic(optional = false)
     @Column(name = "prodName")
     private String prodName;
+    @Column(name = "prodNameBill")
+    private String prodNameBill;
     @Basic(optional = false)
     @Column(name = "prodStock")
     private int prodStock;
@@ -127,6 +129,14 @@ public class Product implements Serializable {
 
     public void setProdName(String prodName) {
         this.prodName = prodName;
+    }
+
+    public String getProdNameBill() {
+        return prodNameBill;
+    }
+
+    public void setProdNameBill(String prodNameBill) {
+        this.prodNameBill = prodNameBill;
     }
 
     public int getProdStock() {

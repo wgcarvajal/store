@@ -47,32 +47,21 @@ public class Client implements Serializable {
     @Column(name = "cliId")
     private Long cliId;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
     @Column(name = "cliIdentity")
     private String cliIdentity;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
     @Column(name = "cliName")
     private String cliName;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
     @Column(name = "cliLastName")
     private String cliLastName;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 200)
     @Column(name = "cliPhones")
     private String cliPhones;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 200)
     @Column(name = "cliAddress")
     private String cliAddress;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "cliCredit")
     private boolean cliCredit;
     @OneToMany(mappedBy = "cliId")
@@ -204,6 +193,6 @@ public class Client implements Serializable {
 
     @Override
     public String toString() {
-        return "com.Client[ cliId=" + cliId + " ]";
+        return "entities.Client[ cliId=" + cliId + " ]";
     }
 }

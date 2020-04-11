@@ -17,7 +17,7 @@ import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.io.FileInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import javax.print.Doc;
@@ -36,33 +36,34 @@ import javax.print.attribute.PrintRequestAttributeSet;
 public class PrintPdf {
     
     private PrinterJob pjob = null;
+    private int paperWidth;
+    private int paperImageableAreaWidth;
     
-        
-    public PrintPdf()
+    public PrintPdf(){};    
+    public PrintPdf(int paperSize)
     {
-
+       if(paperSize == 80)
+       {
+           paperWidth = 226;
+           paperImageableAreaWidth = 205;
+       }
     }
         
-    public void imprimirTicket(String printName,String filePath) {
+    public void imprimirTicket(ByteArrayOutputStream ficheroPdf,String printName) {
         try{
-            
-            FileInputStream fileInputStream = new FileInputStream(filePath);
             PrintService printService = this.findPrintService(printName);
             if(printService!=null)
             {
-                byte[] pdfContent = new byte[fileInputStream.available()];
-                fileInputStream.read(pdfContent, 0, fileInputStream.available());
-                ByteBuffer buffer = ByteBuffer.wrap(pdfContent);
+                ByteBuffer buffer = ByteBuffer.wrap(ficheroPdf.toByteArray());
                 final PDFFile pdfFile = new PDFFile(buffer);
-                fileInputStream.close();
                 System.out.println(pdfFile.getNumPages());
                 PDFPrintPage pages = new PDFPrintPage(pdfFile);
                 PrinterJob printJob = PrinterJob.getPrinterJob();
                 Book book = new Book();
                 PageFormat pageFormat = new PageFormat();
                 Paper paper = new Paper();
-                paper.setSize(226, pdfFile.getPage(0).getHeight());
-                paper.setImageableArea(0, 0, 205, pdfFile.getPage(0).getHeight());
+                paper.setSize(paperWidth, pdfFile.getPage(0).getHeight());
+                paper.setImageableArea(0, 0, paperImageableAreaWidth, pdfFile.getPage(0).getHeight());
                 pageFormat.setPaper(paper);
                 book.append(pages, pageFormat,pdfFile.getNumPages());
                 printJob.setPageable(book);

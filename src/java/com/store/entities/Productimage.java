@@ -41,11 +41,9 @@ public class Productimage implements Serializable {
     @Basic(optional = false)
     @Column(name = "prodimgId")
     private Long prodimgId;
-    @Size(min = 1, max = 100)
     @Column(name = "prodimgPath")
     private String prodimgPath;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "prodimgMain")
     private boolean prodimgMain;
     @JoinColumn(name = "prodId", referencedColumnName = "prodId")
@@ -118,6 +116,6 @@ public class Productimage implements Serializable {
 
     @Override
     public String toString() {
-        return "com.Productimage[ prodimgId=" + prodimgId + " ]";
+        return "entities.Productimage[ prodimgId=" + prodimgId + " ]";
     }
 }

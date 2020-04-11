@@ -69,8 +69,6 @@ public class Purchase implements Serializable {
     @Basic(optional = false)
     @Column(name = "purState")
     private int purState;
-    @Column(name = "purBill")
-    private String purBill;
     @JoinColumn(name = "cliId", referencedColumnName = "cliId")
     @ManyToOne
     private Client cliId;
@@ -141,14 +139,6 @@ public class Purchase implements Serializable {
 
     public void setPurState(int purState) {
         this.purState = purState;
-    }
-
-    public String getPurBill() {
-        return purBill;
-    }
-
-    public void setPurBill(String purBill) {
-        this.purBill = purBill;
     }
 
     public Client getCliId() {

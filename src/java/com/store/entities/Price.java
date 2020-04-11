@@ -46,11 +46,9 @@ public class Price implements Serializable {
     @Column(name = "priceId")
     private Long priceId;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "priceValue")
     private int priceValue;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "priceInitialDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date priceInitialDate;
@@ -136,7 +134,7 @@ public class Price implements Serializable {
 
     @Override
     public String toString() {
-        return "com.store.entities.Price[ priceId=" + priceId + " ]";
+        return "entities.Price[ priceId=" + priceId + " ]";
     }
     
 }

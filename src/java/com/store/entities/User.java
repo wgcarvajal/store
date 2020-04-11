@@ -51,43 +51,28 @@ public class User implements Serializable {
     @Column(name = "usId")
     private Long usId;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 30)
     @Column(name = "usIdentification")
     private String usIdentification;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
     @Column(name = "usName")
     private String usName;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
     @Column(name = "usLastName")
     private String usLastName;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 75)
     @Column(name = "usUserName")
     private String usUserName;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 256)
     @Column(name = "usPassword")
     private String usPassword;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 200)
     @Column(name = "usEmail")
     private String usEmail;
-    @Size(max = 200)
     @Column(name = "usAddress")
     private String usAddress;
-    @Size(max = 200)
     @Column(name = "usPhone")
     private String usPhone;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "usActive")
     private boolean usActive;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId")
@@ -255,6 +240,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "com.User[ usId=" + usId + " ]";
+        return "entities.User[ usId=" + usId + " ]";
     }
 }

@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author aranda
+ * @author WIlson carvajal
  */
 @Entity
 @Table(name = "cash", catalog = "storebd", schema = "")
@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Cash.findByCashId", query = "SELECT c FROM Cash c WHERE c.cashId = :cashId"),
     @NamedQuery(name = "Cash.findByCashName", query = "SELECT c FROM Cash c WHERE c.cashName = :cashName"),
     @NamedQuery(name = "Cash.findByCashIP", query = "SELECT c FROM Cash c WHERE c.cashIP = :cashIP"),
+    @NamedQuery(name = "Cash.findByCashPaperSize", query = "SELECT c FROM Cash c WHERE c.cashPaperSize = :cashPaperSize"),
     @NamedQuery(name = "Cash.findByCashPrintName", query = "SELECT c FROM Cash c WHERE c.cashPrintName = :cashPrintName"),
     @NamedQuery(name = "Cash.findByCashPrintCommandOpenCashDrawer", query = "SELECT c FROM Cash c WHERE c.cashPrintCommandOpenCashDrawer = :cashPrintCommandOpenCashDrawer")})
 public class Cash implements Serializable {
@@ -46,6 +47,9 @@ public class Cash implements Serializable {
     @Column(name = "cashIP")
     private String cashIP;
     @Basic(optional = false)
+    @Column(name = "cashPaperSize")
+    private int cashPaperSize;
+    @Basic(optional = false)
     @Column(name = "cashPrintName")
     private String cashPrintName;
     @Basic(optional = false)
@@ -59,10 +63,11 @@ public class Cash implements Serializable {
         this.cashId = cashId;
     }
 
-    public Cash(Integer cashId, String cashName, String cashIP, String cashPrintName, String cashPrintCommandOpenCashDrawer) {
+    public Cash(Integer cashId, String cashName, String cashIP, int cashPaperSize, String cashPrintName, String cashPrintCommandOpenCashDrawer) {
         this.cashId = cashId;
         this.cashName = cashName;
         this.cashIP = cashIP;
+        this.cashPaperSize = cashPaperSize;
         this.cashPrintName = cashPrintName;
         this.cashPrintCommandOpenCashDrawer = cashPrintCommandOpenCashDrawer;
     }
@@ -89,6 +94,14 @@ public class Cash implements Serializable {
 
     public void setCashIP(String cashIP) {
         this.cashIP = cashIP;
+    }
+
+    public int getCashPaperSize() {
+        return cashPaperSize;
+    }
+
+    public void setCashPaperSize(int cashPaperSize) {
+        this.cashPaperSize = cashPaperSize;
     }
 
     public String getCashPrintName() {

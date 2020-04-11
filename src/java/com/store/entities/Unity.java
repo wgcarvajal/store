@@ -44,13 +44,9 @@ public class Unity implements Serializable {
     @Column(name = "uniId")
     private Integer uniId;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 60)
     @Column(name = "uniName")
     private String uniName;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 5)
     @Column(name = "uniAbbreviation")
     private String uniAbbreviation;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "uniId")
@@ -124,7 +120,7 @@ public class Unity implements Serializable {
 
     @Override
     public String toString() {
-        return "com.store.entities.Unity[ uniId=" + uniId + " ]";
+        return "entities.Unity[ uniId=" + uniId + " ]";
     }
     
 }

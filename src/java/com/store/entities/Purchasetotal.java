@@ -59,7 +59,7 @@ public class Purchasetotal implements Serializable {
         this.purToId = purToId;
     }
 
-    public Purchasetotal(Long purToId, int purToTotal, int purToGain, int purToIva) {
+    public Purchasetotal(Long purToId, int purToTotal, int purToGain, float purToIva) {
         this.purToId = purToId;
         this.purToTotal = purToTotal;
         this.purToGain = purToGain;

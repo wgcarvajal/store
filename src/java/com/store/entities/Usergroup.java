@@ -41,8 +41,6 @@ public class Usergroup implements Serializable {
     @Column(name = "id")
     private Long id;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 75)
     @Column(name = "usUserName")
     private String usUserName;
     @JoinColumn(name = "grouId", referencedColumnName = "grouId")
@@ -118,7 +116,7 @@ public class Usergroup implements Serializable {
 
     @Override
     public String toString() {
-        return "com.Usergroup[ id=" + id + " ]";
+        return "entities.Usergroup[ id=" + id + " ]";
     }
     
 }
