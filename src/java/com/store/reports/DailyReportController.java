@@ -5,11 +5,15 @@
  */
 package com.store.reports;
 
+import com.store.controllers.util.GeneratePdf;
+import com.store.controllers.util.PrintPdf;
 import com.store.controllers.util.Util;
 import com.store.entities.Owner;
 import com.store.entities.Purchase;
+import com.store.entities.Purchaseitem;
 import com.store.entities.Purchasetotal;
 import com.store.facade.PurchaseFacade;
+import com.store.facade.PurchaseitemFacade;
 import com.store.model.OwnerTotal;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +37,8 @@ public class DailyReportController implements Serializable {
     private List<Purchasetotal> purchasetotals;
     @EJB
     private PurchaseFacade purchaseEJB;
+    @EJB
+    private PurchaseitemFacade purchaseitemEJB;
     private long total;
     private long gain;
     private double iva;
@@ -246,9 +252,19 @@ public class DailyReportController implements Serializable {
     
     public void selectBillPurchase(Purchase p)
     {
-        //billSelected = p.getPurBill();
+        billSelected = p.getPurId()+"";
         Util.update(":formBill");
         Util.openDialog("dialogBill");
+    }
+    
+    public void printBill(Purchase p)
+    {
+        List<Purchaseitem>purchaseitems = purchaseitemEJB.findByPurId(p.getPurId());
+        GeneratePdf generatePdf = new GeneratePdf(80);
+        generatePdf.generatePDF(p, purchaseitems);
+        PrintPdf printPdf = new PrintPdf(80);
+        printPdf.imprimirTicket(generatePdf.getFicheroPdf(), "SAT 22TUS");
+        
     }
     
     public boolean billSelectedPurchase()

@@ -194,6 +194,11 @@
                                 <p:commandLink action="#{dailyReportController.selectBillPurchase(purchase)}">
                                     <i class="pi pi-bars"/>
                                 </p:commandLink>
+                                <p:commandLink action="#{dailyReportController.printBill(purchase)}"
+                                               onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                               >
+                                    <i class="pi pi-print"></i>
+                                </p:commandLink>
                             </div>
                         </p:column>
                     </p:dataTable>
@@ -211,7 +216,7 @@
                         <p:media 
                             id="media"
                             rendered="#{dailyReportController.billSelectedPurchase()}" 
-                                 value="/pdf?pdf=#{dailyReportController.billSelected}" 
+                                 value="/pdf?pdf=#{dailyReportController.billSelected}.pdf" 
                                  width="100%" height="100%" 
                                  >
                                 <h:outputText value="No renderer available..." />

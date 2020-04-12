@@ -25,6 +25,7 @@ import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -54,16 +55,83 @@ public class GeneratePdf {
             sizeWidthPage = 226;
             right=10;
             left = 10;
-            top = 20;
+            top = 0;
             bottom = 20;
             maxPaperHeight = 850;
             fontTitleSize = "10pt";
             fontSize = "8pt";
             lineLenght = 11.6f;
-            sizeHeightPage = 20 + 20 + 13 +(lineLenght*21)+20;
+            sizeHeightPage = 0 + 20 + 13 +(lineLenght*21)+20;
         }
     }
     
+    public void generatePDF(Purchase purchase,List <Purchaseitem>purchaseitems) {
+        firstStringHtml(purchase);
+        long amount = 0;
+        long totalProductIva0 = 0;
+        long totalProductIva5 = 0;
+        long totalProductIva19 = 0;
+        for (Purchaseitem p : purchaseitems) {
+            secondStringHtml(p);
+            double iva = 0.0;
+            double vIva = 0.0;
+            long gain = 0;
+            long v = 0;
+            if (p.getIva() == 5) {
+                iva = 1.05;
+            } else if (p.getIva() == 19) {
+                iva = 1.19;
+            }
+
+            if (p.getProdId().getProdtypeId().getProdtypeValue().equals("Sin empaquetar")) {
+                String unity = p.getProdId().getUniId().getUniAbbreviation();
+                switch (unity) {
+                    case "gr":
+                        double fv = p.getPurItemQuantity() / 1000.0;
+                        double pfv = fv * p.getPricePurValue();
+                        fv = fv * p.getPriceValue();
+                        v = Math.round(fv);
+                        long pv = Math.round(pfv);
+                        gain = v - pv;
+
+                        if (p.getIva() > 0) {
+                            double vWIva = gain / iva;
+                            vIva = gain - vWIva;
+                        } else {
+                            vIva = 0;
+                        }
+                        amount = amount + v;
+                }
+            } else {
+                v = p.getPurItemQuantity() * p.getPriceValue();
+                int pv = p.getPurItemQuantity() * p.getPricePurValue();
+                gain = v - pv;
+                if (p.getIva() > 0) {
+                    double vWIva = gain / iva;
+                    vIva = gain - vWIva;
+                } else {
+                    vIva = 0;
+                }
+                amount = amount + v;
+            }
+
+            if (p.getIva() == 0) {
+                totalProductIva0 = totalProductIva0 + v;
+            } else if (p.getIva() == 5) {
+                totalProductIva5 = totalProductIva5 + v;
+            } else if (p.getIva() == 19) {
+                totalProductIva19 = totalProductIva19 + v;
+            }
+        }
+        String idString = purchase.getPurId() + "";
+        int length = idString.length();
+        String barCode = "100000000000000000000000000000";
+        length = 30 - length;
+        barCode = barCode.substring(0, length);
+        barCode = barCode + idString;
+        thirdStringHtml(purchase.getPurFinalAmount(), purchase.getPurFinalAmount(), 0, barCode, purchase, totalProductIva0, totalProductIva5, totalProductIva19);
+        generatePdf(purchase, barCode);
+    }
     
     public void generatePdf(Purchase purchase,String barCode)
     {  
@@ -92,7 +160,7 @@ public class GeneratePdf {
             barcode128.setCodeType(Barcode128.CODE128);
             barcode128.setFont(null);
             PdfContentByte pdfContentByte = pdfWriter.getDirectContent();
-            BaseColor baseColor = new BaseColor(28, 28, 28);
+            BaseColor baseColor = new BaseColor(21, 21, 21);
             Image code128Image = barcode128.createImageWithBarcode(pdfContentByte, baseColor, null);
             code128Image.scaleAbsolute(sizeWidthPage -(right+left) ,20);
             xMLWorkerHelper.parseXHtml(pdfWriter, document,is,cis,Charset.forName("UTF-8"),fontProvider);
@@ -112,7 +180,7 @@ public class GeneratePdf {
         html = "<html>" +
                       "<head>"                      
                     + "</head>"
-                    + "<body style='color: #1C1C1C;'>"
+                    + "<body style='color: #151515;'>"
                         +"<div style='font-size: "+fontTitleSize+";text-align:center;font-weight:bold;'>"+Util.nameStore+"</div>"
                         +"<div style='font-size: "+fontSize+";text-align:center;'>"+Util.addressStore+"</div>"
                         +"<div style='font-size: "+fontSize+";text-align:center;'>NIT "+Util.nitStore+"</div>"
