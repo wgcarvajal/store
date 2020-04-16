@@ -129,7 +129,7 @@ public class GeneratePdf {
         length = 30 - length;
         barCode = barCode.substring(0, length);
         barCode = barCode + idString;
-        thirdStringHtml(purchase.getPurFinalAmount(), purchase.getPurFinalAmount(), 0, barCode, purchase, totalProductIva0, totalProductIva5, totalProductIva19);
+        thirdStringHtml(purchase.getPurFinalAmount(), purchase.getPurReceivedAmount(), (purchase.getPurReceivedAmount() - purchase.getPurFinalAmount()), barCode, purchase, totalProductIva0, totalProductIva5, totalProductIva19);
         generatePdf(purchase, barCode);
     }
     

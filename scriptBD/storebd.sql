@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 11-04-2020 a las 22:04:31
+-- Tiempo de generación: 16-04-2020 a las 06:30:25
 -- Versión del servidor: 5.7.28
 -- Versión de PHP: 7.3.11
 
@@ -403,6 +403,7 @@ CREATE TABLE `purchase` (
   `purId` bigint(20) NOT NULL,
   `purDate` datetime NOT NULL,
   `purFinalAmount` int(11) DEFAULT NULL,
+  `purReceivedAmount` int(11) DEFAULT NULL,
   `purDiscount` int(11) DEFAULT NULL,
   `purPayment` int(11) DEFAULT NULL,
   `cliId` bigint(20) DEFAULT NULL,
@@ -414,8 +415,8 @@ CREATE TABLE `purchase` (
 -- Volcado de datos para la tabla `purchase`
 --
 
-INSERT INTO `purchase` (`purId`, `purDate`, `purFinalAmount`, `purDiscount`, `purPayment`, `cliId`, `usId`, `purState`) VALUES
-(120, '2020-04-11 16:03:53', 25298, NULL, NULL, NULL, 3, 1);
+INSERT INTO `purchase` (`purId`, `purDate`, `purFinalAmount`, `purReceivedAmount`, `purDiscount`, `purPayment`, `cliId`, `usId`, `purState`) VALUES
+(120, '2020-04-11 16:03:53', 25298, 30000, NULL, NULL, NULL, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -473,8 +474,8 @@ CREATE TABLE `purchasetotal` (
 --
 
 INSERT INTO `purchasetotal` (`purToId`, `purId`, `ownId`, `purToTotal`, `purToGain`, `purToIva`) VALUES
-(49, 120, 2, 6000, 1200, 57.1429),
-(50, 120, 1, 19298, 1800, 0);
+(51, 120, 2, 6000, 1200, 57.1429),
+(52, 120, 1, 19298, 1800, 0);
 
 -- --------------------------------------------------------
 
@@ -807,7 +808,7 @@ ALTER TABLE `purchaseitem`
 -- AUTO_INCREMENT de la tabla `purchasetotal`
 --
 ALTER TABLE `purchasetotal`
-  MODIFY `purToId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `purToId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `unity`

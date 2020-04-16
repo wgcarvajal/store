@@ -62,6 +62,8 @@ public class Purchase implements Serializable {
     private Date purDate;
     @Column(name = "purFinalAmount")
     private Integer purFinalAmount;
+    @Column(name = "purReceivedAmount")
+    private Integer purReceivedAmount;
     @Column(name = "purDiscount")
     private Integer purDiscount;
     @Column(name = "purPayment")
@@ -115,6 +117,14 @@ public class Purchase implements Serializable {
 
     public void setPurFinalAmount(Integer purFinalAmount) {
         this.purFinalAmount = purFinalAmount;
+    }
+
+    public Integer getPurReceivedAmount() {
+        return purReceivedAmount;
+    }
+
+    public void setPurReceivedAmount(Integer purReceivedAmount) {
+        this.purReceivedAmount = purReceivedAmount;
     }
 
     public Integer getPurDiscount() {

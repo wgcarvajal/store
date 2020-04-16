@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
 
@@ -190,14 +191,19 @@
                             #{purchase.usId.usName} #{purchase.usId.usLastName}
                         </p:column>
                         <p:column headerText="#{bundle.Actions}">
-                            <div style="text-align: center;">
-                                <p:commandLink action="#{dailyReportController.selectBillPurchase(purchase)}">
-                                    <i class="pi pi-bars"/>
-                                </p:commandLink>
-                                <p:commandLink action="#{dailyReportController.printBill(purchase)}"
-                                               onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                            <div style="text-align: center;text-decoration: none !important;">
+                                <p:commandLink 
+                                    style="color: black;text-decoration: none !important;"
+                                    action="#{dailyReportController.selectBillPurchase(purchase)}"
                                                >
-                                    <i class="pi pi-print"></i>
+                                    <i class="fa fa-fw fa-server"/>
+                                </p:commandLink>
+                                <p:commandLink 
+                                    style="color: black;text-decoration: none !important;"
+                                    action="#{dailyReportController.printBill(purchase)}"
+                                               onstart="PF('efectoCarga').show()"  
+                                               onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-print"/>
                                 </p:commandLink>
                             </div>
                         </p:column>
@@ -208,19 +214,97 @@
                 <br></br>
                 <h:form id="formBill">
                     <p:dialog 
+                        rendered="#{dailyReportController.billSelectedPurchase()}"
                         position="top"
-                        width="100%"
-                        height="500"
+                        width="50%"
+                        height="400"
                         header="#{bundle.Bill}"
                         modal="true" widgetVar="dialogBill">
-                        <p:media 
-                            id="media"
-                            rendered="#{dailyReportController.billSelectedPurchase()}" 
-                                 value="/pdf?pdf=#{dailyReportController.billSelected}.pdf" 
+                        <iframe 
+                            src="#{dailyReportController.urlServer()}/pdf?pdf=#{dailyReportController.billSelected}.pdf#toolbar=0" 
                                  width="100%" height="100%" 
-                                 >
-                                <h:outputText value="No renderer available..." />
-                        </p:media>
+                                 />
+                    </p:dialog>
+                </h:form>
+                
+                
+                <h:form id="formPrint">
+                    <p:dialog
+                        resizable="false"
+                        position="top"
+                        width="50%"
+                        header="#{bundle.Print}"
+                        modal="true" widgetVar="dialogPrint">
+                        <p:panelGrid styleClass="panelgrid">
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel value="#{bundle.SelectedPrint}:" />
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu 
+                                       
+                                        converter="selectOneMenuConverter"
+                                        value="#{dailyReportController.cashSelected}">
+                                        
+                                        <f:selectItem itemLabel="Seleccione.." itemValue="" />
+                                        <f:selectItems value="#{dailyReportController.cashList}"
+                                                       var="cash"
+                                                       itemLabel="#{cash.cashName} | #{bundle.PaperSize}:#{cash.cashPaperSize}mm"
+                                                       itemValue="#{cash}"
+                                                       />
+                                        <p:ajax event="change"  update="panelPrintInfo"
+                                                onstart="PF('efectoCarga').show()"  
+                                               onsuccess="PF('efectoCarga').hide()"
+                                                />
+                                    </p:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <p:panelGrid id="panelPrintInfo" styleClass="panelgrid">
+                            <p:row rendered="#{dailyReportController.cashSelected !=null}">
+                                <p:column>
+                                    <p:outputLabel value="#{bundle.IP}:"/>
+                                </p:column>
+                                <p:column>
+                                    #{dailyReportController.cashSelected.cashIP}
+                                </p:column>
+                            </p:row>
+                            <p:row rendered="#{dailyReportController.cashSelected !=null}">
+                                <p:column>
+                                    <p:outputLabel value="#{bundle.Name}:"/>
+                                </p:column>
+                                <p:column>
+                                    #{dailyReportController.cashSelected.cashName}
+                                </p:column>
+                            </p:row>
+                            <p:row rendered="#{dailyReportController.cashSelected !=null}">
+                                <p:column>
+                                    <p:outputLabel value="#{bundle.Printer}:"/>
+                                </p:column>
+                                <p:column>
+                                    #{dailyReportController.cashSelected.cashPrintName}
+                                </p:column>
+                            </p:row>
+                            <p:row rendered="#{dailyReportController.cashSelected !=null}">
+                                <p:column>
+                                    <p:outputLabel value="#{bundle.PaperSize}:"/>
+                                </p:column>
+                                <p:column>
+                                    #{dailyReportController.cashSelected.cashPaperSize}mm
+                                </p:column>
+                            </p:row>
+                            <p:row rendered="#{dailyReportController.cashSelected !=null}">
+                                <p:column style="text-align: center !important;" colspan="2">
+                                    <p:commandButton 
+                                        action="#{dailyReportController.print}"
+                                        value="#{bundle.Print}"
+                                               onstart="PF('efectoCarga').show()"  
+                                               onsuccess="PF('efectoCarga').hide()"
+                                                     />
+                                </p:column>
+                                
+                            </p:row>
+                        </p:panelGrid>
                     </p:dialog>
                 </h:form>
             </ui:define>

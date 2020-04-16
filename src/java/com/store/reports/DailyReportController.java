@@ -8,10 +8,12 @@ package com.store.reports;
 import com.store.controllers.util.GeneratePdf;
 import com.store.controllers.util.PrintPdf;
 import com.store.controllers.util.Util;
+import com.store.entities.Cash;
 import com.store.entities.Owner;
 import com.store.entities.Purchase;
 import com.store.entities.Purchaseitem;
 import com.store.entities.Purchasetotal;
+import com.store.facade.CashFacade;
 import com.store.facade.PurchaseFacade;
 import com.store.facade.PurchaseitemFacade;
 import com.store.model.OwnerTotal;
@@ -39,18 +41,23 @@ public class DailyReportController implements Serializable {
     private PurchaseFacade purchaseEJB;
     @EJB
     private PurchaseitemFacade purchaseitemEJB;
+    @EJB
+    private CashFacade cashEJB;
     private long total;
     private long gain;
     private double iva;
     private List<OwnerTotal> ownerTotals = new ArrayList<>();
     List<Object[]> products = new ArrayList<>();
+    private List<Cash>cashList;
     private Date initDate;
     private Date finishDate;
     private Date maxiVisibleDate;
     private boolean endDate =false;
     private Date dateSelected;
     private String billSelected;
-
+    private Purchase printPurchase;
+    private Cash cashSelected;
+ 
     public List<Purchase> getPurchases() {
         if(initDate!=null && finishDate!=null)
         {
@@ -134,6 +141,22 @@ public class DailyReportController implements Serializable {
 
     public void setBillSelected(String billSelected) {
         this.billSelected = billSelected;
+    }
+
+    public List<Cash> getCashList() {
+        return cashList;
+    }
+
+    public void setCashList(List<Cash> cashList) {
+        this.cashList = cashList;
+    }
+
+    public Cash getCashSelected() {
+        return cashSelected;
+    }
+
+    public void setCashSelected(Cash cashSelected) {
+        this.cashSelected = cashSelected;
     }
     
     public void onInitDataSelect(SelectEvent event)
@@ -259,12 +282,25 @@ public class DailyReportController implements Serializable {
     
     public void printBill(Purchase p)
     {
-        List<Purchaseitem>purchaseitems = purchaseitemEJB.findByPurId(p.getPurId());
-        GeneratePdf generatePdf = new GeneratePdf(80);
-        generatePdf.generatePDF(p, purchaseitems);
-        PrintPdf printPdf = new PrintPdf(80);
-        printPdf.imprimirTicket(generatePdf.getFicheroPdf(), "SAT 22TUS");
-        
+        printPurchase = p;
+        cashList = cashEJB.findAll();
+        cashSelected = null;
+        Util.update(":formPrint");
+        Util.openDialog("dialogPrint");
+    }
+    
+    public void print()
+    {
+        List<Purchaseitem>purchaseitems = purchaseitemEJB.findByPurId(printPurchase.getPurId());
+        GeneratePdf generatePdf = new GeneratePdf(cashSelected.getCashPaperSize());
+        generatePdf.generatePDF(printPurchase, purchaseitems);
+        PrintPdf printPdf = new PrintPdf(cashSelected.getCashPaperSize());
+        printPdf.imprimirTicket(generatePdf.getFicheroPdf(), cashSelected.getCashPrintName());
+        printPurchase = null;
+        cashList =null;
+        cashSelected = null;
+        Util.update(":formPrint");
+        Util.closeDialog("dialogPrint");
     }
     
     public boolean billSelectedPurchase()
@@ -274,6 +310,11 @@ public class DailyReportController implements Serializable {
             return true;
         }
         return false;
+    }
+    
+    public String urlServer()
+    {
+        return Util.urlServer + Util.projectPath;
     }
     
 }

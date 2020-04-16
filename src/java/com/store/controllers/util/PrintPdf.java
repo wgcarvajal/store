@@ -68,6 +68,7 @@ public class PrintPdf {
                 book.append(pages, pageFormat,pdfFile.getNumPages());
                 printJob.setPageable(book);
                 printJob.setPrintService(printService);
+                printJob.setJobName("Receipt");
                 printJob.print();
             }
             else

@@ -25,14 +25,15 @@ public class Util {
     public static String bossStore = "WILSON G. CARVAJAL";
     public static String phoneStore = "8624840";
     
+    public static String urlServer = "http://localhost:8080";
     public static String projectPath = "/store";
-    /*public static String PRODUCTIMAGEDIR= "/Users/aranda/filesStore/productImage/";
+    public static String PRODUCTIMAGEDIR= "/Users/aranda/filesStore/productImage/";
     public static String BILLDIR= "/Users/aranda/filesStore/bill/";
-    public static String FONTDIR= "/Users/aranda/filesStore/font/";*/
+    public static String FONTDIR= "/Users/aranda/filesStore/font/";
     
-     public static String PRODUCTIMAGEDIR= "D:\\filesStore\\productImage\\";
+    /*public static String PRODUCTIMAGEDIR= "D:\\filesStore\\productImage\\";
     public static String BILLDIR= "D:\\filesStore\\bill\\";
-    public static String FONTDIR= "D:\\filesStore\\font\\";
+    public static String FONTDIR= "D:\\filesStore\\font\\";*/
     
     
     public static String formatText(String value)

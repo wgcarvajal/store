@@ -1218,6 +1218,7 @@ public class CashRegisterController implements Serializable {
                         receivedAmount = Util.getFormatPrice(rm);
                         total = Util.getFormatPrice(amount);
                         purchase.setPurFinalAmount(amount);
+                        purchase.setPurReceivedAmount(rm);
                         purchase.setPurState(1);
                         purchaseEJB.edit(purchase);
                         for(Purchasetotal pt : purchasetotals)
