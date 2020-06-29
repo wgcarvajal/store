@@ -9,6 +9,7 @@ package com.store.controllers.cashregister;
 import com.store.controllers.util.Encrypt;
 import com.store.controllers.util.GeneratePdf;
 import com.store.controllers.util.PrintPdf;
+import com.store.controllers.util.Scale;
 import com.store.controllers.util.Util;
 import com.store.entities.Cash;
 import com.store.entities.Client;
@@ -41,6 +42,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -61,6 +63,7 @@ public class CashRegisterController implements Serializable {
         boolean isCorrectPassword(String password);
         User getCurrentCashier();
     } 
+    private Scale scale;
     
     private boolean openCash;
     private boolean closeCash;
@@ -672,9 +675,27 @@ public class CashRegisterController implements Serializable {
         saleDescription = true;
         closeCash = false;
         selectProduct = true;
+        initScale();
         Util.update(":formCode:focusCode");
         Util.update(":formMenu");
         Util.update(":formSaleDescription");
+    }
+    
+    public void initScale()
+    {
+        if(scale!=null){
+            scale.stop();
+        }
+        scale = new Scale("COM5");
+        scale.start();
+    }
+    
+    public void stopScale()
+    {
+        if(scale!=null){
+            scale.stop();
+            scale = null;
+        }
     }
     
     public void resumeSale(OnSesionUserController onSesionUserController)
@@ -741,6 +762,7 @@ public class CashRegisterController implements Serializable {
             purchase = null;
         }
         purchaseitems = null;
+        stopScale();
         Util.update(":formCode:focusCode");
         Util.update(":formMenu");
         Util.update(":formSaleDescription");
@@ -758,7 +780,7 @@ public class CashRegisterController implements Serializable {
             }
             else{
                 producWaitForWeight = product;
-                openAddWeight();
+                readWeight(onSesionUserController);
             }
         }
         else
@@ -1387,6 +1409,7 @@ public class CashRegisterController implements Serializable {
         payment = true;
         purchase = selectedPurchaseResume;
         purchaseitems = purchaseItemEJB.findByPurId(purchase.getPurId());
+        initScale();
         Util.update(":formCode:focusCode");
         Util.update(":formMenu");
         Util.update(":formSaleDescription");
@@ -1610,4 +1633,26 @@ public class CashRegisterController implements Serializable {
         Util.update(":formOpenDebtor:panelDebtorBottom");
     }
     
+    @PreDestroy
+    public void destroy()
+    {
+        stopScale();
+        System.out.println("destroy");
+    }
+
+    public void readWeight(OnSesionUserController onSesionUserController)
+    {
+        if (scale != null) {
+            scale.setWeight("0");
+            while(scale.getWeight().equals("0")) {
+                System.out.println("entro");
+            }
+            weight = scale.getWeight();
+            addProduct(producWaitForWeight, onSesionUserController, true);
+        } else
+        {
+            openAddWeight();
+        }
+    }
+         
 }
