@@ -34,6 +34,7 @@ import com.store.facade.PurchaseFacade;
 import com.store.facade.PurchaseitemFacade;
 import com.store.facade.PurchasetotalFacade;
 import com.store.model.Debt;
+import com.store.model.ScaleIP;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,6 +64,10 @@ public class CashRegisterController implements Serializable {
         boolean isCorrectPassword(String password);
         User getCurrentCashier();
     } 
+    
+    private final String TAG = "CashRegisterController";
+    
+    private static List<ScaleIP>listScaleIp;
     private Scale scale;
     
     private boolean openCash;
@@ -136,10 +141,10 @@ public class CashRegisterController implements Serializable {
        currentCash = cashEJB.findByCashIP(ip);
        if(currentCash==null)
        {
-           System.out.println("ip no valida");
+           Util.logWarning(TAG, "init", "ip no valida: "+ip);
        }
        else{
-           System.out.println("ip valida");
+           Util.logInformation(TAG, "init", "ip valida: "+ip);
        }
     }
     
@@ -683,11 +688,44 @@ public class CashRegisterController implements Serializable {
     
     public void initScale()
     {
+        if(currentCash==null)
+        {
+            Util.logError(TAG, "initScale", "currentCash is null");
+            return;
+        }
+        
         if(scale!=null){
             scale.stop();
         }
-        scale = new Scale("COM5");
-        scale.start();
+        
+        if(listScaleIp==null)
+        {
+            listScaleIp = new ArrayList<>();
+        }
+        else if(!listScaleIp.isEmpty()){
+            for(int i = listScaleIp.size() - 1 ; i>=0; i--)
+            {
+                ScaleIP scaleIP = listScaleIp.get(i);
+                if(scaleIP.getIp().equals(currentCash.getCashIP()))
+                {
+                    scaleIP.getScale().stop();
+                    listScaleIp.remove(scaleIP);
+                }
+            }
+        }
+        String scalePortSerialName = currentCash.getCashScalePortSerialName();
+        scale = new Scale(scalePortSerialName);
+        Util.logInformation(TAG, "initScale", "scalePortSerialName: "+ scalePortSerialName);
+        if(scale.start())
+        {
+            Util.logInformation(TAG, "initScale", "start true");
+            ScaleIP scaleIP = new ScaleIP(currentCash.getCashIP(), scale);
+            listScaleIp.add(scaleIP);
+        }
+        else
+        {
+            Util.logInformation(TAG, "initScale", "start false");
+        }
     }
     
     public void stopScale()

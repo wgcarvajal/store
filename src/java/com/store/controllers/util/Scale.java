@@ -22,6 +22,8 @@ import org.apache.commons.lang3.ArrayUtils;
  */
 public class Scale implements SerialPortEventListener {
     
+    private final String TAG = "Scale";
+    
     private CommPortIdentifier portIdentifier; 
     private String portName;
     private SerialPort serialPort;
@@ -45,13 +47,15 @@ public class Scale implements SerialPortEventListener {
         this.weight = weight;
     }
     
-    public void start()
+    public boolean start()
     {
         if(initSerialPort())
         {
             setParameterSerialPort();
             initListener();
+            return true;
         }
+        return false;
     }
     
     private boolean initSerialPort()
@@ -70,12 +74,12 @@ public class Scale implements SerialPortEventListener {
                         serialPort = (SerialPort)portIdentifier.open("SerialPort", 2000);
                         return true;
                }
-               catch (PortInUseException e) {                   
-                    System.out.println("Port "  + portIdentifier.getName() + " is in use.");
+               catch (PortInUseException e) {
+                    Util.logError(TAG, "initSerialPort", "Port "  + portIdentifier.getName() + " is in use.");
                     return false;
                 }
-               catch (Exception e) {                   
-                   System.out.println("Failed to open port " +  portIdentifier.getName());
+               catch (Exception e) {
+                   Util.logError(TAG, "initSerialPort",e.getMessage());
                    return false;
                 }
            }
@@ -90,7 +94,7 @@ public class Scale implements SerialPortEventListener {
             serialPort.setFlowControlMode(0);
         }
         catch (UnsupportedCommOperationException e) {
-            System.out.println("UnsupportedCommOperationException: "+e.getLocalizedMessage());
+            Util.logError(TAG, "setParameterSerialPort",e.getMessage());
         }
     }
     
@@ -101,14 +105,19 @@ public class Scale implements SerialPortEventListener {
             serialPort.notifyOnDataAvailable(true);
         }
         catch (TooManyListenersException e) {
-          System.out.println("initListener: "+e.getLocalizedMessage());
+          Util.logError(TAG, "initListener",e.getMessage());
         }
     }
     
     public void stop()
     {
-        serialPort.removeEventListener();
-        serialPort.close();
+        try{
+            serialPort.removeEventListener();
+            serialPort.close();
+        }catch(Exception e)
+        {
+            Util.logError(TAG, "stop",e.getMessage());
+        }
     }
 
     @Override
@@ -148,7 +157,7 @@ public class Scale implements SerialPortEventListener {
             weight = gramos;
 
         } catch (IOException e) {
-            System.out.println("serialEvent: "+e.getLocalizedMessage());
+            Util.logError(TAG, "serialEvent",e.getMessage());
         }
     }
     

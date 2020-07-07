@@ -53,6 +53,9 @@ public class Cash implements Serializable {
     @Column(name = "cashPrintName")
     private String cashPrintName;
     @Basic(optional = false)
+    @Column(name = "cashScalePortSerialName")
+    private String cashScalePortSerialName;
+    @Basic(optional = false)
     @Column(name = "cashPrintCommandOpenCashDrawer")
     private String cashPrintCommandOpenCashDrawer;
 
@@ -63,12 +66,13 @@ public class Cash implements Serializable {
         this.cashId = cashId;
     }
 
-    public Cash(Integer cashId, String cashName, String cashIP, int cashPaperSize, String cashPrintName, String cashPrintCommandOpenCashDrawer) {
+    public Cash(Integer cashId, String cashName, String cashIP, int cashPaperSize, String cashPrintName, String cashScalePortSerialName, String cashPrintCommandOpenCashDrawer) {
         this.cashId = cashId;
         this.cashName = cashName;
         this.cashIP = cashIP;
         this.cashPaperSize = cashPaperSize;
         this.cashPrintName = cashPrintName;
+        this.cashScalePortSerialName = cashScalePortSerialName;
         this.cashPrintCommandOpenCashDrawer = cashPrintCommandOpenCashDrawer;
     }
 
@@ -110,6 +114,14 @@ public class Cash implements Serializable {
 
     public void setCashPrintName(String cashPrintName) {
         this.cashPrintName = cashPrintName;
+    }
+
+    public String getCashScalePortSerialName() {
+        return cashScalePortSerialName;
+    }
+
+    public void setCashScalePortSerialName(String cashScalePortSerialName) {
+        this.cashScalePortSerialName = cashScalePortSerialName;
     }
 
     public String getCashPrintCommandOpenCashDrawer() {

@@ -29,18 +29,20 @@ public class Util {
     public static String projectPath = "/store";
     /*public static String PRODUCTIMAGEDIR= "/Users/aranda/filesStore/productImage/";
     public static String BILLDIR= "/Users/aranda/filesStore/bill/";
-    public static String FONTDIR= "/Users/aranda/filesStore/font/";*/
+    public static String FONTDIR= "/Users/aranda/filesStore/font/";
+    public static String LOGSDIR= "/Users/aranda/filesStore/logs/";*/
     
-    public static String PRODUCTIMAGEDIR= "/home/store/filesStore/productImage/";
+    
+    /*public static String PRODUCTIMAGEDIR= "/home/store/filesStore/productImage/";
     public static String BILLDIR= "/home/store/filesStore/bill/";
     public static String FONTDIR= "/home/store/filesStore/font/";
+    public static String LOGSDIR= "/home/store/filesStore/logs/";
+    */
     
-    /*public static String PRODUCTIMAGEDIR= "D:\\filesStore\\productImage\\";
+    public static String PRODUCTIMAGEDIR= "D:\\filesStore\\productImage\\";
     public static String BILLDIR= "D:\\filesStore\\bill\\";
-    public static String FONTDIR= "D:\\filesStore\\font\\";*/
-    
-    
-    
+    public static String FONTDIR= "D:\\filesStore\\font\\";
+    public static String LOGSDIR= "D:\\filesStore\\logs\\";
     
     public static String formatText(String value)
     {
@@ -175,5 +177,20 @@ public class Util {
     public static String upperCase(String string)
     {
         return string.toUpperCase();
+    }
+    
+    public static void logInformation(String className, String method, String message){
+        Logger.log(Logger.M_INFORMATION, className, method, message);
+        System.out.println(Logger.createLogLine(Logger.M_INFORMATION, className,method, message));
+    }
+    
+    public static void logError(String className, String method, String message){
+        Logger.log(Logger.M_ERROR, className, method, message);
+        System.out.println(Logger.createLogLine(Logger.M_ERROR, className,method, message));
+    }
+    
+    public static void logWarning(String className, String method, String message){
+        Logger.log(Logger.M_WARNING, className, method, message);
+        System.out.println(Logger.createLogLine(Logger.M_WARNING, className,method, message));
     }
 }

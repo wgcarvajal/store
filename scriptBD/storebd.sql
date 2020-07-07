@@ -2,10 +2,10 @@
 -- version 4.9.3
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 16-04-2020 a las 06:30:25
--- Versión del servidor: 5.7.28
--- Versión de PHP: 7.3.11
+-- Host: localhost
+-- Generation Time: Jul 07, 2020 at 06:47 AM
+-- Server version: 5.7.28
+-- PHP Version: 7.3.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,13 +19,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `storebd`
+-- Database: `storebd`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `brand`
+-- Table structure for table `brand`
 --
 
 CREATE TABLE `brand` (
@@ -34,7 +34,7 @@ CREATE TABLE `brand` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `brand`
+-- Dumping data for table `brand`
 --
 
 INSERT INTO `brand` (`brandId`, `brandName`) VALUES
@@ -46,7 +46,7 @@ INSERT INTO `brand` (`brandId`, `brandName`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cash`
+-- Table structure for table `cash`
 --
 
 CREATE TABLE `cash` (
@@ -55,20 +55,21 @@ CREATE TABLE `cash` (
   `cashIP` varchar(250) NOT NULL,
   `cashPaperSize` int(11) NOT NULL DEFAULT '80',
   `cashPrintName` varchar(250) NOT NULL,
+  `cashScalePortSerialName` varchar(20) NOT NULL,
   `cashPrintCommandOpenCashDrawer` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `cash`
+-- Dumping data for table `cash`
 --
 
-INSERT INTO `cash` (`cashId`, `cashName`, `cashIP`, `cashPaperSize`, `cashPrintName`, `cashPrintCommandOpenCashDrawer`) VALUES
-(1, 'Caja 1', '192.168.1.5', 80, 'SAT 22TUS', '{27,112,0,100,250}');
+INSERT INTO `cash` (`cashId`, `cashName`, `cashIP`, `cashPaperSize`, `cashPrintName`, `cashScalePortSerialName`, `cashPrintCommandOpenCashDrawer`) VALUES
+(1, 'Caja 1', '192.168.1.5', 80, 'SAT 22TUS', 'COM4', '{27,112,0,100,250}');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `category`
+-- Table structure for table `category`
 --
 
 CREATE TABLE `category` (
@@ -78,7 +79,7 @@ CREATE TABLE `category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `category`
+-- Dumping data for table `category`
 --
 
 INSERT INTO `category` (`catId`, `catName`, `catDescription`) VALUES
@@ -88,7 +89,7 @@ INSERT INTO `category` (`catId`, `catName`, `catDescription`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `client`
+-- Table structure for table `client`
 --
 
 CREATE TABLE `client` (
@@ -102,7 +103,7 @@ CREATE TABLE `client` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `client`
+-- Dumping data for table `client`
 --
 
 INSERT INTO `client` (`cliId`, `cliIdentity`, `cliName`, `cliLastName`, `cliPhones`, `cliAddress`, `cliCredit`) VALUES
@@ -116,7 +117,7 @@ INSERT INTO `client` (`cliId`, `cliIdentity`, `cliName`, `cliLastName`, `cliPhon
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `groupp`
+-- Table structure for table `groupp`
 --
 
 CREATE TABLE `groupp` (
@@ -125,7 +126,7 @@ CREATE TABLE `groupp` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `groupp`
+-- Dumping data for table `groupp`
 --
 
 INSERT INTO `groupp` (`grouId`, `grouDescription`) VALUES
@@ -136,7 +137,7 @@ INSERT INTO `groupp` (`grouId`, `grouDescription`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `lend`
+-- Table structure for table `lend`
 --
 
 CREATE TABLE `lend` (
@@ -152,7 +153,7 @@ CREATE TABLE `lend` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `owner`
+-- Table structure for table `owner`
 --
 
 CREATE TABLE `owner` (
@@ -162,7 +163,7 @@ CREATE TABLE `owner` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `owner`
+-- Dumping data for table `owner`
 --
 
 INSERT INTO `owner` (`ownId`, `ownName`, `ownDescription`) VALUES
@@ -173,7 +174,7 @@ INSERT INTO `owner` (`ownId`, `ownName`, `ownDescription`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pay`
+-- Table structure for table `pay`
 --
 
 CREATE TABLE `pay` (
@@ -185,7 +186,7 @@ CREATE TABLE `pay` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `pay`
+-- Dumping data for table `pay`
 --
 
 INSERT INTO `pay` (`payId`, `cliId`, `usId`, `payDate`, `payValue`) VALUES
@@ -197,7 +198,7 @@ INSERT INTO `pay` (`payId`, `cliId`, `usId`, `payDate`, `payValue`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `price`
+-- Table structure for table `price`
 --
 
 CREATE TABLE `price` (
@@ -209,7 +210,7 @@ CREATE TABLE `price` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `price`
+-- Dumping data for table `price`
 --
 
 INSERT INTO `price` (`priceId`, `priceValue`, `priceInitialDate`, `priceFinalDate`, `prodId`) VALUES
@@ -235,7 +236,7 @@ INSERT INTO `price` (`priceId`, `priceValue`, `priceInitialDate`, `priceFinalDat
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pricepurchase`
+-- Table structure for table `pricepurchase`
 --
 
 CREATE TABLE `pricepurchase` (
@@ -247,7 +248,7 @@ CREATE TABLE `pricepurchase` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `pricepurchase`
+-- Dumping data for table `pricepurchase`
 --
 
 INSERT INTO `pricepurchase` (`pricePurId`, `pricePurValue`, `pricePurInitialDate`, `pricePurFinalDate`, `prodId`) VALUES
@@ -265,7 +266,7 @@ INSERT INTO `pricepurchase` (`pricePurId`, `pricePurValue`, `pricePurInitialDate
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `product`
+-- Table structure for table `product`
 --
 
 CREATE TABLE `product` (
@@ -285,7 +286,7 @@ CREATE TABLE `product` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `product`
+-- Dumping data for table `product`
 --
 
 INSERT INTO `product` (`prodId`, `prodBarCode`, `prodName`, `prodNameBill`, `prodStock`, `prodIva`, `prodBaseNumber`, `prodUnitValue`, `catId`, `brandId`, `uniId`, `ownId`, `prodtypeId`) VALUES
@@ -307,7 +308,7 @@ INSERT INTO `product` (`prodId`, `prodBarCode`, `prodName`, `prodNameBill`, `pro
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `productimage`
+-- Table structure for table `productimage`
 --
 
 CREATE TABLE `productimage` (
@@ -318,7 +319,7 @@ CREATE TABLE `productimage` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `productimage`
+-- Dumping data for table `productimage`
 --
 
 INSERT INTO `productimage` (`prodimgId`, `prodimgPath`, `prodId`, `prodimgMain`) VALUES
@@ -327,7 +328,7 @@ INSERT INTO `productimage` (`prodimgId`, `prodimgPath`, `prodId`, `prodimgMain`)
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `producttype`
+-- Table structure for table `producttype`
 --
 
 CREATE TABLE `producttype` (
@@ -336,7 +337,7 @@ CREATE TABLE `producttype` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `producttype`
+-- Dumping data for table `producttype`
 --
 
 INSERT INTO `producttype` (`prodtypeId`, `prodtypeValue`) VALUES
@@ -346,7 +347,7 @@ INSERT INTO `producttype` (`prodtypeId`, `prodtypeValue`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `provider`
+-- Table structure for table `provider`
 --
 
 CREATE TABLE `provider` (
@@ -360,7 +361,7 @@ CREATE TABLE `provider` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `provider`
+-- Dumping data for table `provider`
 --
 
 INSERT INTO `provider` (`provId`, `provName`, `provPhones`, `provAddress`, `provRut`, `provNit`, `provWeb`) VALUES
@@ -369,7 +370,7 @@ INSERT INTO `provider` (`provId`, `provName`, `provPhones`, `provAddress`, `prov
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `provides`
+-- Table structure for table `provides`
 --
 
 CREATE TABLE `provides` (
@@ -381,7 +382,7 @@ CREATE TABLE `provides` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `provides`
+-- Dumping data for table `provides`
 --
 
 INSERT INTO `provides` (`providesId`, `provId`, `prodId`, `providesInitialDate`, `providesFinalDate`) VALUES
@@ -396,7 +397,7 @@ INSERT INTO `provides` (`providesId`, `provId`, `prodId`, `providesInitialDate`,
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `purchase`
+-- Table structure for table `purchase`
 --
 
 CREATE TABLE `purchase` (
@@ -412,7 +413,7 @@ CREATE TABLE `purchase` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `purchase`
+-- Dumping data for table `purchase`
 --
 
 INSERT INTO `purchase` (`purId`, `purDate`, `purFinalAmount`, `purReceivedAmount`, `purDiscount`, `purPayment`, `cliId`, `usId`, `purState`) VALUES
@@ -421,7 +422,7 @@ INSERT INTO `purchase` (`purId`, `purDate`, `purFinalAmount`, `purReceivedAmount
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `purchaseitem`
+-- Table structure for table `purchaseitem`
 --
 
 CREATE TABLE `purchaseitem` (
@@ -436,7 +437,7 @@ CREATE TABLE `purchaseitem` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `purchaseitem`
+-- Dumping data for table `purchaseitem`
 --
 
 INSERT INTO `purchaseitem` (`purItemId`, `purItemQuantity`, `prodId`, `purId`, `priceValue`, `iva`, `pricePurValue`, `ownId`) VALUES
@@ -457,7 +458,7 @@ INSERT INTO `purchaseitem` (`purItemId`, `purItemQuantity`, `prodId`, `purId`, `
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `purchasetotal`
+-- Table structure for table `purchasetotal`
 --
 
 CREATE TABLE `purchasetotal` (
@@ -470,7 +471,7 @@ CREATE TABLE `purchasetotal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `purchasetotal`
+-- Dumping data for table `purchasetotal`
 --
 
 INSERT INTO `purchasetotal` (`purToId`, `purId`, `ownId`, `purToTotal`, `purToGain`, `purToIva`) VALUES
@@ -480,7 +481,7 @@ INSERT INTO `purchasetotal` (`purToId`, `purId`, `ownId`, `purToTotal`, `purToGa
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `unity`
+-- Table structure for table `unity`
 --
 
 CREATE TABLE `unity` (
@@ -490,7 +491,7 @@ CREATE TABLE `unity` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `unity`
+-- Dumping data for table `unity`
 --
 
 INSERT INTO `unity` (`uniId`, `uniName`, `uniAbbreviation`) VALUES
@@ -500,7 +501,7 @@ INSERT INTO `unity` (`uniId`, `uniName`, `uniAbbreviation`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -517,7 +518,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`usId`, `usIdentification`, `usName`, `usLastName`, `usUserName`, `usPassword`, `usEmail`, `usAddress`, `usPhone`, `usActive`) VALUES
@@ -529,7 +530,7 @@ INSERT INTO `user` (`usId`, `usIdentification`, `usName`, `usLastName`, `usUserN
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usergroup`
+-- Table structure for table `usergroup`
 --
 
 CREATE TABLE `usergroup` (
@@ -540,7 +541,7 @@ CREATE TABLE `usergroup` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `usergroup`
+-- Dumping data for table `usergroup`
 --
 
 INSERT INTO `usergroup` (`id`, `usUserName`, `grouId`, `usId`) VALUES
@@ -550,29 +551,29 @@ INSERT INTO `usergroup` (`id`, `usUserName`, `grouId`, `usId`) VALUES
 (5, 'lucho', 'admin', 4);
 
 --
--- Índices para tablas volcadas
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `brand`
+-- Indexes for table `brand`
 --
 ALTER TABLE `brand`
   ADD PRIMARY KEY (`brandId`);
 
 --
--- Indices de la tabla `cash`
+-- Indexes for table `cash`
 --
 ALTER TABLE `cash`
   ADD PRIMARY KEY (`cashId`);
 
 --
--- Indices de la tabla `category`
+-- Indexes for table `category`
 --
 ALTER TABLE `category`
   ADD PRIMARY KEY (`catId`);
 
 --
--- Indices de la tabla `client`
+-- Indexes for table `client`
 --
 ALTER TABLE `client`
   ADD PRIMARY KEY (`cliId`),
@@ -580,13 +581,13 @@ ALTER TABLE `client`
   ADD UNIQUE KEY `cliIdentity_2` (`cliIdentity`);
 
 --
--- Indices de la tabla `groupp`
+-- Indexes for table `groupp`
 --
 ALTER TABLE `groupp`
   ADD PRIMARY KEY (`grouId`);
 
 --
--- Indices de la tabla `lend`
+-- Indexes for table `lend`
 --
 ALTER TABLE `lend`
   ADD PRIMARY KEY (`lendId`),
@@ -594,13 +595,13 @@ ALTER TABLE `lend`
   ADD KEY `fk_lend_user` (`usId`);
 
 --
--- Indices de la tabla `owner`
+-- Indexes for table `owner`
 --
 ALTER TABLE `owner`
   ADD PRIMARY KEY (`ownId`);
 
 --
--- Indices de la tabla `pay`
+-- Indexes for table `pay`
 --
 ALTER TABLE `pay`
   ADD PRIMARY KEY (`payId`),
@@ -608,21 +609,21 @@ ALTER TABLE `pay`
   ADD KEY `usId` (`usId`);
 
 --
--- Indices de la tabla `price`
+-- Indexes for table `price`
 --
 ALTER TABLE `price`
   ADD PRIMARY KEY (`priceId`),
   ADD KEY `fk_price_product` (`prodId`);
 
 --
--- Indices de la tabla `pricepurchase`
+-- Indexes for table `pricepurchase`
 --
 ALTER TABLE `pricepurchase`
   ADD PRIMARY KEY (`pricePurId`),
   ADD KEY `fk_pricepurshase_product` (`prodId`);
 
 --
--- Indices de la tabla `product`
+-- Indexes for table `product`
 --
 ALTER TABLE `product`
   ADD PRIMARY KEY (`prodId`),
@@ -633,26 +634,26 @@ ALTER TABLE `product`
   ADD KEY `fk_product_owner` (`ownId`);
 
 --
--- Indices de la tabla `productimage`
+-- Indexes for table `productimage`
 --
 ALTER TABLE `productimage`
   ADD PRIMARY KEY (`prodimgId`),
   ADD KEY `fk_productimage_product` (`prodId`);
 
 --
--- Indices de la tabla `producttype`
+-- Indexes for table `producttype`
 --
 ALTER TABLE `producttype`
   ADD PRIMARY KEY (`prodtypeId`);
 
 --
--- Indices de la tabla `provider`
+-- Indexes for table `provider`
 --
 ALTER TABLE `provider`
   ADD PRIMARY KEY (`provId`);
 
 --
--- Indices de la tabla `provides`
+-- Indexes for table `provides`
 --
 ALTER TABLE `provides`
   ADD PRIMARY KEY (`providesId`),
@@ -660,7 +661,7 @@ ALTER TABLE `provides`
   ADD KEY `fk_provides_product` (`prodId`);
 
 --
--- Indices de la tabla `purchase`
+-- Indexes for table `purchase`
 --
 ALTER TABLE `purchase`
   ADD PRIMARY KEY (`purId`),
@@ -668,7 +669,7 @@ ALTER TABLE `purchase`
   ADD KEY `fk_purshase_user` (`usId`);
 
 --
--- Indices de la tabla `purchaseitem`
+-- Indexes for table `purchaseitem`
 --
 ALTER TABLE `purchaseitem`
   ADD PRIMARY KEY (`purItemId`),
@@ -677,7 +678,7 @@ ALTER TABLE `purchaseitem`
   ADD KEY `fk_purchaseitem_owner` (`ownId`);
 
 --
--- Indices de la tabla `purchasetotal`
+-- Indexes for table `purchasetotal`
 --
 ALTER TABLE `purchasetotal`
   ADD PRIMARY KEY (`purToId`),
@@ -685,19 +686,19 @@ ALTER TABLE `purchasetotal`
   ADD KEY `fk_purshaseTotal_owner` (`ownId`);
 
 --
--- Indices de la tabla `unity`
+-- Indexes for table `unity`
 --
 ALTER TABLE `unity`
   ADD PRIMARY KEY (`uniId`);
 
 --
--- Indices de la tabla `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`usId`);
 
 --
--- Indices de la tabla `usergroup`
+-- Indexes for table `usergroup`
 --
 ALTER TABLE `usergroup`
   ADD PRIMARY KEY (`id`),
@@ -705,161 +706,161 @@ ALTER TABLE `usergroup`
   ADD KEY `fk_usergroup_groupp` (`grouId`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `brand`
+-- AUTO_INCREMENT for table `brand`
 --
 ALTER TABLE `brand`
   MODIFY `brandId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT de la tabla `cash`
+-- AUTO_INCREMENT for table `cash`
 --
 ALTER TABLE `cash`
   MODIFY `cashId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `category`
+-- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
   MODIFY `catId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `client`
+-- AUTO_INCREMENT for table `client`
 --
 ALTER TABLE `client`
   MODIFY `cliId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT de la tabla `lend`
+-- AUTO_INCREMENT for table `lend`
 --
 ALTER TABLE `lend`
   MODIFY `lendId` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `owner`
+-- AUTO_INCREMENT for table `owner`
 --
 ALTER TABLE `owner`
   MODIFY `ownId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `pay`
+-- AUTO_INCREMENT for table `pay`
 --
 ALTER TABLE `pay`
   MODIFY `payId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT de la tabla `price`
+-- AUTO_INCREMENT for table `price`
 --
 ALTER TABLE `price`
   MODIFY `priceId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT de la tabla `pricepurchase`
+-- AUTO_INCREMENT for table `pricepurchase`
 --
 ALTER TABLE `pricepurchase`
   MODIFY `pricePurId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT de la tabla `product`
+-- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
   MODIFY `prodId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT de la tabla `productimage`
+-- AUTO_INCREMENT for table `productimage`
 --
 ALTER TABLE `productimage`
   MODIFY `prodimgId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `producttype`
+-- AUTO_INCREMENT for table `producttype`
 --
 ALTER TABLE `producttype`
   MODIFY `prodtypeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `provider`
+-- AUTO_INCREMENT for table `provider`
 --
 ALTER TABLE `provider`
   MODIFY `provId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `provides`
+-- AUTO_INCREMENT for table `provides`
 --
 ALTER TABLE `provides`
   MODIFY `providesId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT de la tabla `purchase`
+-- AUTO_INCREMENT for table `purchase`
 --
 ALTER TABLE `purchase`
   MODIFY `purId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
--- AUTO_INCREMENT de la tabla `purchaseitem`
+-- AUTO_INCREMENT for table `purchaseitem`
 --
 ALTER TABLE `purchaseitem`
   MODIFY `purItemId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=502;
 
 --
--- AUTO_INCREMENT de la tabla `purchasetotal`
+-- AUTO_INCREMENT for table `purchasetotal`
 --
 ALTER TABLE `purchasetotal`
   MODIFY `purToId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
--- AUTO_INCREMENT de la tabla `unity`
+-- AUTO_INCREMENT for table `unity`
 --
 ALTER TABLE `unity`
   MODIFY `uniId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
   MODIFY `usId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `usergroup`
+-- AUTO_INCREMENT for table `usergroup`
 --
 ALTER TABLE `usergroup`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- Restricciones para tablas volcadas
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `lend`
+-- Constraints for table `lend`
 --
 ALTER TABLE `lend`
   ADD CONSTRAINT `fk_lend_client` FOREIGN KEY (`cliId`) REFERENCES `client` (`cliId`),
   ADD CONSTRAINT `fk_lend_user` FOREIGN KEY (`usId`) REFERENCES `user` (`usId`);
 
 --
--- Filtros para la tabla `pay`
+-- Constraints for table `pay`
 --
 ALTER TABLE `pay`
   ADD CONSTRAINT `fk_pay_client` FOREIGN KEY (`cliId`) REFERENCES `client` (`cliId`),
   ADD CONSTRAINT `pay_ibfk_1` FOREIGN KEY (`usId`) REFERENCES `user` (`usId`);
 
 --
--- Filtros para la tabla `price`
+-- Constraints for table `price`
 --
 ALTER TABLE `price`
   ADD CONSTRAINT `fk_price_product` FOREIGN KEY (`prodId`) REFERENCES `product` (`prodId`);
 
 --
--- Filtros para la tabla `pricepurchase`
+-- Constraints for table `pricepurchase`
 --
 ALTER TABLE `pricepurchase`
   ADD CONSTRAINT `fk_pricepurshase_product` FOREIGN KEY (`prodId`) REFERENCES `product` (`prodId`);
 
 --
--- Filtros para la tabla `product`
+-- Constraints for table `product`
 --
 ALTER TABLE `product`
   ADD CONSTRAINT `fk_product_brand` FOREIGN KEY (`brandId`) REFERENCES `brand` (`brandId`),
@@ -869,27 +870,27 @@ ALTER TABLE `product`
   ADD CONSTRAINT `fk_produt_category` FOREIGN KEY (`catId`) REFERENCES `category` (`catId`);
 
 --
--- Filtros para la tabla `productimage`
+-- Constraints for table `productimage`
 --
 ALTER TABLE `productimage`
   ADD CONSTRAINT `fk_productimage_product` FOREIGN KEY (`prodId`) REFERENCES `product` (`prodId`);
 
 --
--- Filtros para la tabla `provides`
+-- Constraints for table `provides`
 --
 ALTER TABLE `provides`
   ADD CONSTRAINT `fk_provides_product` FOREIGN KEY (`prodId`) REFERENCES `product` (`prodId`),
   ADD CONSTRAINT `fk_provides_provider` FOREIGN KEY (`provId`) REFERENCES `provider` (`provId`);
 
 --
--- Filtros para la tabla `purchase`
+-- Constraints for table `purchase`
 --
 ALTER TABLE `purchase`
   ADD CONSTRAINT `fk_purchase_client` FOREIGN KEY (`cliId`) REFERENCES `client` (`cliId`),
   ADD CONSTRAINT `fk_purshase_user` FOREIGN KEY (`usId`) REFERENCES `user` (`usId`);
 
 --
--- Filtros para la tabla `purchaseitem`
+-- Constraints for table `purchaseitem`
 --
 ALTER TABLE `purchaseitem`
   ADD CONSTRAINT `fk_purchaseitem_owner` FOREIGN KEY (`ownId`) REFERENCES `owner` (`ownId`),
@@ -897,14 +898,14 @@ ALTER TABLE `purchaseitem`
   ADD CONSTRAINT `fk_purchaseitem_purchase` FOREIGN KEY (`purId`) REFERENCES `purchase` (`purId`);
 
 --
--- Filtros para la tabla `purchasetotal`
+-- Constraints for table `purchasetotal`
 --
 ALTER TABLE `purchasetotal`
   ADD CONSTRAINT `fk_purshaseTotal_owner` FOREIGN KEY (`ownId`) REFERENCES `owner` (`ownId`),
   ADD CONSTRAINT `fk_purshaseTotal_purshase` FOREIGN KEY (`purId`) REFERENCES `purchase` (`purId`);
 
 --
--- Filtros para la tabla `usergroup`
+-- Constraints for table `usergroup`
 --
 ALTER TABLE `usergroup`
   ADD CONSTRAINT `fk_usergroup_groupp` FOREIGN KEY (`grouId`) REFERENCES `groupp` (`grouId`),
