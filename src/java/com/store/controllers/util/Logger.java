@@ -94,7 +94,7 @@ public class Logger {
 
 			if (fileExist()) {
 				long length = file.length();
-				if(length>5000000)
+				if(length>20000000)
 				{
 					File f = new File(getDirPath()+ File.separator + (new Date()).getTime() + ".txt");
 					file.renameTo(f);

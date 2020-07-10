@@ -153,5 +153,22 @@ public class ProductFacade extends AbstractFacade<Product> {
         return resuList.size() > 0;
     }
     
+    public List<Object[]> searchProductName(String prodName)
+    {
+        Query query = getEntityManager().createNamedQuery("Product.searchProductName");
+        query.setHint("eclipselink.refresh", true);
+        query.setParameter("prodName", "%"+prodName+"%");
+        List<Object[]> resuList = query.getResultList();
+        return resuList;
+    }
+    
+    public List<Object[]> searchProductId(long prodId)
+    {
+        Query query = getEntityManager().createNamedQuery("Product.searchProductId");
+        query.setHint("eclipselink.refresh", true);
+        query.setParameter("prodId", prodId);
+        List<Object[]> resuList = query.getResultList();
+        return resuList;
+    }
     
 }

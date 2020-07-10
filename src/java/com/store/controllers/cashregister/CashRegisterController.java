@@ -1680,15 +1680,30 @@ public class CashRegisterController implements Serializable {
 
     public void readWeight(OnSesionUserController onSesionUserController)
     {
+        Calendar c = Calendar.getInstance();
+        long initTime = c.getTimeInMillis();
         if (scale != null) {
             scale.setWeight("0");
             while(scale.getWeight().equals("0")) {
-                System.out.println("entro");
+                c = Calendar.getInstance();
+                long currentTime = c.getTimeInMillis();
+                if(currentTime>(initTime + 4000l))
+                {
+                    break;
+                }
             }
-            weight = scale.getWeight();
-            addProduct(producWaitForWeight, onSesionUserController, true);
+            if(scale.getWeight().equals("0"))
+            {
+                Util.logInformation(TAG, "readWeight", "scale.getWeight == 0, call openAddWeight()");
+                openAddWeight();
+            }else{
+                weight = scale.getWeight();
+                Util.logInformation(TAG, "readWeight", "scale.getWeight sucessfull, Weight = weight");
+                addProduct(producWaitForWeight, onSesionUserController, true);
+            }
         } else
         {
+            Util.logInformation(TAG, "readWeight", "scale is null, call openAddWeight()");
             openAddWeight();
         }
     }

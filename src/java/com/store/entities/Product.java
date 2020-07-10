@@ -35,6 +35,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Product.findByProdId", query = "SELECT p FROM Product p WHERE p.prodId = :prodId"),
     @NamedQuery(name = "Product.findByProdBarCode", query = "SELECT p FROM Product p WHERE p.prodBarCode = :prodBarCode"),
     @NamedQuery(name = "Product.findByProdName", query = "SELECT p FROM Product p WHERE p.prodName = :prodName"),
+    @NamedQuery(name = "Product.searchProductName", query = "SELECT p,pr,pripur FROM Product p INNER JOIN Price pr INNER JOIN Pricepurchase pripur  WHERE LOWER(p.prodName) LIKE :prodName AND p.prodId = pr.prodId.prodId AND pr.priceFinalDate IS NULL AND p.prodId = pripur.prodId.prodId AND pripur.pricePurFinalDate IS NULL ORDER BY p.prodName ASC"),
+    @NamedQuery(name = "Product.searchProductId", query = "SELECT p,pr,pripur FROM Product p INNER JOIN Price pr INNER JOIN Pricepurchase pripur  WHERE p.prodId LIKE :prodId AND p.prodId = pr.prodId.prodId AND pr.priceFinalDate IS NULL AND p.prodId = pripur.prodId.prodId AND pripur.pricePurFinalDate IS NULL"),
     @NamedQuery(name = "Product.findByProdStock", query = "SELECT p FROM Product p WHERE p.prodStock = :prodStock"),
     @NamedQuery(name = "Product.findByProdBaseNumber", query = "SELECT p FROM Product p WHERE p.prodBaseNumber = :prodBaseNumber"),
     @NamedQuery(name = "Product.findByProdUnitValue", query = "SELECT p FROM Product p WHERE p.prodUnitValue = :prodUnitValue")})
