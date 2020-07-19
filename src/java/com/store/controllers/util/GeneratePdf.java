@@ -291,9 +291,9 @@ public class GeneratePdf {
                                sizeHeightPage = sizeHeightPage +lineLenght;
                                html=html+"<div style='text-align:center;font-size: "+fontSize+";width:25%;float:left;padding-right:1px;padding-left:1px;'>B= 19%</div>"+
                                         "<div style='text-align:center;font-size: "+fontSize+";width:33%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva19)+"</div>";
-                                        double iva = totalProductIva5 / 1.19f;
-                                        long iva19 = totalProductIva5 - Math.round(iva);
-                                        totalBaseImp = totalBaseImp +(totalProductIva5 - iva19);
+                                        double iva = totalProductIva19 / 1.19f;
+                                        long iva19 = totalProductIva19 - Math.round(iva);
+                                        totalBaseImp = totalBaseImp +(totalProductIva19 - iva19);
                                         totalImp = totalImp +iva19;
                                         html=html+"<div style='text-align:center;font-size: "+fontSize+";width:50%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(totalProductIva19 - iva19)+"</div>"+
                                         "<div style='text-align:center;font-size: "+fontSize+";width:100%;float:left;padding-right:1px;padding-left:1px;'>"+Util.getFormatPrice(iva19)+"</div>"+

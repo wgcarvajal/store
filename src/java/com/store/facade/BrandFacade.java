@@ -63,11 +63,10 @@ public class BrandFacade extends AbstractFacade<Brand> {
      
     public boolean isBrandUsed(Long id)
     {
-        /*Query query = getEntityManager().createNamedQuery("Producto.findByCatId");
-        query.setParameter("catId",  id);
-        List<Category> resultList = query.getResultList();
-        return resultList!=null && resultList.size()>0;*/
-        return false;
+        Query query = getEntityManager().createNamedQuery("Product.findByBrandId");
+        query.setParameter("brandId",  id);
+        List<Brand> resultList = query.getResultList();
+        return resultList!=null && resultList.size()>0;
     }
     
 }

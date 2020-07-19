@@ -39,7 +39,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Product.searchProductId", query = "SELECT p,pr,pripur FROM Product p INNER JOIN Price pr INNER JOIN Pricepurchase pripur  WHERE p.prodId LIKE :prodId AND p.prodId = pr.prodId.prodId AND pr.priceFinalDate IS NULL AND p.prodId = pripur.prodId.prodId AND pripur.pricePurFinalDate IS NULL"),
     @NamedQuery(name = "Product.findByProdStock", query = "SELECT p FROM Product p WHERE p.prodStock = :prodStock"),
     @NamedQuery(name = "Product.findByProdBaseNumber", query = "SELECT p FROM Product p WHERE p.prodBaseNumber = :prodBaseNumber"),
-    @NamedQuery(name = "Product.findByProdUnitValue", query = "SELECT p FROM Product p WHERE p.prodUnitValue = :prodUnitValue")})
+    @NamedQuery(name = "Product.findByProdUnitValue", query = "SELECT p FROM Product p WHERE p.prodUnitValue = :prodUnitValue"),
+    @NamedQuery(name = "Product.findByCatId", query = "SELECT p FROM Product p WHERE p.catId.catId = :catId"),
+    @NamedQuery(name = "Product.findByBrandId", query = "SELECT p FROM Product p WHERE p.brandId.brandId = :brandId")})
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;

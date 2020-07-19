@@ -63,11 +63,10 @@ public class CategoryFacade extends AbstractFacade<Category> {
      
     public boolean isCategoryUsed(Long id)
     {
-        /*Query query = getEntityManager().createNamedQuery("Producto.findByCatId");
+        Query query = getEntityManager().createNamedQuery("Product.findByCatId");
         query.setParameter("catId",  id);
         List<Category> resultList = query.getResultList();
-        return resultList!=null && resultList.size()>0;*/
-        return false;
+        return resultList!=null && resultList.size()>0;
     }
     
 }

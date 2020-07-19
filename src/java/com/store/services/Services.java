@@ -84,6 +84,7 @@ public class Services {
            Pricepurchase pricepurchase = (Pricepurchase)p[2];
            JSONObject jSONProduct = new JSONObject();
            jSONProduct.put("prodId", product.getProdId());
+           jSONProduct.put("barcode", product.getProdBarCode());
            jSONProduct.put("name", product.getProdName());
            jSONProduct.put("price", price.getPriceValue());
            jSONProduct.put("pricepurchase", pricepurchase.getPricePurValue());
