@@ -38,8 +38,17 @@ public class ProductFacade extends AbstractFacade<Product> {
         super(Product.class);
     }
     
+    public List<Product> findAllWithoutComposite()
+    {
+        Query query = getEntityManager().createNamedQuery("Product.findAllWithoutComposite");
+        query.setHint("eclipselink.refresh", true);
+        List<Product> resuList = query.getResultList();
+        return resuList;
+    }
+    
     public Product findByProdId( Long prodId ){
         Query query = getEntityManager().createNamedQuery("Product.findByProdId");
+        query.setHint("eclipselink.refresh", true);
         query.setParameter("prodId", prodId);
         List<Product> resuList = query.getResultList();
         return resuList.size() > 0 ? resuList.get(0):null;
@@ -47,6 +56,7 @@ public class ProductFacade extends AbstractFacade<Product> {
     
     public Product findByBarCode( String prodBarCode ){
         Query query = getEntityManager().createNamedQuery("Product.findByProdBarCode");
+        query.setHint("eclipselink.refresh", true);
         query.setParameter("prodBarCode", prodBarCode);
         List<Product> resuList = query.getResultList();
         return resuList.size() > 0 ? resuList.get(0):null;
@@ -92,7 +102,7 @@ public class ProductFacade extends AbstractFacade<Product> {
         {
             cq.where(restricciones.toArray(new Predicate[restricciones.size()]));
         }
-        return (long)getEntityManager().createQuery(cq).getSingleResult();
+        return (long)getEntityManager().createQuery(cq).setHint("eclipselink.refresh", true).getSingleResult();
     }
     
     
@@ -141,13 +151,14 @@ public class ProductFacade extends AbstractFacade<Product> {
         {
             cq.where(restricciones.toArray(new Predicate[restricciones.size()]));
         }
-        return getEntityManager().createQuery(cq).setFirstResult(first).setMaxResults(limit).getResultList();
+        return getEntityManager().createQuery(cq).setHint("eclipselink.refresh", true).setFirstResult(first).setMaxResults(limit).getResultList();
     }
     
     
     public boolean barcodeAlreadyExists(String prodBarCode)
     {
         Query query = getEntityManager().createNamedQuery("Product.findByProdBarCode");
+        query.setHint("eclipselink.refresh", true);
         query.setParameter("prodBarCode", prodBarCode);
         List<Product> resuList = query.getResultList();
         return resuList.size() > 0;

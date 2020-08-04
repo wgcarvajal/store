@@ -48,6 +48,7 @@
         
         <h:form id="formOpenReceivedAmount">
             <p:dialog
+                header="Pago en efectivo"
                 resizable="false"
                 widgetVar="openReceivedAmount"
                 modal="true"
@@ -56,11 +57,13 @@
                     <p:focus for="receivedAmount"/>
                     
                     <p:row >
-                        <p:column>
+                        <p:column style="font-size: 20pt;">
                             #{bundle.ReceivedAmount}:
                         </p:column>
                         <p:column  >
-                            <p:inputText 
+                            <p:inputText
+                                style="font-size: 20pt;"
+                                autocomplete="off"
                                 id="receivedAmount"
                                 value="#{cashRegisterController.receivedAmount}">
                             </p:inputText>
@@ -68,7 +71,8 @@
                     </p:row>
                     <p:row>
                         <p:column colspan="2">
-                            <p:commandButton 
+                            <p:commandButton
+                                style="font-size: 20pt;"
                                 action="#{cashRegisterController.okReceivedAmount}"
                                 value="#{bundle.Ok}"
                                 onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
@@ -85,9 +89,49 @@
                 resizable="false"
                 widgetVar="openSuccessfulPayment"
                 modal="true"
+                style="font-size: 18pt;"
                 >
-                <p:panelGrid id="panelOpenSuccessfulPayment" styleClass="panelgrid" style="text-align:center" >
+                1:#{bundle.Print} 2:#{bundle.End}
+                <p:panelGrid id="panelOpenSuccessfulPayment" styleClass="panelgrid" style="text-align:center;font-size: 18pt;" >
                     <p:focus for="action"/>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:staticMessage severity="info" summary="Que deseas hacer?" detail="" />
+                        </p:column>
+                    </p:row>
+                    <p:row >
+                        <p:column>
+                            #{bundle.Action}:
+                        </p:column>
+                        <p:column  >
+                            <p:inputText 
+                                id="action"
+                                value="#{cashRegisterController.action}">
+                            </p:inputText>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:commandButton 
+                                action="#{cashRegisterController.okAction}"
+                                value="#{bundle.Ok}"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:dialog>
+        </h:form>
+        
+        <h:form id="formOpenFinishPayment">
+            <p:dialog
+                closable="false"
+                resizable="false"
+                widgetVar="openOpenFinishPayment"
+                modal="true"
+                >
+                <p:panelGrid id="panelOpenFinishPayment" styleClass="panelgrid" style="text-align:center;font-size: 18pt;" >
+                    
                     <p:row>
                         <p:column colspan="2">
                             <p:staticMessage severity="info" summary="#{bundle.SuccessfulPayment}!!" detail="" />
@@ -117,25 +161,13 @@
                             #{cashRegisterController.refund}
                         </p:column>
                     </p:row>
-                    1:#{bundle.Print} 2:#{bundle.End}
-                    <p:row >
-                        <p:column>
-                            #{bundle.Action}:
-                        </p:column>
-                        <p:column  >
-                            <p:inputText 
-                                id="action"
-                                value="#{cashRegisterController.action}">
-                            </p:inputText>
-                        </p:column>
-                    </p:row>
                     <p:row>
                         <p:column colspan="2">
                             <p:commandButton 
-                                action="#{cashRegisterController.okAction}"
+                                action="#{cashRegisterController.okFinishPaymentAction}"
                                 value="#{bundle.Ok}"
                                 onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
-                                />
+                                onclick="PF('openOpenFinishPayment').hide()"/>
                         </p:column>
                     </p:row>
                 </p:panelGrid>

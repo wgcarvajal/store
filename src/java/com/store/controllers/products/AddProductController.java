@@ -38,6 +38,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import org.primefaces.PrimeFaces;
 
 /**
@@ -57,6 +58,9 @@ public class AddProductController implements Serializable
     private String baseNumber;
     private String iva;
     private String prodNameBill;
+    private String composite ="0";
+    private String compositeValue;
+    private Product productCompsite;
     private Brand brand;
     private Category category;
     private Unity unity;
@@ -69,6 +73,7 @@ public class AddProductController implements Serializable
     private List<Provider> providers;
     private List<Producttype> producttypes;
     private List<Owner> owners;
+    private List<Product> productsComposite;
     @EJB private ProductFacade productEJB;
     @EJB private BrandFacade brandEJB;
     @EJB private CategoryFacade categoryEJB;
@@ -143,6 +148,31 @@ public class AddProductController implements Serializable
     public void setBaseNumber(String baseNumber) {
         this.baseNumber = baseNumber;
     }
+
+    public String getComposite() {
+        return composite;
+    }
+
+    public void setComposite(String composite) {
+        this.composite = composite;
+    }
+
+    public String getCompositeValue() {
+        return compositeValue;
+    }
+
+    public void setCompositeValue(String compositeValue) {
+        this.compositeValue = compositeValue;
+    }
+
+    public Product getProductCompsite() {
+        return productCompsite;
+    }
+
+    public void setProductCompsite(Product productCompsite) {
+        this.productCompsite = productCompsite;
+    }
+    
     
     public Brand getBrand() {
         return brand;
@@ -190,6 +220,15 @@ public class AddProductController implements Serializable
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public List<Product> getProductsComposite() {
+        productsComposite = productEJB.findAllWithoutComposite();
+        return productsComposite;
+    }
+
+    public void setProductsComposite(List<Product> productsComposite) {
+        this.productsComposite = productsComposite;
     }
 
     public Unity getUnity() {
@@ -289,14 +328,24 @@ public class AddProductController implements Serializable
         product.setProdIva(Integer.parseInt(iva));
         product.setOwnId(owner);
         
-        if(stock!=null && !stock.isEmpty())
-            product.setProdStock(Integer.parseInt(stock));
+        if(composite.equals("0"))
+        {
+            if(stock!=null && !stock.isEmpty())
+                product.setProdStock(Integer.parseInt(stock));
+            else
+                product.setProdStock(0);
+            if(baseNumber!=null && !baseNumber.isEmpty())
+                product.setProdBaseNumber(Integer.parseInt(baseNumber));
+            else
+                product.setProdBaseNumber(0);
+        }
         else
+        {
             product.setProdStock(0);
-        if(baseNumber!=null && !baseNumber.isEmpty())
-            product.setProdBaseNumber(Integer.parseInt(baseNumber));
-        else
             product.setProdBaseNumber(0);
+            product.setProdComposition(productCompsite);
+            product.setProdCompositionValue(Integer.parseInt(compositeValue));
+        }
         
         productEJB.create(product);
         
@@ -350,6 +399,9 @@ public class AddProductController implements Serializable
         category = null;
         unity = null;
         provider = null;
+        compositeValue = null;
+        productCompsite = null;
+        composite = "0";
     }
     
     private void goProducts()
@@ -360,6 +412,15 @@ public class AddProductController implements Serializable
         } catch (IOException ex) {
             Logger.getLogger(ProductsController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    
+    public void compositeChange(){  
+        stock = null;
+        baseNumber = null;
+        compositeValue = null;
+        productCompsite = null;
+        Util.update(":form:panelComposite");
     }
     
 }

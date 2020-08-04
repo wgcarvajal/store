@@ -47,6 +47,7 @@ public class DailyReportController implements Serializable {
     private long gain;
     private double iva;
     private List<OwnerTotal> ownerTotals = new ArrayList<>();
+    private List<OwnerTotal> ownerHouseTotals = new ArrayList<>();
     List<Object[]> products = new ArrayList<>();
     private List<Cash>cashList;
     private Date initDate;
@@ -102,6 +103,16 @@ public class DailyReportController implements Serializable {
     public void setOwnerTotals(List<OwnerTotal> ownerTotals) {
         this.ownerTotals = ownerTotals;
     }
+
+    public List<OwnerTotal> getOwnerHouseTotals() {
+        return ownerHouseTotals;
+    }
+
+    public void setOwnerHouseTotals(List<OwnerTotal> ownerHouseTotals) {
+        this.ownerHouseTotals = ownerHouseTotals;
+    }
+    
+    
 
     public List<Object[]> getProducts() {
         return products;
@@ -187,6 +198,7 @@ public class DailyReportController implements Serializable {
         gain = 0;
         iva = 0;
         ownerTotals = new ArrayList<>();
+        ownerHouseTotals = new ArrayList<>();
         if (eDate != null) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(eDate);
@@ -210,9 +222,25 @@ public class DailyReportController implements Serializable {
                     }
                 }
             }
+            
+            List<Object[]> listCasa = purchaseEJB.findPurshaseTotalInitialDayEndDayWithClientId(initDate, finishDate, 1);
+            
+            if (listCasa != null) {
+                for (Object[] object : listCasa) {
+                    if (object[0] != null && object[1] != null && object[2] != null && object[2] != null) {
+                        OwnerTotal ownerTotal = new OwnerTotal();
+                        ownerTotal.setOwner((Owner) object[0]);
+                        ownerTotal.setTotal((long) object[1]);
+                        ownerTotal.setGain((long) object[2]);
+                        ownerTotal.setIva((double) object[3]);
+                        ownerHouseTotals.add(ownerTotal);
+                    }
+                }
+            }
         }
         Util.update(":formTotal");
         Util.update(":formOwner");
+        Util.update(":formOwnerHouse");
         Util.update(":formPurchase");
     }
     
@@ -220,6 +248,18 @@ public class DailyReportController implements Serializable {
     public void showProductList(Owner owner)
     {
         products = purchaseEJB.findProductQuantityInitialDayEndDay(initDate, finishDate,owner);
+        if(products==null)
+        {
+            products = new ArrayList<>();
+        }
+        
+        Util.update(":formProductTable");
+        Util.openDialog("dialongProductTable");
+    }
+    
+    public void showHouseProductList(Owner owner)
+    {
+        products = purchaseEJB.findProductQuantityInitialDayEndDayWithClientId(initDate, finishDate,owner,1);
         if(products==null)
         {
             products = new ArrayList<>();

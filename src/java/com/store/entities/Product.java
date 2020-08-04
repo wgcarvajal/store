@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p"),
     @NamedQuery(name = "Product.findByProdId", query = "SELECT p FROM Product p WHERE p.prodId = :prodId"),
+    @NamedQuery(name = "Product.findAllWithoutComposite", query = "SELECT p FROM Product p WHERE p.prodComposition IS NULL"),
     @NamedQuery(name = "Product.findByProdBarCode", query = "SELECT p FROM Product p WHERE p.prodBarCode = :prodBarCode"),
     @NamedQuery(name = "Product.findByProdName", query = "SELECT p FROM Product p WHERE p.prodName = :prodName"),
     @NamedQuery(name = "Product.searchProductName", query = "SELECT p,pr,pripur FROM Product p INNER JOIN Price pr INNER JOIN Pricepurchase pripur  WHERE LOWER(p.prodName) LIKE :prodName AND p.prodId = pr.prodId.prodId AND pr.priceFinalDate IS NULL AND p.prodId = pripur.prodId.prodId AND pripur.pricePurFinalDate IS NULL ORDER BY p.prodName ASC"),
@@ -69,6 +70,8 @@ public class Product implements Serializable {
     @Basic(optional = false)
     @Column(name = "prodUnitValue")
     private int prodUnitValue;
+    @Column(name = "prodCompositionValue")
+    private Integer prodCompositionValue;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
     private List<Pricepurchase> pricepurchaseList;
     @JoinColumn(name = "brandId", referencedColumnName = "brandId")
@@ -77,6 +80,11 @@ public class Product implements Serializable {
     @JoinColumn(name = "ownId", referencedColumnName = "ownId")
     @ManyToOne(optional = false)
     private Owner ownId;
+    @OneToMany(mappedBy = "prodComposition")
+    private List<Product> productList;
+    @JoinColumn(name = "prodComposition", referencedColumnName = "prodId")
+    @ManyToOne
+    private Product prodComposition;
     @JoinColumn(name = "prodtypeId", referencedColumnName = "prodtypeId")
     @ManyToOne(optional = false)
     private Producttype prodtypeId;
@@ -175,6 +183,14 @@ public class Product implements Serializable {
         this.prodUnitValue = prodUnitValue;
     }
 
+    public Integer getProdCompositionValue() {
+        return prodCompositionValue;
+    }
+
+    public void setProdCompositionValue(Integer prodCompositionValue) {
+        this.prodCompositionValue = prodCompositionValue;
+    }
+
     @XmlTransient
     public List<Pricepurchase> getPricepurchaseList() {
         return pricepurchaseList;
@@ -198,6 +214,23 @@ public class Product implements Serializable {
 
     public void setOwnId(Owner ownId) {
         this.ownId = ownId;
+    }
+
+    @XmlTransient
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+    }
+
+    public Product getProdComposition() {
+        return prodComposition;
+    }
+
+    public void setProdComposition(Product prodComposition) {
+        this.prodComposition = prodComposition;
     }
 
     public Producttype getProdtypeId() {

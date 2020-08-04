@@ -81,7 +81,7 @@
                                 </div>
                             </p:commandLink>
                             <p:commandLink
-                                action="#{cashRegisterController.openPayment}"
+                                action="#{cashRegisterController.openPaymentCash}"
                                 tabindex="-1"
                                 rendered="#{cashRegisterController.payment}"
                                 onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
@@ -222,7 +222,7 @@
                                         value="#{bundle.Total}:"
                                         />
                                 </p:column>
-                                <p:column style="font-size: 15pt;font-weight: bold;text-align: right;">
+                                <p:column style="font-size: 50pt;font-weight: bold;text-align: right;">
                                     <p:outputLabel 
                                         rendered="#{cashRegisterController.saleDescription}"
                                         value="#{cashRegisterController.amountTotal}"
@@ -232,17 +232,18 @@
                         </p:panelGrid>
                         <p:dataTable 
                             id="purchaseItemTable"
-                            selectionMode="single"
                             rowKey="#{purchaseitem.purItemId}"
-                            selection ="#{cashRegisterController.selectedPurchaseItem}"
                             scrollable="true" scrollHeight="300"
                             rendered="#{cashRegisterController.saleDescription and cashRegisterController.showList}"
                             value="#{cashRegisterController.purchaseitems}" var="purchaseitem" 
                                      >
-                            <p:column style="width: 40%;" headerText="#{bundle.Name}">
+                            <p:column headerText="#{bundle.Code}">
+                                #{purchaseitem.prodId.prodBarCode}
+                            </p:column>
+                            <p:column style="width: 30%;" headerText="#{bundle.Name}">
                                 #{purchaseitem.prodId.prodName} #{purchaseitem.prodId.prodUnitValue} #{purchaseitem.prodId.uniId.uniAbbreviation}
                             </p:column>
-                            <p:column style="text-align: center;width: 23%;" headerText="#{bundle.SalePrice}">
+                            <p:column style="text-align: center;width: 22%;" headerText="#{bundle.SalePrice}">
                                 #{cashRegisterController.getPrice(purchaseitem)}
                             </p:column>
                             <p:column style="text-align: center;width: 12%;" headerText="#{bundle.Quantity}">

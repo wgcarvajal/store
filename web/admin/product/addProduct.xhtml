@@ -33,13 +33,14 @@
                         </p:row> 
                         <p:row><p:column></p:column></p:row>
                         <p:row>
-                            <p:column class="column">
+                            <p:column class="column" style="width: 150px;">
                                 <h:outputText class="fieldLabel" value="#{bundle.BarCode}:" />
                                 <h:outputLabel class="asterisk" value="*"/>
                             </p:column>
-                            <p:column>
+                            <p:column style="width: 330px;">
                                 <p:inputText 
                                     maxlength="12"
+                                    autocomplete="off"
                                     id="barCode" class="inputTextMedium"
                                     value="#{addProductController.barCode}" 
                                     required="true"  requiredMessage="#{bundle.FieldRequired}"
@@ -47,7 +48,7 @@
                                     <f:validator validatorId="barCodeValidator" />
                                 </p:inputText>
                             </p:column>
-                            <p:column>
+                            <p:column style="width: 150px;">
                                     <p:message for="barCode"/>
                             </p:column>
                         </p:row>
@@ -290,7 +291,29 @@
                                 </p:selectOneMenu>
                             </p:column>
                         </p:row>
+                    </p:panelGrid>
+                    
+                    <p:panelGrid id="panelComposite" styleClass="panelgrid">
                         <p:row>
+                            <p:column class="column" style="width: 150px !important;">
+                                <h:outputText class="fieldLabel" value="#{bundle.Composition}:" />
+                            </p:column>
+                            <p:column style="width: 330px;">
+                                <p:selectOneMenu id="composition"  style="width:300px"  
+                                                 value="#{addProductController.composite}"
+                                                 >
+                                    <p:ajax listener="#{addProductController.compositeChange}"
+                                            onstart="PF('efectoCarga').show()"  
+                                            onsuccess="PF('efectoCarga').hide()"/>
+                                    <f:selectItem itemLabel="No compuesto" itemValue="0"/>
+                                    <f:selectItem itemLabel="Compuesto" itemValue="1"/>
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column style="width: 150px;">
+                                
+                            </p:column>
+                        </p:row>
+                        <p:row rendered="#{addProductController.composite == '0'}">
                             <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.BaseNumber}:" />
                             </p:column>
@@ -305,7 +328,7 @@
                                     <p:message for="baseNumber"/>
                             </p:column>
                         </p:row>
-                        <p:row>
+                        <p:row rendered="#{addProductController.composite == '0'}">
                             <p:column class="column">
                                 <h:outputText class="fieldLabel" value="#{bundle.Stock}:" />
                             </p:column>
@@ -318,6 +341,47 @@
                             </p:column>
                             <p:column>
                                     <p:message for="stock"/>
+                            </p:column>
+                        </p:row>
+                        <p:row rendered="#{addProductController.composite == '1'}">
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Product}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="productComposition"  style="width:300px"  
+                                                 value="#{addProductController.productCompsite}"
+                                                 required="true"
+                                                 requiredMessage="#{bundle.FieldRequired}"
+                                                 filter="true" filterMatchMode="contains"
+                                                 converter="selectOneMenuConverter"
+                                                 >
+                                    <f:selectItem itemLabel="#{bundle.Select}..."/>
+                                    <f:selectItems value="#{addProductController.productsComposite}"
+                                                   var="productComposite"
+                                                   itemLabel="#{productComposite.prodName}" itemValue="#{productComposite}"
+                                                   />
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="productComposition"/>
+                            </p:column>
+                        </p:row>
+                        <p:row rendered="#{addProductController.composite == '1'}">
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.CompositionValue}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="compositeValue"
+                                    required="true"  requiredMessage="#{bundle.FieldRequired}"
+                                    class="inputTextVeryShort"
+                                    value="#{addProductController.compositeValue}">
+                                    <f:validator validatorId="integerValidator" />
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="compositeValue"/>
                             </p:column>
                         </p:row>
                         <p:row>
@@ -333,7 +397,7 @@
                                     action="#{addProductController.add()}"
                                     value="Registrar"
                                     ajax="true"
-                                    update="panel"
+                                    update="panel panelComposite"
                                     onstart="PF('efectoCarga').show()"  
                                     onsuccess="PF('efectoCarga').hide()"
                                                    />

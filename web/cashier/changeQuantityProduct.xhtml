@@ -7,6 +7,7 @@
     <ui:composition>
         <h:form id="formOpenChangeQuantityProduct">
             <p:dialog
+                header="Cambiar la cantidad"
                 resizable="false"
                 widgetVar="openChangeQuantityProduct"
                 modal="true"
@@ -16,11 +17,13 @@
                     <p:focus for="changeQuantity"/>
                     
                     <p:row >
-                        <p:column style="background: #C8CDD6">
+                        <p:column style="font-size: 20pt;background: #C8CDD6">
                                     #{bundle.Quantity}:
                         </p:column>
                         <p:column  style="background: #C8CDD6">
                             <p:inputText 
+                                autocomplete="off"
+                                style="font-size: 20pt;"
                                 id="changeQuantity"
                                 value="#{cashRegisterController.quantity}">
                             </p:inputText>
@@ -29,6 +32,7 @@
                     <p:row>
                         <p:column colspan="2"  style="background: #C8CDD6; text-align: center;">
                             <p:commandButton 
+                                style="font-size: 20pt"
                                 action="#{cashRegisterController.okChangeQuantityProduct}"
                                 value="#{bundle.Ok}"
                                 onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"

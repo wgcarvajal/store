@@ -55,6 +55,8 @@ public class ProductController implements Serializable
     private String billName;
     private String stock;
     private String baseNumber;
+    private String composite;
+    private String compositeValue;
     private Unity unity;
     private String unitValue;
     private Category category;
@@ -68,6 +70,7 @@ public class ProductController implements Serializable
     private Producttype producttype;
     private Provides currentProvides;
     private Productimage productimage;
+    private Product productComposite;
     
     private List<Unity> unities;
     private List<Category> categories;
@@ -76,6 +79,7 @@ public class ProductController implements Serializable
     private List<Producttype> producttypes;
     private List<Provider> providers;
     private List<Productimage> productimages;
+    private List<Product>productsComposite;
     
     private boolean editImage = false;
     
@@ -166,6 +170,22 @@ public class ProductController implements Serializable
 
     public void setIva(String iva) {
         this.iva = iva;
+    }
+    
+    public String getComposite() {
+        return composite;
+    }
+
+    public void setComposite(String composite) {
+        this.composite = composite;
+    }
+
+    public String getCompositeValue() {
+        return compositeValue;
+    }
+
+    public void setCompositeValue(String compositeValue) {
+        this.compositeValue = compositeValue;
     }
     
     public List<Unity> getUnities() {
@@ -268,8 +288,27 @@ public class ProductController implements Serializable
         return pricepurchase;
     }
 
+    public List<Product> getProductsComposite() {
+        productsComposite = productEJB.findAllWithoutComposite();
+        return productsComposite;
+    }
+
+    public void setProductsComposite(List<Product> productsComposite) {
+        this.productsComposite = productsComposite;
+    }
+    
+    
+
     public void setPricepurchase(Pricepurchase pricepurchase) {
         this.pricepurchase = pricepurchase;
+    }
+
+    public Product getProductComposite() {
+        return productComposite;
+    }
+
+    public void setProductComposite(Product productComposite) {
+        this.productComposite = productComposite;
     }
     
     
@@ -451,11 +490,56 @@ public class ProductController implements Serializable
         Util.openDialog("editBaseNumberDialog");
     }
     
+    public void editComposition()
+    {
+        if(product.getProdComposition()!=null)
+        {
+            composite = "1";
+            productComposite = product.getProdComposition();
+        }
+        else
+        {
+            composite = "0";
+        }
+        Util.update(":formEditChangeComposition");
+        Util.openDialog("changeComposition");
+    }
+    
+    public void editCompositionOk()
+    {
+        product.setProdStock(0);
+        product.setProdBaseNumber(0);
+        product.setProdCompositionValue(null);
+        product.setProdComposition(null);
+        if(composite.equals("1"))
+        {
+            product.setProdCompositionValue(0);
+            product.setProdComposition(productComposite);
+        }
+        
+        productEJB.edit(product);
+        Util.update(":formProduct:panelProduct");
+        Util.closeDialog("changeComposition");
+    }
+    
+    public void changeComposition()
+    {
+        System.out.println("entro");
+        Util.update("formEditChangeComposition:changeCompositionPanel");
+    }
+    
     public void editStock()
     {
         stock = product.getProdStock()+"";
         Util.update(":formEditStock");
         Util.openDialog("editStockDialog");
+    }
+    
+    public void editCompositeValue()
+    {
+        compositeValue = product.getProdCompositionValue()+"";
+        Util.update(":formEditCompositeValue");
+        Util.openDialog("editCompositeValueDialog");
     }
     
     public void editProvider()
@@ -750,6 +834,49 @@ public class ProductController implements Serializable
         else
         {
             Util.closeDialog("editPricepurchaseDialog");
+        }
+    }
+    
+    public void okEditCompositionValue()
+    {
+        if(compositeValue!=null && !compositeValue.isEmpty()){
+            int compsiteV = Integer.parseInt(compositeValue);
+            if(product.getProdCompositionValue()!= compsiteV)
+            {
+                product.setProdCompositionValue(compsiteV);
+                productEJB.edit(product);
+                Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+                Util.update(":formProduct:panelProduct");
+                Util.update(":formProduct:messageGrowl");
+                Util.closeDialog("editCompositeValueDialog");
+            }
+            else{
+                Util.closeDialog("editCompositeValueDialog"); 
+            }
+        }
+        else
+        {
+            if(product.getProdCompositionValue()!=0)
+            {
+                product.setProdCompositionValue(0);
+                productEJB.edit(product);
+                Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+                Util.update(":formProduct:panelProduct");
+                Util.update(":formProduct:messageGrowl");
+                Util.closeDialog("editCompositeValueDialog");
+            }
+            else
+            {
+                Util.closeDialog("editCompositeValueDialog"); 
+            }
         }
     }
     

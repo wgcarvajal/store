@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 10, 2020 at 11:19 PM
+-- Generation Time: Aug 04, 2020 at 03:13 PM
 -- Server version: 5.7.28
 -- PHP Version: 7.3.11
 
@@ -232,14 +232,17 @@ INSERT INTO `price` (`priceId`, `priceValue`, `priceInitialDate`, `priceFinalDat
 (16, 1800, '2020-03-09 16:50:41', '2020-03-09 16:51:11', 2),
 (17, 2200, '2020-03-09 16:51:11', '2020-07-09 17:43:37', 2),
 (18, 1200, '2020-03-17 20:51:13', NULL, 14),
-(19, 1600, '2020-07-08 11:23:00', NULL, 1),
+(19, 1600, '2020-07-08 11:23:00', '2020-07-27 11:22:12', 1),
 (20, 700, '2020-07-09 16:56:56', '2020-07-09 16:57:42', 4),
 (21, 800, '2020-07-09 16:57:42', '2020-07-09 17:00:13', 4),
 (22, 600, '2020-07-09 17:00:13', '2020-07-09 17:04:58', 4),
 (23, 700, '2020-07-09 17:04:58', '2020-07-09 23:05:44', 4),
 (24, 2203, '2020-07-09 17:43:37', NULL, 2),
 (25, 2200, '2020-07-09 17:54:53', NULL, 3),
-(26, 800, '2020-07-09 23:05:44', NULL, 4);
+(26, 800, '2020-07-09 23:05:44', NULL, 4),
+(27, 567, '2020-07-26 15:40:56', NULL, 15),
+(28, 10000000, '2020-07-27 11:22:12', '2020-07-27 11:27:52', 1),
+(29, 100000000, '2020-07-27 11:27:52', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -266,13 +269,16 @@ INSERT INTO `pricepurchase` (`pricePurId`, `pricePurValue`, `pricePurInitialDate
 (4, 2000, '2020-03-09 16:51:03', NULL, 2),
 (5, 1900, '2020-03-09 16:52:05', NULL, 13),
 (6, 500, '2020-03-09 17:18:52', '2020-07-09 16:56:56', 4),
-(7, 1200, '2020-03-16 00:18:46', NULL, 1),
+(7, 1200, '2020-03-16 00:18:46', '2020-07-27 11:22:06', 1),
 (8, 1800, '2020-03-16 00:19:08', NULL, 3),
 (9, 1000, '2020-03-17 20:51:13', NULL, 14),
 (10, 2300, '2020-03-20 19:21:35', NULL, 11),
 (11, 600, '2020-07-09 16:56:57', '2020-07-09 17:00:22', 4),
 (12, 500, '2020-07-09 17:00:22', '2020-07-09 17:06:36', 4),
-(13, 600, '2020-07-09 17:06:36', NULL, 4);
+(13, 600, '2020-07-09 17:06:36', NULL, 4),
+(14, 454, '2020-07-26 15:40:56', NULL, 15),
+(15, 10000000, '2020-07-27 11:22:06', '2020-07-27 11:27:47', 1),
+(16, 100000000, '2020-07-27 11:27:47', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -293,28 +299,31 @@ CREATE TABLE `product` (
   `brandId` bigint(20) DEFAULT NULL,
   `uniId` int(11) NOT NULL,
   `ownId` int(11) NOT NULL DEFAULT '1',
-  `prodtypeId` int(11) NOT NULL
+  `prodtypeId` int(11) NOT NULL,
+  `prodComposition` bigint(20) DEFAULT NULL,
+  `prodCompositionValue` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`prodId`, `prodBarCode`, `prodName`, `prodNameBill`, `prodStock`, `prodIva`, `prodBaseNumber`, `prodUnitValue`, `catId`, `brandId`, `uniId`, `ownId`, `prodtypeId`) VALUES
-(1, '30', 'Coca cola', 'coca col 350ml', 14, 5, 14, 350, 4, 4, 1, 2, 1),
-(2, '31', 'Papas margarita limon', 'pap marg limo 90g', 4, 0, 4, 90, 3, 2, 2, 1, 1),
-(3, '32', 'Papas margarita pollo', 'pap marg pollo 90g', 8, 0, 8, 90, 3, 2, 2, 1, 1),
-(4, '095489', 'Choco ramo', NULL, 14, 0, 14, 100, 3, 4, 1, 1, 1),
-(5, '3434', 'Ponque ramo', NULL, 5, 0, 6, 58, 3, 2, 1, 1, 1),
-(6, '45565', 'Manzana', NULL, 20, 0, 25, 350, 3, 5, 1, 1, 1),
-(7, '34435', 'Uva', NULL, 7, 0, 8, 350, 3, 5, 1, 1, 1),
-(8, '556567', 'Yogurt', NULL, 0, 0, 0, 20, 3, 4, 1, 1, 1),
-(9, '489239', 'Sprite', NULL, 4, 0, 5, 350, 3, 4, 1, 1, 1),
-(10, '859143', 'Sprite', NULL, 0, 0, 0, 600, 3, 4, 1, 1, 1),
-(11, '33', 'Pollo sin viceras', 'pollo sin vice', 39000, 0, 40000, 1000, 4, 3, 2, 1, 2),
-(12, '49895968', 'Prueba', NULL, 10, 5, 29, 350, 4, 5, 1, 1, 1),
-(13, '545465', 'Curuba', NULL, 12, 5, 23, 34343, 4, 4, 1, 1, 1),
-(14, '999999', 'Test2', NULL, 5, 5, 10, 350, 3, 2, 1, 3, 1);
+INSERT INTO `product` (`prodId`, `prodBarCode`, `prodName`, `prodNameBill`, `prodStock`, `prodIva`, `prodBaseNumber`, `prodUnitValue`, `catId`, `brandId`, `uniId`, `ownId`, `prodtypeId`, `prodComposition`, `prodCompositionValue`) VALUES
+(1, '304050608040', 'Coca cola', 'coca col 350ml', 90, 5, 50, 350, 4, 4, 1, 2, 1, NULL, NULL),
+(2, '31', 'Papas margarita limon', 'pap marg limo 90g', 0, 0, 4, 90, 3, 2, 2, 1, 1, NULL, NULL),
+(3, '32', 'Papas margarita pollo', 'pap marg pollo 90g', 3, 0, 8, 90, 3, 2, 2, 1, 1, NULL, NULL),
+(4, '095489', 'Choco ramo', NULL, 9, 0, 14, 100, 3, 4, 1, 1, 1, NULL, NULL),
+(5, '3434', 'Ponque ramo', NULL, 2, 0, 6, 58, 3, 2, 1, 1, 1, NULL, NULL),
+(6, '45565', 'Manzana', NULL, 18, 0, 25, 350, 3, 5, 1, 1, 1, NULL, NULL),
+(7, '34435', 'Uva', NULL, 3, 0, 8, 350, 3, 5, 1, 1, 1, NULL, NULL),
+(8, '556567', 'Yogurt', NULL, 0, 0, 0, 20, 3, 4, 1, 1, 1, NULL, NULL),
+(9, '489239', 'Sprite', NULL, 4, 0, 5, 350, 3, 4, 1, 1, 1, NULL, NULL),
+(10, '859143', 'Sprite', NULL, -1, 0, 0, 600, 3, 4, 1, 1, 1, NULL, NULL),
+(11, '33', 'Pollo sin viceras', 'pollo sin vice', 35000, 0, 40000, 1000, 4, 3, 2, 1, 2, NULL, NULL),
+(12, '49895968', 'Prueba', NULL, 9, 5, 29, 350, 4, 5, 1, 1, 1, NULL, NULL),
+(13, '545465', 'Curuba', NULL, 11, 5, 23, 34343, 4, 4, 1, 1, 1, NULL, NULL),
+(14, '999999', 'Test2', NULL, 5, 5, 10, 350, 3, 2, 1, 3, 1, NULL, NULL),
+(15, '797979', 'cocacola promo', 'test composite', 0, 0, 0, 475, 4, 4, 2, 1, 1, 4, 5);
 
 -- --------------------------------------------------------
 
@@ -423,6 +432,44 @@ CREATE TABLE `purchase` (
   `purState` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `purchase`
+--
+
+INSERT INTO `purchase` (`purId`, `purDate`, `purFinalAmount`, `purReceivedAmount`, `purDiscount`, `purPayment`, `cliId`, `usId`, `purState`) VALUES
+(1, '2020-07-18 22:59:42', 1600, 2000, NULL, NULL, NULL, 3, 1),
+(2, '2020-07-18 23:02:59', 1600, 2000, NULL, NULL, NULL, 3, 1),
+(3, '2020-07-18 23:07:23', 1600, 2000, NULL, NULL, NULL, 3, 1),
+(4, '2020-07-21 23:24:11', 1600, 2000, NULL, NULL, NULL, 3, 1),
+(5, '2020-07-21 23:33:21', 2203, 3000, NULL, NULL, NULL, 3, 1),
+(6, '2020-07-21 23:36:32', 1600, 2000, NULL, NULL, NULL, 3, 1),
+(7, '2020-07-21 23:39:54', 1600, 2000, NULL, NULL, NULL, 3, 1),
+(8, '2020-07-21 23:40:18', 2200, 10000, NULL, NULL, NULL, 3, 1),
+(9, '2020-07-21 23:41:51', 800, 1000, NULL, NULL, NULL, 3, 1),
+(10, '2020-07-21 23:43:28', 1600, 4000, NULL, NULL, NULL, 3, 1),
+(11, '2020-07-21 23:44:06', 700, 4000, NULL, NULL, NULL, 3, 1),
+(12, '2020-07-21 23:45:17', 1800, 2000, NULL, NULL, NULL, 3, 1),
+(13, '2020-07-21 23:46:09', 700, 5000, NULL, NULL, NULL, 3, 1),
+(14, '2020-07-21 23:47:25', 1600, 3000, NULL, NULL, NULL, 3, 1),
+(15, '2020-07-21 23:49:27', 1800, 20000, NULL, NULL, NULL, 3, 1),
+(17, '2020-07-21 23:57:57', 800, 1000, NULL, NULL, NULL, 3, 1),
+(18, '2020-07-21 23:58:54', 700, 1000, NULL, NULL, NULL, 3, 1),
+(25, '2020-07-27 14:30:14', 200002600, 220000000, NULL, NULL, NULL, 3, 1),
+(27, '2020-07-27 14:38:27', 3003, 4000, NULL, NULL, NULL, 3, 1),
+(29, '2020-07-27 14:44:40', 2203, 30000, NULL, NULL, NULL, 3, 1),
+(31, '2020-07-27 14:50:37', 2200, 3000, NULL, NULL, NULL, 3, 1),
+(32, '2020-07-27 14:52:45', 800, 1000, NULL, NULL, NULL, 3, 1),
+(33, '2020-07-27 14:54:38', 2200, 2200, NULL, NULL, NULL, 3, 1),
+(34, '2020-07-27 14:57:17', 1800, 2000, NULL, NULL, NULL, 3, 1),
+(35, '2020-07-27 14:58:18', 2400, 3000, NULL, NULL, NULL, 3, 1),
+(36, '2020-07-27 14:59:52', 10000, 20000, NULL, NULL, NULL, 3, 1),
+(37, '2020-07-27 15:00:23', 1800, 2000, NULL, NULL, NULL, 3, 1),
+(38, '2020-07-27 15:02:40', 1800, 2000, NULL, NULL, NULL, 3, 1),
+(40, '2020-07-27 15:09:05', 6600, 7000, NULL, NULL, NULL, 3, 1),
+(41, '2020-07-27 15:14:51', NULL, NULL, NULL, NULL, NULL, 3, 0),
+(42, '2020-08-02 12:08:35', 800, 800, NULL, NULL, 4, 3, 1),
+(43, '2020-08-02 12:18:44', 1800, 2000, NULL, NULL, NULL, 3, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -441,14 +488,94 @@ CREATE TABLE `purchaseitem` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Dumping data for table `purchaseitem`
+--
+
+INSERT INTO `purchaseitem` (`purItemId`, `purItemQuantity`, `prodId`, `purId`, `priceValue`, `iva`, `pricePurValue`, `ownId`) VALUES
+(1, 1, 1, 1, 1600, 19, 1200, 2),
+(2, 1, 1, 2, 1600, 19, 1200, 2),
+(3, 1, 1, 3, 1600, 5, 1200, 2),
+(4, 1, 1, 4, 1600, 5, 1200, 2),
+(5, 1, 2, 5, 2203, 0, 2000, 1),
+(6, 1, 1, 6, 1600, 5, 1200, 2),
+(7, 1, 1, 7, 1600, 5, 1200, 2),
+(8, 1, 10, 8, 2200, 0, 2200, 1),
+(9, 1, 4, 9, 800, 0, 600, 1),
+(10, 1, 1, 10, 1600, 5, 1200, 2),
+(11, 1, 5, 11, 700, 0, 700, 1),
+(12, 1, 7, 12, 1800, 0, 1800, 1),
+(13, 1, 5, 13, 700, 0, 700, 1),
+(14, 1, 1, 14, 1600, 5, 1200, 2),
+(15, 1, 6, 15, 1800, 0, 1800, 1),
+(17, 1, 4, 17, 800, 0, 600, 1),
+(18, 1, 5, 18, 700, 0, 700, 1),
+(39, 1, 12, 25, 2600, 5, 2600, 1),
+(40, 2, 1, 25, 100000000, 5, 100000000, 2),
+(42, 1, 4, 27, 800, 0, 600, 1),
+(43, 1, 2, 27, 2203, 0, 2000, 1),
+(45, 1, 2, 29, 2203, 0, 2000, 1),
+(47, 1, 3, 31, 2200, 0, 1800, 1),
+(48, 1, 4, 32, 800, 0, 600, 1),
+(49, 1, 3, 33, 2200, 0, 1800, 1),
+(50, 1, 7, 34, 1800, 0, 1800, 1),
+(51, 1, 13, 35, 2400, 5, 1900, 1),
+(52, 4000, 11, 36, 2500, 0, 2300, 1),
+(53, 1, 6, 37, 1800, 0, 1800, 1),
+(54, 1, 7, 38, 1800, 0, 1800, 1),
+(56, 3, 3, 40, 2200, 0, 1800, 1),
+(57, 1, 2, 41, 2203, 0, 2000, 1),
+(58, 1, 4, 42, 800, 0, 600, 1),
+(59, 1, 7, 43, 1800, 0, 1800, 1);
+
+--
 -- Triggers `purchaseitem`
 --
 DELIMITER $$
-CREATE TRIGGER `delete_purchaseitem` AFTER DELETE ON `purchaseitem` FOR EACH ROW UPDATE product SET product.prodStock = product.prodStock + OLD.purItemQuantity WHERE product.prodId = OLD.prodId
+CREATE TRIGGER `delete_purchaseitem` AFTER DELETE ON `purchaseitem` FOR EACH ROW BEGIN
+DECLARE PROID bigint(20);
+DECLARE COMPOSITEVALUE int;
+SET PROID =(SELECT product.prodComposition FROM product WHERE 						product.prodId = OLD.prodId);
+
+SET COMPOSITEVALUE =(SELECT product.prodCompositionValue FROM product WHERE product.prodId = OLD.prodId);
+
+IF(PROID IS NULL) THEN
+	UPDATE product SET product.prodStock = product.prodStock + 				OLD.purItemQuantity WHERE product.prodId = OLD.prodId;
+ELSE
+	UPDATE product SET product.prodStock = (product.prodStock + 		     OLD.purItemQuantity * COMPOSITEVALUE) WHERE product.prodId = PROID;
+END IF;
+END
 $$
 DELIMITER ;
 DELIMITER $$
-CREATE TRIGGER `insert_purchaseitem` AFTER INSERT ON `purchaseitem` FOR EACH ROW UPDATE product SET product.prodStock = (product.prodStock - NEW.purItemQuantity) WHERE product.prodId = NEW.prodId
+CREATE TRIGGER `insert_purchaseitem` AFTER INSERT ON `purchaseitem` FOR EACH ROW BEGIN
+DECLARE PROID bigint(20);
+DECLARE COMPOSITEVALUE int;
+SET PROID =(SELECT product.prodComposition FROM product WHERE 						product.prodId = NEW.prodId);
+
+SET COMPOSITEVALUE =(SELECT product.prodCompositionValue FROM product WHERE product.prodId = NEW.prodId);
+
+IF(PROID IS NULL) THEN
+	UPDATE product SET product.prodStock = (product.prodStock - 		     NEW.purItemQuantity) WHERE product.prodId = NEW.prodId;
+ELSE
+	UPDATE product SET product.prodStock = (product.prodStock - 		     NEW.purItemQuantity * COMPOSITEVALUE) WHERE product.prodId = PROID;
+END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `update_purshaseitem` AFTER UPDATE ON `purchaseitem` FOR EACH ROW BEGIN
+DECLARE PROID bigint(20);
+DECLARE COMPOSITEVALUE int;
+SET PROID =(SELECT product.prodComposition FROM product WHERE 						product.prodId = NEW.prodId);
+
+SET COMPOSITEVALUE =(SELECT product.prodCompositionValue FROM product WHERE product.prodId = NEW.prodId);
+
+IF(PROID IS NULL) THEN
+	UPDATE product SET product.prodStock = (product.prodStock - 			(NEW.purItemQuantity - OLD.purItemQuantity)) WHERE product.prodId = 	NEW.prodId;
+ELSE
+	UPDATE product SET product.prodStock = (product.prodStock -(( 		     NEW.purItemQuantity * COMPOSITEVALUE) - (OLD.purItemQuantity * COMPOSITEVALUE))) WHERE product.prodId = PROID;
+END IF;
+END
 $$
 DELIMITER ;
 
@@ -466,6 +593,44 @@ CREATE TABLE `purchasetotal` (
   `purToGain` int(11) NOT NULL,
   `purToIva` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `purchasetotal`
+--
+
+INSERT INTO `purchasetotal` (`purToId`, `purId`, `ownId`, `purToTotal`, `purToGain`, `purToIva`) VALUES
+(1, 1, 2, 1600, 400, 63.8655),
+(2, 2, 2, 1600, 400, 63.8655),
+(3, 3, 2, 1600, 400, 19.0476),
+(4, 4, 2, 1600, 400, 19.0476),
+(5, 5, 1, 2203, 203, 0),
+(6, 6, 2, 1600, 400, 19.0476),
+(7, 7, 2, 1600, 400, 19.0476),
+(8, 8, 1, 2200, 0, 0),
+(9, 9, 1, 800, 200, 0),
+(10, 10, 2, 1600, 400, 19.0476),
+(11, 11, 1, 700, 0, 0),
+(12, 12, 1, 1800, 0, 0),
+(13, 13, 1, 700, 0, 0),
+(14, 14, 2, 1600, 400, 19.0476),
+(15, 15, 1, 1800, 0, 0),
+(16, 17, 1, 800, 200, 0),
+(17, 18, 1, 700, 0, 0),
+(18, 25, 1, 2600, 0, 0),
+(19, 25, 2, 200000000, 0, 0),
+(20, 27, 1, 3003, 403, 0),
+(21, 29, 1, 2203, 203, 0),
+(22, 31, 1, 2200, 400, 0),
+(23, 32, 1, 800, 200, 0),
+(24, 33, 1, 2200, 400, 0),
+(25, 34, 1, 1800, 0, 0),
+(26, 35, 1, 2400, 500, 23.8095),
+(27, 36, 1, 10000, 800, 0),
+(28, 37, 1, 1800, 0, 0),
+(29, 38, 1, 1800, 0, 0),
+(30, 40, 1, 6600, 1200, 0),
+(31, 42, 1, 800, 200, 0),
+(32, 43, 1, 1800, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -620,7 +785,8 @@ ALTER TABLE `product`
   ADD KEY `fk_produt_category` (`catId`),
   ADD KEY `fk_product_unity` (`uniId`),
   ADD KEY `fk_product_producttype` (`prodtypeId`),
-  ADD KEY `fk_product_owner` (`ownId`);
+  ADD KEY `fk_product_owner` (`ownId`),
+  ADD KEY `fk_product_product` (`prodComposition`);
 
 --
 -- Indexes for table `productimage`
@@ -744,19 +910,19 @@ ALTER TABLE `pay`
 -- AUTO_INCREMENT for table `price`
 --
 ALTER TABLE `price`
-  MODIFY `priceId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `priceId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `pricepurchase`
 --
 ALTER TABLE `pricepurchase`
-  MODIFY `pricePurId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `pricePurId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `prodId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `prodId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `productimage`
@@ -786,19 +952,19 @@ ALTER TABLE `provides`
 -- AUTO_INCREMENT for table `purchase`
 --
 ALTER TABLE `purchase`
-  MODIFY `purId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `purId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `purchaseitem`
 --
 ALTER TABLE `purchaseitem`
-  MODIFY `purItemId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `purItemId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `purchasetotal`
 --
 ALTER TABLE `purchasetotal`
-  MODIFY `purToId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `purToId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `unity`
@@ -854,6 +1020,7 @@ ALTER TABLE `pricepurchase`
 ALTER TABLE `product`
   ADD CONSTRAINT `fk_product_brand` FOREIGN KEY (`brandId`) REFERENCES `brand` (`brandId`),
   ADD CONSTRAINT `fk_product_owner` FOREIGN KEY (`ownId`) REFERENCES `owner` (`ownId`),
+  ADD CONSTRAINT `fk_product_product` FOREIGN KEY (`prodComposition`) REFERENCES `product` (`prodId`),
   ADD CONSTRAINT `fk_product_producttype` FOREIGN KEY (`prodtypeId`) REFERENCES `producttype` (`prodtypeId`),
   ADD CONSTRAINT `fk_product_unity` FOREIGN KEY (`uniId`) REFERENCES `unity` (`uniId`),
   ADD CONSTRAINT `fk_produt_category` FOREIGN KEY (`catId`) REFERENCES `category` (`catId`);

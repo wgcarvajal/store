@@ -34,6 +34,7 @@ public class PricepurchaseFacade extends AbstractFacade<Pricepurchase> {
     public Pricepurchase findCurrentByProdId(long prodId)
     {
         Query query = getEntityManager().createNamedQuery("Pricepurchase.findCurrentByProdId");
+        query.setHint("eclipselink.refresh", true);
         query.setParameter("prodId", prodId);
         List<Pricepurchase> resuList = query.getResultList();
         return resuList.size() > 0 ? resuList.get(0):null;

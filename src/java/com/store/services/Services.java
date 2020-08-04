@@ -90,6 +90,8 @@ public class Services {
            jSONProduct.put("pricepurchase", pricepurchase.getPricePurValue());
            jSONProduct.put("stock", product.getProdStock());
            jSONProduct.put("base", product.getProdBaseNumber());
+           jSONProduct.put("unitvalue", product.getProdUnitValue());
+           jSONProduct.put("unit", product.getUniId().getUniAbbreviation());
            jSONArray.put(jSONProduct);
        }
        jSONProducts.put("list", jSONArray);
@@ -199,7 +201,7 @@ public class Services {
             int addStock = jsonRequest.getInt("addStock");
             
             Product p = productEJB.findByProdId(prodId);
-            p.setProdStock(p.getProdStock()+addStock);
+            p.setProdStock(addStock);
             productEJB.edit(p);
             jsonResponse.put("isValid", true);
             

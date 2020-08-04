@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <body>
 
@@ -46,15 +47,19 @@
                             <h:outputText value="#{prod.brandId.brandName}" />
                         </p:column>
                         <p:column headerText="#{bundle.Stock}"   filterBy="#{prod.prodStock}">
-                            <h:outputText value="#{prod.prodStock}" />
+                            
+                            <h:outputText rendered="#{prod.prodComposition==null}" value="#{prod.prodStock}" />
+                            <h:outputText rendered="#{prod.prodComposition!=null}" value="Producto Compuesto"/>
                         </p:column>
                         <p:column headerText="#{bundle.BaseNumber}">
-                            <h:outputText value="#{prod.prodBaseNumber}" />
+                            <h:outputText rendered="#{prod.prodComposition==null}"  value="#{prod.prodBaseNumber}" />
+                            <h:outputText rendered="#{prod.prodComposition!=null}" value="Producto Compuesto"/>
                         </p:column>
                         <p:column headerText="#{bundle.Price}">
                             <h:outputText value="#{productsController.price(prod)}" />
                         </p:column>
                     </p:dataTable>
+                    <br/>
                 </h:form>
                 
             </ui:define>

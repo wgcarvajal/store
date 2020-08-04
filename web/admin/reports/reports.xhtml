@@ -139,6 +139,68 @@
                         </p:dataViewListItem>
                     </p:dataView>
                 </h:form>
+                <br />
+                    
+                <br />
+                <h:form id="formOwnerHouse">
+                    
+                    <p:dataView var="ownerTotals" value="#{dailyReportController.ownerHouseTotals}"
+                                listIcon="pi pi-bars"
+                                >
+                        <p:dataViewListItem>
+                            <p:panelGrid styleClass="panelgridReports">
+                                <p:row>
+                                    <p:column class="columnReport">
+                                        <p:outputLabel value="#{ownerTotals.owner.ownName}"
+                                                       style="font-size: 15pt;font-weight: bold;"/>
+                                        (Se saco para la casa)
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputPanel>
+                                            <p:panelGrid styleClass="panelgridReports">
+                                                <p:row>
+                                                    <p:column>
+                                                        <p:outputLabel value="#{bundle.Total}:" 
+                                                                       style="font-size: 10pt;font-weight: bold;" />
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:outputLabel value="#{dailyReportController.priceFormat(ownerTotals.total)}"/>
+                                                    </p:column>
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column>
+                                                        <p:outputLabel value="#{bundle.GainWithIva}:"
+                                                                       style="font-size: 10pt;font-weight: bold;"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:outputLabel value="#{dailyReportController.priceFormat(ownerTotals.gain)}"/>
+                                                    </p:column>
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column>
+                                                        <p:outputLabel value="#{bundle.Iva}:" 
+                                                                       style="font-size: 10pt;font-weight: bold;"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:outputLabel value="#{dailyReportController.priceFloatFormat(ownerTotals.iva)}"/>
+                                                    </p:column>
+                                                </p:row>
+                                            </p:panelGrid>
+                                        </p:outputPanel>
+                                    </p:column>
+                                    <p:column>
+                                        <p:commandLink action="#{dailyReportController.showHouseProductList(ownerTotals.owner)}"
+                                                       onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                                       >
+                                           <i class="pi pi-bars"></i>
+                                        </p:commandLink>
+                                    </p:column>
+                                </p:row>
+                                
+                            </p:panelGrid>
+                        </p:dataViewListItem>
+                    </p:dataView>
+                </h:form>
                 
                 <h:form id="formProductTable">
                     <p:dialog

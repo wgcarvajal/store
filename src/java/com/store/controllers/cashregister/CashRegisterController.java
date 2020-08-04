@@ -597,7 +597,7 @@ public class CashRegisterController implements Serializable {
             case "005":
                 if(payment)
                 {
-                    openPayment();
+                    openPaymentCash();
                 }
                 else
                 {
@@ -814,7 +814,18 @@ public class CashRegisterController implements Serializable {
             boolean productType = product.getProdtypeId().getProdtypeValue().equals("Sin empaquetar");
             if(!productType)
             {
-                addProduct(product, onSesionUserController, productType);
+                if(product.getProdComposition()!=null){
+                    addProduct(product, onSesionUserController, productType);
+                }
+                else if(product.getProdStock()>0)
+                {
+                    addProduct(product, onSesionUserController, productType);
+                }
+                else{
+                   String message = ResourceBundle.getBundle("/Bundle").getString("ProductSoldOut");
+                   Util.addErrorMessage(message, message);
+                   Util.update(":formGeneralMessage"); 
+                }
             }
             else{
                 producWaitForWeight = product;
@@ -1238,6 +1249,13 @@ public class CashRegisterController implements Serializable {
         Util.openDialog("openReceivedAmount");
     }
     
+    public void openPaymentCash()
+    {
+        receivedAmount = null;
+        Util.update(":formOpenReceivedAmount");
+        Util.openDialog("openReceivedAmount");
+    }
+    
     public void escKeyReceivedAmount()
     {
         receivedAmount = null;
@@ -1331,8 +1349,9 @@ public class CashRegisterController implements Serializable {
                        printPdf.imprimirTicket(generatePdf.getFicheroPdf(),currentCash.getCashPrintName());
                        printPdf.openCashDrawer(currentCash.getCashPrintName(), currentCash.getCashPrintCommandOpenCashDrawer());
                     }
-                    Util.update(":formCode:focusCode");
                     Util.closeDialog("openSuccessfulPayment");
+                    Util.update(":formOpenFinishPayment");
+                    Util.openDialog("openOpenFinishPayment");
                 }
                 else if(a == 2)//end
                 {
@@ -1341,8 +1360,9 @@ public class CashRegisterController implements Serializable {
                        PrintPdf printPdf = new PrintPdf();
                        printPdf.openCashDrawer(currentCash.getCashPrintName(), currentCash.getCashPrintCommandOpenCashDrawer());
                    }
-                   Util.update(":formCode:focusCode");
-                   Util.closeDialog("openSuccessfulPayment");         
+                   Util.closeDialog("openSuccessfulPayment"); 
+                   Util.update(":formOpenFinishPayment");
+                   Util.openDialog("openOpenFinishPayment");
                 }
                     
             }
@@ -1351,6 +1371,12 @@ public class CashRegisterController implements Serializable {
                 
             }
         }
+    }
+    
+    public void okFinishPaymentAction()
+    {       
+        Util.update(":formCode:focusCode");
+        Util.closeDialog("openOpenFinishPayment");
     }
     
     public void openSearchProduct()
