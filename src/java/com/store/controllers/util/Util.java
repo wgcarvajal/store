@@ -26,6 +26,7 @@ public class Util {
     public static String phoneStore = "8624840";
     
     public static String urlServer = "http://192.168.0.71:8080";
+    //public static String urlServer = "http://localhost:8080";
     public static String projectPath = "/store";
     /*public static String PRODUCTIMAGEDIR= "/Users/aranda/filesStore/productImage/";
     public static String BILLDIR= "/Users/aranda/filesStore/bill/";

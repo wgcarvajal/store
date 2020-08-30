@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../../plantillas/sAdmin.xhtml">
+
+            <ui:define name="cssPage">
+                <h:outputStylesheet name="./css/formcss.css"/>
+            </ui:define>
+
+            <ui:define name="title">
+               #{bundle.CancelPurchaseAuditorie}
+            </ui:define>
+
+            <ui:define name="top">
+                
+            </ui:define>
+
+            <ui:define name="content">
+                <div class="pageTitle">#{bundle.CancelPurchaseAuditorie}</div>
+                <h:form id="formCalendar">
+                    <p:panelGrid id="panelCalendar" styleClass="panelgrid">
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="#{bundle.DateInit}:"/>
+                            </p:column>
+                            <p:column>
+                                <p:calendar maxdate="#{cancelPurchaseController.maxVisibleDate()}">
+                                    <p:ajax event="dateSelect" listener="#{cancelPurchaseController.onInitDataSelect}" 
+                                            onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                            />
+
+                                </p:calendar>
+                            </p:column>
+                            <p:column rendered="#{cancelPurchaseController.endDate}">
+                                <p:outputLabel value="#{bundle.DateEnd}:"/>
+                            </p:column>
+                            <p:column rendered="#{cancelPurchaseController.endDate}">
+                                <p:calendar value="#{cancelPurchaseController.dateSelected}" mindate="#{cancelPurchaseController.initDate}"
+                                            maxdate="#{cancelPurchaseController.maxVisibleDate()}"
+                                            >
+                                    <p:ajax event="dateSelect" listener="#{cancelPurchaseController.onEndDateSelect}" 
+                                            onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                            />
+                                </p:calendar>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </h:form>
+                <br />
+                <br />
+                <h:form id="formPurchase">
+                    <p:dataTable paginator="true" rows="20"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 var="cancelPurchase" value="#{cancelPurchaseController.cancelPurchases}">
+                        <p:column headerText="#{bundle.Date} cancelación">
+                            #{cancelPurchaseController.formatDate(cancelPurchase.canpuraudDate)}
+                        </p:column>
+                        <p:column headerText="#{bundle.Code}">
+                            #{cancelPurchaseController.idPurchase(cancelPurchase)}
+                        </p:column>
+                        <p:column headerText="Fecha de la venta">
+                            #{cancelPurchaseController.datePurchase(cancelPurchase)}
+                        </p:column>
+                        <p:column headerText="#{bundle.Cashier}">
+                            #{cancelPurchase.usuId.usName} #{cancelPurchase.usuId.usLastName}
+                        </p:column>
+                        <p:column headerText="#{bundle.Total}">
+                            #{cancelPurchaseController.totalPurchase(cancelPurchase)}
+                        </p:column>
+                        <p:column headerText="#{bundle.Actions}">
+                            <div style="text-align: center;text-decoration: none !important;">
+                                <p:commandLink 
+                                    style="color: black;text-decoration: none !important;"
+                                    action="#{cancelPurchaseController.selectCancelpurchaseauditorie(cancelPurchase)}"
+                                               >
+                                    <i class="fa fa-fw fa-server"/>
+                                </p:commandLink>
+                            </div>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+                <h:form id="formProductTable">
+                    <p:dialog
+                        closeOnEscape="true"
+                        header="Productos"
+                        modal="true"
+                        widgetVar="dialogProductTable"
+                        >
+                        <p:dataTable 
+                            paginator="true" rows="10"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                            var="cancelpurchaseitem" value="#{cancelPurchaseController.cancelPurchaseItems}" >
+                            <p:column headerText="#{bundle.BarCode}">
+                                #{cancelpurchaseitem.barcode}
+                            </p:column>
+                            <p:column headerText="#{bundle.Name}">
+                                #{cancelpurchaseitem.name}
+                            </p:column>
+                            <p:column headerText="#{bundle.Quantity}">
+                                #{cancelpurchaseitem.quantity}
+                            </p:column>
+                            <p:column headerText="#{bundle.PricePurchase}">
+                                #{cancelpurchaseitem.pricePurchase}
+                            </p:column>
+                            <p:column headerText="#{bundle.Price}">
+                                #{cancelpurchaseitem.price}
+                            </p:column>
+                            <p:column headerText="#{bundle.Total}">
+                                #{cancelpurchaseitem.price * cancelpurchaseitem.quantity}
+                            </p:column>
+                            <p:column headerText="#{bundle.Owner}">
+                                #{cancelpurchaseitem.owner.ownName}
+                            </p:column>
+                        </p:dataTable>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

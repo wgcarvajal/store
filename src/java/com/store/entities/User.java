@@ -79,6 +79,8 @@ public class User implements Serializable {
     private List<Purchase> purchaseList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId")
     private List<Pay> payList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuId")
+    private List<Cancelpurchaseauditorie> cancelpurchaseauditorieList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId")
     private List<Usergroup> usergroupList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId")
@@ -198,6 +200,15 @@ public class User implements Serializable {
 
     public void setPayList(List<Pay> payList) {
         this.payList = payList;
+    }
+
+    @XmlTransient
+    public List<Cancelpurchaseauditorie> getCancelpurchaseauditorieList() {
+        return cancelpurchaseauditorieList;
+    }
+
+    public void setCancelpurchaseauditorieList(List<Cancelpurchaseauditorie> cancelpurchaseauditorieList) {
+        this.cancelpurchaseauditorieList = cancelpurchaseauditorieList;
     }
 
     @XmlTransient

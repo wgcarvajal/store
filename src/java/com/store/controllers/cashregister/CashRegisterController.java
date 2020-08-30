@@ -11,6 +11,7 @@ import com.store.controllers.util.GeneratePdf;
 import com.store.controllers.util.PrintPdf;
 import com.store.controllers.util.Scale;
 import com.store.controllers.util.Util;
+import com.store.entities.Cancelpurchaseauditorie;
 import com.store.entities.Cash;
 import com.store.entities.Client;
 import com.store.entities.Lend;
@@ -23,6 +24,7 @@ import com.store.entities.Purchase;
 import com.store.entities.Purchaseitem;
 import com.store.entities.Purchasetotal;
 import com.store.entities.User;
+import com.store.facade.CancelpurchaseauditorieFacade;
 import com.store.facade.CashFacade;
 import com.store.facade.ClientFacade;
 import com.store.facade.LendFacade;
@@ -50,6 +52,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.json.JSONArray;
+import org.primefaces.json.JSONObject;
 
 /**
  *
@@ -70,6 +74,7 @@ public class CashRegisterController implements Serializable {
     private static List<ScaleIP>listScaleIp;
     private Scale scale;
     
+    private boolean isReturnProductWeight;
     private boolean openCash;
     private boolean closeCash;
     private boolean start;
@@ -90,6 +95,7 @@ public class CashRegisterController implements Serializable {
     private String receivedAmount;
     private String identification;
     private String codeForRemove;
+    private String codeForReturn;
     private String total;
     private String refund;
     private String action;
@@ -131,6 +137,7 @@ public class CashRegisterController implements Serializable {
     @EJB private LendFacade lendEJB;
     @EJB private PurchasetotalFacade purchasetotalEJB;
     @EJB private CashFacade cashEJB;
+    @EJB private CancelpurchaseauditorieFacade cancelpurchaseauditorieEJB;
     
     @PostConstruct
     public void init()
@@ -327,6 +334,14 @@ public class CashRegisterController implements Serializable {
 
     public void setCodeForRemove(String codeForRemove) {
         this.codeForRemove = codeForRemove;
+    }
+
+    public String getCodeForReturn() {
+        return codeForReturn;
+    }
+
+    public void setCodeForReturn(String codeForReturn) {
+        this.codeForReturn = codeForReturn;
     }
 
     public String getReceivedAmount() {
@@ -653,10 +668,20 @@ public class CashRegisterController implements Serializable {
                     openNoAction();
                 }
                     break;
+            case "009":
+                if(selectProduct)
+                {
+                    openReturnProducto();
+                }
+                else
+                {
+                    
+                }
+                break;
             default:
                 if(cancel)
                 {
-                    searchAndAddProduct(onSesionUserController);
+                    searchAndAddProduct(onSesionUserController,false);
                 }
                 break;
         }
@@ -795,6 +820,28 @@ public class CashRegisterController implements Serializable {
         selectProduct = false;
         if(purchase!=null)
         {
+            Cancelpurchaseauditorie cancelpurchaseauditorie = new Cancelpurchaseauditorie();
+            cancelpurchaseauditorie.setCanpuraudDate(new Date());
+            cancelpurchaseauditorie.setUsuId(purchase.getUsId());
+            JSONObject jsonPurchase = new JSONObject();
+            jsonPurchase.put("purId", purchase.getPurId());
+            jsonPurchase.put("purDate", Util.getFormatCurrentDate(purchase.getPurDate()));
+            JSONArray jsonArrayPurchaseItems = new JSONArray();
+            for(Purchaseitem pi: purchaseitems)
+            {
+                JSONObject jsonPurchaseItem = new JSONObject();
+                jsonPurchaseItem.put("purItemId", pi.getPurItemId());
+                jsonPurchaseItem.put("purItemQuantity", pi.getPurItemQuantity());
+                jsonPurchaseItem.put("prodId", pi.getProdId().getProdId());
+                jsonPurchaseItem.put("priceValue", pi.getPriceValue());
+                jsonPurchaseItem.put("iva", pi.getIva());
+                jsonPurchaseItem.put("pricePurValue", pi.getPricePurValue());
+                jsonPurchaseItem.put("ownId", pi.getOwnId().getOwnId());
+                jsonArrayPurchaseItems.put(jsonPurchaseItem);
+            }
+            jsonPurchase.put("purchaseItems", jsonArrayPurchaseItems);
+            cancelpurchaseauditorie.setPurchase(jsonPurchase.toString());
+            cancelpurchaseauditorieEJB.create(cancelpurchaseauditorie);
             purchaseItemEJB.deleteByPurId(purchase.getPurId());
             purchaseEJB.remove(purchase);
             purchase = null;
@@ -807,29 +854,23 @@ public class CashRegisterController implements Serializable {
         Util.closeDialog("openCancelSalePasswordRequest");
     }
     
-    private void searchAndAddProduct(OnSesionUserController onSesionUserController)
+    private void searchAndAddProduct(OnSesionUserController onSesionUserController,boolean isReturnProduct)
     {
-        Product product = productEJB.findByBarCode(code);
+        String c = code;
+        if(isReturnProduct)
+        {
+            c = codeForReturn;
+        }
+        Product product = productEJB.findByBarCode(c);
         if (product != null) {
             boolean productType = product.getProdtypeId().getProdtypeValue().equals("Sin empaquetar");
             if(!productType)
             {
-                if(product.getProdComposition()!=null){
-                    addProduct(product, onSesionUserController, productType);
-                }
-                else if(product.getProdStock()>0)
-                {
-                    addProduct(product, onSesionUserController, productType);
-                }
-                else{
-                   String message = ResourceBundle.getBundle("/Bundle").getString("ProductSoldOut");
-                   Util.addErrorMessage(message, message);
-                   Util.update(":formGeneralMessage"); 
-                }
+                addProduct(product, onSesionUserController, productType,isReturnProduct);
             }
             else{
                 producWaitForWeight = product;
-                readWeight(onSesionUserController);
+                readWeight(onSesionUserController,isReturnProduct);
             }
         }
         else
@@ -840,7 +881,7 @@ public class CashRegisterController implements Serializable {
         }
     }
     
-    private void addProduct(Product product,OnSesionUserController onSesionUserController,boolean productType)
+    private void addProduct(Product product,OnSesionUserController onSesionUserController,boolean productType,boolean isReturnProduct)
     {
         Price price = priceEJB.findCurrentByProdId(product.getProdId());
         Pricepurchase pricepurchase = pricePurchaseEJB.findCurrentByProdId(product.getProdId());
@@ -859,11 +900,15 @@ public class CashRegisterController implements Serializable {
             }
             
             if (!purchaseitems.isEmpty() && product.getProdId().equals(purchaseitems.get(purchaseitems.size() - 1).getProdId().getProdId())) {
-                
                 int q = 1;
+                if(isReturnProduct)
+                {
+                    q = -1;
+                }
+                
                 if(productType)
                 {
-                    q = getSimulatedBalance();
+                    q = getSimulatedBalance()*q;
                     changeQuantityLastProdut = false;
                     
                 }
@@ -871,20 +916,42 @@ public class CashRegisterController implements Serializable {
                 purchaseitems.get(purchaseitems.size() - 1).
                         setPurItemQuantity(purchaseitems.get(purchaseitems.size() - 1).
                         getPurItemQuantity() +q);
-                purchaseItemEJB.edit(purchaseitems.get(purchaseitems.size() - 1));
+                if(purchaseitems.get(purchaseitems.size() - 1).getPurItemQuantity()==0)
+                {
+                    purchaseItemEJB.remove(purchaseitems.get(purchaseitems.size() - 1));
+                    purchaseitems.remove(purchaseitems.size() - 1);
+                    if(purchaseitems.isEmpty())
+                    {
+                        purchaseEJB.remove(purchase);
+                        addClient = false;
+                        removeProduct = false;
+                        showList = false;
+                        productType = true;
+                        payment = false;
+                        purchaseitems = null;
+                        purchase = null;
+                    }
+                }
+                else{
+                    purchaseItemEJB.edit(purchaseitems.get(purchaseitems.size() - 1));
+                }
             }
             else
             {
                 Purchaseitem purchaseitem = new Purchaseitem();
                 purchaseitem.setProdId(product);
+                int factor = 1;
+                if(isReturnProduct)
+                {
+                   factor = -1;
+                }
                 if(productType)
                 {
-                    
-                    purchaseitem.setPurItemQuantity(getSimulatedBalance());
+                    purchaseitem.setPurItemQuantity(getSimulatedBalance()*factor);
                 }
                 else
                 {
-                    purchaseitem.setPurItemQuantity(1);
+                    purchaseitem.setPurItemQuantity(factor);
                 }
                 purchaseitem.setPriceValue(price.getPriceValue());
                 if(pricepurchase!=null)
@@ -924,7 +991,7 @@ public class CashRegisterController implements Serializable {
             try
             {
                int w = Integer.parseInt(weight);
-               addProduct(producWaitForWeight, onSesionUserController, true);
+               addProduct(producWaitForWeight, onSesionUserController, true,isReturnProductWeight);
                Util.closeDialog("openAddWeight");
             }
             catch(NumberFormatException e)
@@ -1030,11 +1097,19 @@ public class CashRegisterController implements Serializable {
                     purchasetotal.setPurToIva(0);
                     purchasetotals.add(purchasetotal);
                 }
+                int q;
+                if(purchaseitem.getPurItemQuantity()>0)
+                {
+                    q = purchaseitem.getPurItemQuantity();
+                }
+                else{
+                    q = purchaseitem.getPurItemQuantity()*-1;
+                }
                 if (purchaseitem.getProdId().getProdtypeId().getProdtypeValue().equals("Sin empaquetar")) {
                     String unity = purchaseitem.getProdId().getUniId().getUniAbbreviation();
                     switch (unity) {
                         case "gr":
-                            double fv = purchaseitem.getPurItemQuantity() / 1000.0;
+                            double fv = q / 1000.0;
                             double pfv= fv * purchaseitem.getPricePurValue();
                             fv = fv * purchaseitem.getPriceValue();
                             v = Math.round(fv);
@@ -1050,13 +1125,20 @@ public class CashRegisterController implements Serializable {
                             {
                                 vIva = 0;
                             }
+                            
+                            if(purchaseitem.getPurItemQuantity()<0)
+                            {
+                                vIva = vIva *-1;
+                                v = v*-1;
+                                gain = gain * -1;
+                            }
                             amount = amount + v;
                            
                     }
                 }
                 else{
-                    v = purchaseitem.getPurItemQuantity() * purchaseitem.getPriceValue();
-                    int pv = purchaseitem.getPurItemQuantity() * purchaseitem.getPricePurValue();
+                    v = q * purchaseitem.getPriceValue();
+                    int pv = q * purchaseitem.getPricePurValue();
                     gain = v - pv;
                     if(purchaseitem.getIva() > 0)
                     {
@@ -1067,6 +1149,13 @@ public class CashRegisterController implements Serializable {
                     {
                         vIva = 0;
                     }
+                    if(purchaseitem.getPurItemQuantity()<0)
+                    {
+                        vIva = vIva *-1;
+                        v = v*-1;
+                        gain = gain * -1;
+                    }
+                    
                     amount = amount + v;
                 }
                 
@@ -1133,6 +1222,11 @@ public class CashRegisterController implements Serializable {
                 if(q>0)
                 {
                     int index = purchaseitems.size() -1;
+                    if(purchaseitems.get(index).getPurItemQuantity()<0)
+                    {
+                        q = q*-1;
+                    }
+                            
                     purchaseitems.get(index).setPurItemQuantity(q);
                     purchaseItemEJB.edit(purchaseitems.get(index));
                     Util.update(":formCode:focusCode");
@@ -1229,6 +1323,30 @@ public class CashRegisterController implements Serializable {
         }
     }
     
+    
+    public void openReturnProducto()
+    {
+        codeForReturn = null;
+        Util.update(":formOpenReturnProducto");
+        Util.openDialog("openReturnProducto");
+    }
+    
+    public void escKeyReturnProducto()
+    {
+        Util.update(":formCode:focusCode");
+        Util.closeDialog("openReturnProducto");
+    }
+    
+    public void okReturnProducto(OnSesionUserController onSesionUserController)
+    {
+        if(!codeForReturn.isEmpty())
+        {
+            searchAndAddProduct(onSesionUserController, true);
+            Util.closeDialog("openReturnProducto");
+        }
+    }
+    
+    
     public void openPayment()
     {
         Util.update(":formOpenPayment");
@@ -1270,7 +1388,7 @@ public class CashRegisterController implements Serializable {
             try
             {
                 int rm = Integer.parseInt(receivedAmount);
-                if(rm>0)
+                if(rm>=0)
                 {
                     generatePdf=null;
                     if(currentCash!=null){
@@ -1457,7 +1575,7 @@ public class CashRegisterController implements Serializable {
         code = SelectedProduct.getProdBarCode();
         SelectedProduct = null;
         Util.closeDialog("openSelectProduct");
-        searchAndAddProduct(onSesionUserController);
+        searchAndAddProduct(onSesionUserController,false);
         code = null;
     }
     
@@ -1704,7 +1822,7 @@ public class CashRegisterController implements Serializable {
         System.out.println("destroy");
     }
 
-    public void readWeight(OnSesionUserController onSesionUserController)
+    public void readWeight(OnSesionUserController onSesionUserController,boolean isReturnProduct)
     {
         Calendar c = Calendar.getInstance();
         long initTime = c.getTimeInMillis();
@@ -1722,15 +1840,17 @@ public class CashRegisterController implements Serializable {
             {
                 Util.logInformation(TAG, "readWeight", "scale.getWeight == 0, call openAddWeight()");
                 openAddWeight();
+                isReturnProductWeight = isReturnProduct;
             }else{
                 weight = scale.getWeight();
                 Util.logInformation(TAG, "readWeight", "scale.getWeight sucessfull, Weight = weight");
-                addProduct(producWaitForWeight, onSesionUserController, true);
+                addProduct(producWaitForWeight, onSesionUserController, true,isReturnProduct);
             }
         } else
         {
             Util.logInformation(TAG, "readWeight", "scale is null, call openAddWeight()");
             openAddWeight();
+            isReturnProductWeight = isReturnProduct;
         }
     }
          

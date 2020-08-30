@@ -124,6 +124,7 @@
                                                     library="image" name="product/removeProduct.png" />
                                 </div>
                             </p:commandLink>
+                            
                             <p:commandLink
                                 action="#{cashRegisterController.openSearchProduct}"
                                 tabindex="-1"
@@ -133,6 +134,17 @@
                                 <div class="contentLeftItemMenu">
                                     <p:graphicImage width="100%" 
                                                     library="image" name="product/searchProduct.png" />
+                                </div>
+                            </p:commandLink>
+                            <p:commandLink
+                                action="#{cashRegisterController.openReturnProducto}"
+                                tabindex="-1"
+                                rendered="#{cashRegisterController.selectProduct}"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                >
+                                <div class="contentLeftItemMenu">
+                                    <p:graphicImage width="100%" 
+                                                    library="image" name="product/returnProduct.png" />
                                 </div>
                             </p:commandLink>
                             <p:commandLink
@@ -389,6 +401,7 @@
                 <ui:include src="selectProduct.xhtml"/>
                 <ui:include src="debtor.xhtml"/>
                 <ui:include src="resumeSale.xhtml"/>
+                <ui:include src="returnProduct.xhtml"/>
             </ui:define>
 
         </ui:composition>

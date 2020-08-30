@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition>
+        <h:form id="formOpenReturnProducto">
+            <p:dialog
+                resizable="false"
+                widgetVar="openReturnProducto"
+                modal="true"
+                header="Devolución de producto"
+                style="background: #C8CDD6"
+                >
+                <p:panelGrid id="panelOpenReturnProducto" styleClass="panelgrid" style="text-align:center" >
+                    <p:focus for="returnProduct"/>
+                    
+                    <p:row >
+                        <p:column style="background: #C8CDD6;font-size:20pt;">
+                                    #{bundle.BarCode}:
+                        </p:column>
+                        <p:column  style="background: #C8CDD6;font-size:20pt;">
+                            <p:inputText 
+                                maxlength="12"
+                                autocomplete="off"
+                                id="returnProduct"
+                                value="#{cashRegisterController.codeForReturn}">
+                            </p:inputText>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2"  style="background: #C8CDD6; text-align: center;">
+                            <p:commandButton
+                                action="#{cashRegisterController.okReturnProducto(sessionUserController)}"
+                                value="#{bundle.Ok}"
+                                onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:dialog>
+        </h:form>
+    </ui:composition>
+</html>
+
+
+
