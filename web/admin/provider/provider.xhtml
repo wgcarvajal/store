@@ -1,0 +1,492 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../plantillas/admin.xhtml">
+
+            <ui:define name="cssPage">
+                <h:outputStylesheet name="./css/formcss.css"/>
+            </ui:define>
+
+            <ui:define name="title">
+                 #{bundle.Provider}
+            </ui:define>
+
+            <ui:define name="content">
+                <div class="pageTitle">#{bundle.Provider}</div>
+                <h:form id="formProvider">
+                    <p:growl id="messageGrowl"/>
+                    <p:panelGrid id="panelProvider" styleClass="panelgrid">
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Name}:"/>
+                            </p:column>
+                            <p:column>
+                                #{providerController.provider.provName}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink 
+                                    action="#{providerController.editName}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Address}:"/>
+                            </p:column>
+                            <p:column>
+                                #{providerController.provider.provAddress}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink 
+                                    action="#{providerController.editAddress}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Phones}:"/>
+                            </p:column>
+                            <p:column>
+                                #{providerController.provider.provPhones}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink 
+                                    action="#{providerController.editPhones}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Employee}:"/>
+                            </p:column>
+                            <p:column>
+                                #{providerController.provider.provEmployeeName}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink 
+                                    action="#{providerController.editEmployee}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Nit}:"/>
+                            </p:column>
+                            <p:column>
+                                #{providerController.provider.provNit}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink 
+                                    action="#{providerController.editNit}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Rut}:"/>
+                            </p:column>
+                            <p:column>
+                                #{providerController.provider.provRut}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink 
+                                    action="#{providerController.editRut}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.WebSite}:"/>
+                            </p:column>
+                            <p:column>
+                                #{providerController.provider.provWeb}
+                            </p:column>
+                            <p:column>
+                                <p:commandLink 
+                                    action="#{providerController.editWeb}"
+                                    style="font-size: 10pt;"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </h:form>
+                
+                <h:form id="formEditName">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Name}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editNameDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="namePanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Name}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        id="name" class="inputTextLong"
+                                        value="#{providerController.name}" 
+                                        required="true"  requiredMessage="#{bundle.FieldRequired}"
+                                        >
+                                        <f:validator validatorId="lengthMax100Validator" />
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        action="#{providerController.okEditName}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditName:namePanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditAddress">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Address}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editAddressDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="addressPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Address}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        id="name" class="inputTextLong"
+                                        value="#{providerController.address}" 
+                                        required="true"  requiredMessage="#{bundle.FieldRequired}"
+                                        >
+                                        <f:validator validatorId="lengthMax200Validator" />
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        action="#{providerController.okEditAddress}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditAddress:addressPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditPhones">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Phones}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editPhonesDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="phonesPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputLabel style="font-style: italic;
+                                                   font-size: 16px;
+                                                   text-align: left; 
+                                                   color:red;" 
+                                                   value="* "/>
+                                    <h:outputLabel class="messageFieldRequired" 
+                                                   value="#{bundle.FieldsRequired}" />
+                                </p:column>                                
+                            </p:row> 
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Phones}:" />
+                                    <h:outputLabel class="asterisk" value="*"/>
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        id="name" class="inputTextLong"
+                                        value="#{providerController.phone}" 
+                                        required="true"  requiredMessage="#{bundle.FieldRequired}"
+                                        >
+                                        <f:validator validatorId="lengthMax200Validator" />
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        action="#{providerController.okEditPhones}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditPhones:phonesPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditEmployee">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Employee}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editEmployeeDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="employeePanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Employee}:" />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        id="name" class="inputTextLong"
+                                        value="#{providerController.employee}"
+                                        maxlength="200"
+                                        >
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        action="#{providerController.okEditEmployee}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditEmployee:employeePanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditNit">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Nit}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editNitDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="nitPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Nit}:" />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        id="name" class="inputTextLong"
+                                        value="#{providerController.nit}"
+                                        maxlength="50"
+                                        >
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        action="#{providerController.okEditNit}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditNit:nitPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditRut">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Rut}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editRutDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="rutPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.Rut}:" />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        id="name" class="inputTextLong"
+                                        value="#{providerController.rut}"
+                                        maxlength="50"
+                                        >
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        action="#{providerController.okEditRut}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditRut:rutPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <h:form id="formEditWeb">
+                    <p:dialog resizable="false"   
+                              header="#{bundle.WebSite}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editWebDialog" >
+                        <p:messages closable="true">
+                            <p:autoUpdate />
+                        </p:messages>
+                        <p:panelGrid id="webPanel" style="text-align:left;" styleClass="panelgrid">
+                            <p:row><p:column></p:column></p:row>
+                            <p:row>
+                                <p:column class="column">
+                                    <h:outputText class="fieldLabel" value="#{bundle.WebSite}:" />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText 
+                                        id="name" class="inputTextLong"
+                                        value="#{providerController.web}"
+                                        maxlength="50"
+                                        >
+                                    </p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
+                                <p:column>
+                                    <p:commandButton 
+                                        action="#{providerController.okEditWeb}"
+                                        style="font-style: italic;font-weight: normal;"
+                                        value="#{bundle.Ok}"
+                                        update="formEditWeb:webPanel"
+                                        onstart="PF('efectoCarga').show()"  
+                                        onsuccess="PF('efectoCarga').hide()"
+                                        />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <br />
+                <br />
+                <br />
+                <h:form>
+                    <p:dataTable var="object" value="#{providerController.provides}" id="providesTable">
+                        <p:column headerText="#{bundle.BarCode}">
+                            <h:outputText value="#{object[0].prodId.prodBarCode}" />
+                        </p:column>
+                       <p:column headerText="#{bundle.Name}">
+                            <h:outputText value="#{object[0].prodId.prodName} #{object[0].prodId.prodUnitValue}#{object[0].prodId.uniId.uniAbbreviation}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.PricePurchase}">
+                            <h:outputText value="#{object[2].pricePurValue}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Price}">
+                            <h:outputText value="#{object[1].priceValue}" />
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+                
+                
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

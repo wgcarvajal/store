@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Provides.findAll", query = "SELECT p FROM Provides p"),
     @NamedQuery(name = "Provides.findByProvidesId", query = "SELECT p FROM Provides p WHERE p.providesId = :providesId"),
     @NamedQuery(name = "Provides.findCurrentByProdId", query = "SELECT p FROM Provides p WHERE p.prodId.prodId = :prodId And p.providesFinalDate IS NULL"),
+    @NamedQuery(name = "Provides.findProductsByProvId", query = "SELECT p,pr,prp FROM Provides p INNER JOIN Price pr INNER JOIN Pricepurchase prp WHERE  p.provId.provId =:provId And p.providesFinalDate IS NULL AND pr.prodId.prodId = p.prodId.prodId And pr.priceFinalDate IS NULL AND prp.prodId.prodId = p.prodId.prodId And prp.pricePurFinalDate IS NULL ORDER BY p.prodId.prodName asc"),
     @NamedQuery(name = "Provides.findByProvidesInitialDate", query = "SELECT p FROM Provides p WHERE p.providesInitialDate = :providesInitialDate"),
     @NamedQuery(name = "Provides.findByProvidesFinalDate", query = "SELECT p FROM Provides p WHERE p.providesFinalDate = :providesFinalDate")})
 public class Provides implements Serializable {

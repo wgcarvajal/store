@@ -18,8 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -50,6 +48,8 @@ public class Provider implements Serializable {
     @Basic(optional = false)
     @Column(name = "provName")
     private String provName;
+    @Column(name = "provEmployeeName")
+    private String provEmployeeName;
     @Basic(optional = false)
     @Column(name = "provPhones")
     private String provPhones;
@@ -93,6 +93,14 @@ public class Provider implements Serializable {
 
     public void setProvName(String provName) {
         this.provName = provName;
+    }
+
+    public String getProvEmployeeName() {
+        return provEmployeeName;
+    }
+
+    public void setProvEmployeeName(String provEmployeeName) {
+        this.provEmployeeName = provEmployeeName;
     }
 
     public String getProvPhones() {

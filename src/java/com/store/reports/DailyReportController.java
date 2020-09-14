@@ -10,6 +10,7 @@ import com.store.controllers.util.PrintPdf;
 import com.store.controllers.util.Util;
 import com.store.entities.Cash;
 import com.store.entities.Owner;
+import com.store.entities.Product;
 import com.store.entities.Purchase;
 import com.store.entities.Purchaseitem;
 import com.store.entities.Purchasetotal;
@@ -355,6 +356,20 @@ public class DailyReportController implements Serializable {
     public String urlServer()
     {
         return Util.urlServer + Util.projectPath;
+    }
+    
+    public String calculateTotal(Product p,long price,long quantity)
+    {
+        if(p.getProdtypeId().getProdtypeValue().equals("Empaquetado"))
+        {
+            return priceFormat(price);
+        }
+        else
+        {
+            long pr = price / quantity;
+            pr = (quantity * pr) / 1000;
+            return priceFormat(pr);
+        }
     }
     
 }

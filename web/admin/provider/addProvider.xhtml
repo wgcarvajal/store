@@ -1,0 +1,182 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../plantillas/admin.xhtml">
+
+            <ui:define name="cssPage">
+                <h:outputStylesheet name="./css/formcss.css"/>
+            </ui:define>
+
+            <ui:define name="title">
+                #{bundle.Provider}
+            </ui:define>
+
+            <ui:define name="content">
+                <div class="pageTitle">#{bundle.Provider}</div>
+                
+                <h:form id="form" onkeypress="if (event.keyCode == 13) { return false; }">
+                    <p:messages id="message" showIcon="true" showDetail="true" />
+                    <p:panelGrid id="panel" styleClass="panelgrid">
+                        <p:row>
+                            <p:column colspan="3">
+                                <h:outputLabel style="font-style: italic;font-size: 16px;text-align: left; color:red;" 
+                                               value="* "/>
+                                <h:outputLabel class="messageFieldRequired" value="#{bundle.FieldsRequired}" />
+                            </p:column>                                
+                        </p:row> 
+                        <p:row><p:column></p:column></p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Name}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="name" class="inputTextLong"
+                                             value="#{addProviderController.name}"
+                                             required="true"  requiredMessage="#{bundle.FieldRequired}">
+                                    <f:validator validatorId="lengthMax100Validator" />
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="name"/>
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Address}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="address" class="inputTextLong"
+                                             value="#{addProviderController.address}"
+                                             required="true"  requiredMessage="#{bundle.FieldRequired}">
+                                    <f:validator validatorId="lengthMax200Validator" />
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                <p:message for="address"/>  
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Phones}:" />
+                                <h:outputLabel class="asterisk" value="*"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="phone" class="inputTextLong"
+                                             value="#{addProviderController.phone}"
+                                             required="true"  requiredMessage="#{bundle.FieldRequired}">
+                                    <f:validator validatorId="lengthMax200Validator" />
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                <p:message for="phone"/>  
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Employee}:" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="employee" class="inputTextLong"
+                                             value="#{addProviderController.employee}"
+                                             maxlength="200"
+                                             >
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="employee"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Nit}:" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="nit" class="inputTextLong"
+                                             value="#{addProviderController.nit}"
+                                             maxlength="50"
+                                             >
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="nit"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.Rut}:" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="rut" class="inputTextLong"
+                                             value="#{addProviderController.rut}"
+                                             maxlength="50"
+                                             >
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="rut"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="column">
+                                <h:outputText class="fieldLabel" value="#{bundle.WebSite}:" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="web" class="inputTextLong"
+                                             value="#{addProviderController.web}"
+                                             maxlength="300"
+                                             >
+                                </p:inputText>
+                            </p:column>
+                            <p:column>
+                                    <p:message for="web"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            
+                        </p:row>
+                        <p:row>
+                            <p:column>
+
+                            </p:column>
+                            <p:column>
+                                <p:commandButton
+                                    style="font-style: italic;font-weight: normal;"
+                                    action="#{addProviderController.add()}"
+                                    value="Registrar"
+                                    ajax="true"
+                                    update="panel"
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()"
+                                                   />
+                                
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+
+                    
+
+                </h:form>
+                <br />
+                <br />
+                <br />
+                <br />
+                
+         
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

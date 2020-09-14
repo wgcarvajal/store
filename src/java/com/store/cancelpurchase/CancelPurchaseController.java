@@ -184,7 +184,8 @@ public class CancelPurchaseController implements Serializable {
         {
             JSONObject jsonItem = jSONArray.getJSONObject(i);
             int priceValue = jsonItem.getInt("priceValue");
-            total = total + priceValue;
+            int quantity = jsonItem.getInt("purItemQuantity");
+            total = total + (priceValue*quantity);
         }
         
         return total+"";

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+
+        <ui:composition template="./../../plantillas/admin.xhtml">
+
+            <ui:define name="cssPage">
+                
+            </ui:define>
+
+            <ui:define name="title">
+                #{bundle.Providers}
+            </ui:define>
+
+            <ui:define name="content">
+                <div class="pageTitle">#{bundle.Providers}</div>
+                <h:form id="form">
+                    <p:growl id="msg" showDetail="true"  />
+                    <p:commandButton
+                        action="#{providersController.goAddProvider}"
+                        icon="fa fa-fw fa-plus" value="#{bundle.Add}"
+                            />
+                    <p:dataTable var="provider" value="#{providersController.providers}" paginator="true" rows="10"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                 rowsPerPageTemplate="5,10,15" id="providerTable">
+                       <p:column headerText="#{bundle.Nit}">
+                            <h:outputText value="#{provider.provNit}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Name}" filterBy="#{provider.provName}">
+                            <h:outputText value="#{provider.provName}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Address}">
+                            <h:outputText value="#{provider.provAddress}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Phones}">
+                            <h:outputText value="#{provider.provPhones}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Employee}">
+                            <h:outputText value="#{provider.provEmployeeName}" />
+                        </p:column>
+                        <p:column headerText="#{bundle.Actions}" style="text-align: center;">
+                            <p:commandLink
+                                action="#{providersController.editProvider(provider)}"
+                                    style="font-size: 10pt;" 
+                                    onstart="PF('efectoCarga').show()"  
+                                    onsuccess="PF('efectoCarga').hide()">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                    <br/>
+                </h:form>
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

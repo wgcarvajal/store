@@ -204,12 +204,13 @@
                 
                 <h:form id="formProductTable">
                     <p:dialog
+                        position="top"
                         header="Productos"
                         modal="true"
                         widgetVar="dialongProductTable"
                         >
-                        
-                        <p:dataTable var="object" value="#{dailyReportController.products}">
+                        <p:dataTable paginator="true" rows="15"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" var="object" value="#{dailyReportController.products}">
                             <p:column headerText="#{bundle.BarCode}">
                                 #{object[0].prodBarCode}
                             </p:column>
@@ -222,11 +223,11 @@
                             <p:column headerText="#{bundle.PricePurchase}">
                                 #{dailyReportController.returnPrice(object[4],object[1])}
                             </p:column>
-                            <p:column headerText="#{bundle.Iva}">
-                                #{dailyReportController.returnIVA(object[3], object[1])}
-                            </p:column>
                             <p:column headerText="#{bundle.Price}">
                                 #{dailyReportController.returnPrice(object[2],object[1])}
+                            </p:column>
+                            <p:column headerText="#{bundle.Total}">
+                                 #{dailyReportController.calculateTotal(object[0],object[2],object[1])}
                             </p:column>
                         </p:dataTable>
                         

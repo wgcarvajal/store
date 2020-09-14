@@ -35,7 +35,16 @@ public class ProvidesFacade extends AbstractFacade<Provides> {
     {
         Query query = getEntityManager().createNamedQuery("Provides.findCurrentByProdId");
         query.setParameter("prodId", prodId);
+        query.setHint("eclipselink.refresh", true);
         List<Provides> resuList = query.getResultList();
         return resuList.size() > 0 ? resuList.get(0):null;
+    }
+    
+    public List findProductsByProvId(long provId)
+    {
+        Query query = getEntityManager().createNamedQuery("Provides.findProductsByProvId");
+        query.setParameter("provId", provId);
+        query.setHint("eclipselink.refresh", true);
+        return query.getResultList();
     }
 }

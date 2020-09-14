@@ -27,7 +27,7 @@ import org.primefaces.model.LazyDataModel;
 
 /**
  *
- * @author aranda
+ * @author Wilson Carvajal
  */
 @ManagedBean(name = "productsController")
 @ViewScoped
