@@ -77,6 +77,18 @@
             <role-name>cashier</role-name>
         </auth-constraint>
     </security-constraint>
+    <security-constraint>
+        <display-name>owner</display-name>
+        <web-resource-collection>
+            <web-resource-name>owner</web-resource-name>
+            <description/>
+            <url-pattern>/owner/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>owner</role-name>
+        </auth-constraint>
+    </security-constraint>
     <login-config>
         <auth-method>FORM</auth-method>
         <realm-name>storeJDBCRealm</realm-name>
@@ -96,5 +108,9 @@
     <security-role>
         <description/>
         <role-name>cashier</role-name>
+    </security-role>
+    <security-role>
+        <description>owner of products</description>
+        <role-name>owner</role-name>
     </security-role>
 </web-app>

@@ -84,5 +84,30 @@
     font-size: 11px;
 }
 
+.pending-event{
+    background-color: #82E0AA !important;
+    color: black !important;
+    font-size: 9pt !important;
+    border-color: #82E0AA !important;
+    color: white;
+}
 
+.close-event{
+    background-color: #B2BABB !important;
+    color: black !important;
+    font-size: 9pt !important;
+    border-color: #B2BABB !important;
+    color: white;
+}
 
+.column_state_1{
+    background-color: #82E0AA !important;
+}
+
+.column_state_2{
+    background-color: #B2BABB!important;
+}
+
+.column_state_3{
+    background-color: #B2BABB!important;
+}

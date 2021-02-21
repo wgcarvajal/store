@@ -468,18 +468,18 @@
                 <br />
                 <br />
                 <h:form>
-                    <p:dataTable var="object" value="#{providerController.provides}" id="providesTable">
+                    <p:dataTable var="provides" value="#{providerController.provides}" id="providesTable">
                         <p:column headerText="#{bundle.BarCode}">
-                            <h:outputText value="#{object[0].prodId.prodBarCode}" />
+                            <h:outputText value="#{provides.provides.prodId.prodBarCode}" />
                         </p:column>
                        <p:column headerText="#{bundle.Name}">
-                            <h:outputText value="#{object[0].prodId.prodName} #{object[0].prodId.prodUnitValue}#{object[0].prodId.uniId.uniAbbreviation}" />
+                            <h:outputText value="#{provides.provides.prodId.prodName} #{provides.provides.prodId.prodUnitValue}#{provides.provides.prodId.uniId.uniAbbreviation}" />
                         </p:column>
                         <p:column headerText="#{bundle.PricePurchase}">
-                            <h:outputText value="#{object[2].pricePurValue}" />
+                            <h:outputText value="#{provides.pricepurchase.pricePurValue}" />
                         </p:column>
                         <p:column headerText="#{bundle.Price}">
-                            <h:outputText value="#{object[1].priceValue}" />
+                            <h:outputText value="#{provides.price.priceValue}" />
                         </p:column>
                     </p:dataTable>
                 </h:form>

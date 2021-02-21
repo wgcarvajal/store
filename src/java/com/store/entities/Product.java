@@ -98,6 +98,8 @@ public class Product implements Serializable {
     private List<Purchaseitem> purchaseitemList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
     private List<Productimage> productimageList;
+    @OneToMany(mappedBy = "prodId")
+    private List<Orderitem> orderitemList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
     private List<Price> priceList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "prodId")
@@ -273,6 +275,15 @@ public class Product implements Serializable {
 
     public void setProductimageList(List<Productimage> productimageList) {
         this.productimageList = productimageList;
+    }
+
+    @XmlTransient
+    public List<Orderitem> getOrderitemList() {
+        return orderitemList;
+    }
+
+    public void setOrderitemList(List<Orderitem> orderitemList) {
+        this.orderitemList = orderitemList;
     }
 
     @XmlTransient

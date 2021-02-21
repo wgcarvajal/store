@@ -4,6 +4,7 @@ import com.store.controllers.util.Util;
 import com.store.entities.Provider;
 import com.store.facade.ProviderFacade;
 import com.store.facade.ProvidesFacade;
+import com.store.model.ProvidesModel;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ProviderController implements Serializable
     private String nit;
     private String rut;
     private String web;
-    private List provides;
+    private List<ProvidesModel> provides;
     
     @EJB private ProviderFacade providerEJB;
     @EJB private ProvidesFacade providesEJB;
@@ -118,7 +119,7 @@ public class ProviderController implements Serializable
         this.web = web;
     }
 
-    public List getProvides() {
+    public List<ProvidesModel> getProvides() {
         if(provides==null)
         {
             provides = providesEJB.findProductsByProvId(provider.getProvId());

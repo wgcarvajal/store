@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../../plantillas/owner.xhtml">
+
+            <ui:define name="cssPage">
+                <h:outputStylesheet name="./css/formcss.css"/>
+            </ui:define>
+
+            <ui:define name="title">
+                #{bundle.Reports}
+            </ui:define>
+            
+            <ui:define name="content">
+                <div class="pageTitle">#{bundle.Reports}</div>
+                <h:form id="formCalendar">
+                    <p:panelGrid id="panelCalendar" styleClass="panelgrid">
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="#{bundle.DateInit}:"/>
+                            </p:column>
+                            <p:column>
+                                <p:calendar locale="es" maxdate="#{ownerDailyReportController.maxVisibleDate()}">
+                                    <p:ajax event="dateSelect" listener="#{ownerDailyReportController.onInitDataSelect}" 
+                                            onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                            />
+
+                                </p:calendar>
+                            </p:column>
+                            <p:column rendered="#{ownerDailyReportController.endDate}">
+                                <p:outputLabel value="#{bundle.DateEnd}:"/>
+                            </p:column>
+                            <p:column rendered="#{ownerDailyReportController.endDate}">
+                                <p:calendar locale="es" value="#{ownerDailyReportController.dateSelected}" mindate="#{ownerDailyReportController.initDate}"
+                                            maxdate="#{ownerDailyReportController.maxVisibleDate()}"
+                                            >
+                                    <p:ajax event="dateSelect" listener="#{ownerDailyReportController.onEndDateSelect}" 
+                                            onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                            />
+                                </p:calendar>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </h:form>
+                
+                <h:form id="formTotal">
+                    <p:panelGrid styleClass="panelgrid">
+                        <p:row>
+                            <p:column class="column">
+                                <p:outputLabel value="#{bundle.Total}:" 
+                                               style="font-size: 16pt;font-weight: bold;"/>
+                            </p:column>
+                            <p:column>
+                                <p:outputLabel value="#{ownerDailyReportController.priceFormat(ownerDailyReportController.total)}" 
+                                               style="font-size: 15pt;"  />
+                            </p:column>
+                            <p:column class="column">
+                                <p:outputLabel value="#{bundle.GainWithIva}:" style="font-size: 16pt;font-weight: bold;"/>
+                            </p:column>
+                            <p:column>
+                                <p:outputLabel value="#{ownerDailyReportController.priceFormat(ownerDailyReportController.gain)}" 
+                                               style="font-size: 15pt;"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </h:form>
+                <br />
+                <br />
+                <h:form id="formProductTable">
+                    <p:dataTable paginator="true" rows="15"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" var="object" value="#{ownerDailyReportController.products}">
+                        <p:column headerText="#{bundle.BarCode}">
+                                #{object[0].prodBarCode}
+                        </p:column>
+                        <p:column headerText="#{bundle.Name}">
+                                #{object[0].prodName}
+                        </p:column>
+                        <p:column headerText="#{bundle.Quantity}">
+                                #{object[1]}
+                        </p:column>
+                        <p:column headerText="#{bundle.PricePurchase}">
+                                #{dailyReportController.returnPrice(object[4],object[1])}
+                        </p:column>
+                        <p:column headerText="#{bundle.Price}">
+                                #{dailyReportController.returnPrice(object[2],object[1])}
+                        </p:column>
+                        <p:column headerText="#{bundle.Total}">
+                                 #{dailyReportController.calculateTotal(object[0],object[2],object[1])}
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

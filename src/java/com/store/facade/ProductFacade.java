@@ -21,7 +21,7 @@ import javax.persistence.criteria.Root;
 
 /**
  *
- * @author aranda
+ * @author Wilson Carvajal
  */
 @Stateless
 public class ProductFacade extends AbstractFacade<Product> {

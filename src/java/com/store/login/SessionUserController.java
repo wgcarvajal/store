@@ -149,6 +149,12 @@ public class SessionUserController implements Serializable,CashRegisterControlle
                     .getExternalContext()
                     .redirect(Util.projectPath+"/cashier/index.xhtml");
         }
+        else if(usergroup.getGrouId().getGrouId().equals(Rol.owner))
+        {
+            FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .redirect(Util.projectPath+"/owner/index.xhtml?i=0");
+        }
     }
 
     public void logout() throws IOException, ServletException {

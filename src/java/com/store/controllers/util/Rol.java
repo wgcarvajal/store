@@ -13,4 +13,5 @@ public class Rol {
     public static String admin = "admin";
     public static String cashier = "cashier";
     public static String sAdmin = "sAdmin";
+    public static String owner = "owner";
 }

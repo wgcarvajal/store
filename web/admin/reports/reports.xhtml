@@ -29,7 +29,7 @@
                                 <p:outputLabel value="#{bundle.DateInit}:"/>
                             </p:column>
                             <p:column>
-                                <p:calendar maxdate="#{dailyReportController.maxVisibleDate()}">
+                                <p:calendar locale="es" maxdate="#{dailyReportController.maxVisibleDate()}">
                                     <p:ajax event="dateSelect" listener="#{dailyReportController.onInitDataSelect}" 
                                             onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
                                             />
@@ -40,7 +40,7 @@
                                 <p:outputLabel value="#{bundle.DateEnd}:"/>
                             </p:column>
                             <p:column rendered="#{dailyReportController.endDate}">
-                                <p:calendar value="#{dailyReportController.dateSelected}" mindate="#{dailyReportController.initDate}"
+                                <p:calendar locale="es" value="#{dailyReportController.dateSelected}" mindate="#{dailyReportController.initDate}"
                                             maxdate="#{dailyReportController.maxVisibleDate()}"
                                             >
                                     <p:ajax event="dateSelect" listener="#{dailyReportController.onEndDateSelect}" 

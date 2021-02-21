@@ -1,22 +1,39 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <body>
 
         <ui:composition template="./../plantillas/admin.xhtml">
 
             <ui:define name="cssPage">
-                
+                <h:outputStylesheet name="./css/formcss.css"/>
             </ui:define>
 
             <ui:define name="title">
-                #{bundle.Index}
+                #{bundle.Order}
             </ui:define>
             
             <ui:define name="content">
+                <div class="pageTitle">#{bundle.ManageOrders}</div>
+                <br />
+                <div style="margin: 0px auto; width: 43%;">
+                    <h:form>
+                        <p:schedule 
+                            locale="es"
+                            rightHeaderTemplate="month"
+                            value="#{ordersController.lazyEventModel}" >
+                            <p:ajax event="dateSelect" listener="#{ordersController.onDateSelect}" />
+                            <p:ajax event="eventSelect" listener="#{ordersController.onEventSelect}"/>
+                        </p:schedule>
                 
+                    </h:form>
+                </div>
+                <br></br>
+                <br></br>
             </ui:define>
 
         </ui:composition>

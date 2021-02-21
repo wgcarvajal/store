@@ -105,6 +105,21 @@ public class PurchaseFacade extends AbstractFacade<Purchase> {
        return null;
     }
     
+    public Object[] findPurshaseTotalInitialDayEndDaywithOwner(Date initialDate, Date endDate,int ownId)
+    {
+       Query query = getEntityManager().createNamedQuery("Purchase.findPurshaseTotalInitialDayEndDaywithOwner");
+       query.setHint("eclipselink.refresh", true);
+       query.setParameter("initialDate", initialDate);
+       query.setParameter("endDate", endDate);
+       query.setParameter("ownId",ownId);
+       List list = query.getResultList();
+       if(list!=null && list.size()>0)
+       {
+           return (Object[])list.get(0);
+       }
+       return null;
+    }
+    
     public List findPurshaseTotalInitialDayEndDayWithClientId(Date initialDate, Date endDate,long cliId)
     {
         Query query = getEntityManager().createNamedQuery("Purchase.findPurshaseTotalInitialDayEndDayWithClientId");

@@ -9,6 +9,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Currency;
 import java.util.Date;
+import java.util.Locale;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.primefaces.PrimeFaces;
@@ -25,25 +26,24 @@ public class Util {
     public static String bossStore = "WILSON G. CARVAJAL";
     public static String phoneStore = "8624840";
     
-    public static String urlServer = "http://192.168.0.71:8080";
-    //public static String urlServer = "http://localhost:8080";
+    //public static String urlServer = "http://192.168.0.71:8080";
+    public static String urlServer = "http://localhost:8080";
     public static String projectPath = "/store";
-    /*public static String PRODUCTIMAGEDIR= "/Users/aranda/filesStore/productImage/";
+    public static String PRODUCTIMAGEDIR= "/Users/aranda/filesStore/productImage/";
     public static String BILLDIR= "/Users/aranda/filesStore/bill/";
     public static String FONTDIR= "/Users/aranda/filesStore/font/";
-    public static String LOGSDIR= "/Users/aranda/filesStore/logs/";*/
+    public static String LOGSDIR= "/Users/aranda/filesStore/logs/";
     
     
     /*public static String PRODUCTIMAGEDIR= "/home/store/filesStore/productImage/";
     public static String BILLDIR= "/home/store/filesStore/bill/";
     public static String FONTDIR= "/home/store/filesStore/font/";
-    public static String LOGSDIR= "/home/store/filesStore/logs/";
-    */
+    public static String LOGSDIR= "/home/store/filesStore/logs/";*/
     
-    public static String PRODUCTIMAGEDIR= "D:\\filesStore\\productImage\\";
+    /*public static String PRODUCTIMAGEDIR= "D:\\filesStore\\productImage\\";
     public static String BILLDIR= "D:\\filesStore\\bill\\";
     public static String FONTDIR= "D:\\filesStore\\font\\";
-    public static String LOGSDIR= "D:\\filesStore\\logs\\";
+    public static String LOGSDIR= "D:\\filesStore\\logs\\";*/
     
     public static String formatText(String value)
     {
@@ -141,6 +141,14 @@ public class Util {
         }
     }
     
+    public static String getFormatDateReturnDay(Date date)
+    {
+        SimpleDateFormat formato = new SimpleDateFormat("EEEE",new Locale("es","ES"));
+        String fecha = formato.format(date);
+        fecha = fecha.substring(0, 1).toUpperCase() + fecha.substring(1).toLowerCase();
+        return fecha;
+    }
+    
     public static String getFormatDate(Date date)
     {        
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yy");
@@ -160,6 +168,15 @@ public class Util {
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
         String hora = formato.format(date);
         return hora;
+    }
+    
+    
+    public static String getFormatCurrentDateTranslate(Date date)
+    {
+        SimpleDateFormat formato = new SimpleDateFormat("EEEE d  MMMM yyyy",new Locale("es","ES"));
+        String fecha = formato.format(date);
+        fecha = fecha.substring(0, 1).toUpperCase() + fecha.substring(1).toLowerCase();
+        return fecha;
     }
     
     public static String evaluateIva(int iva)

@@ -64,6 +64,8 @@ public class Provider implements Serializable {
     private String provWeb;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "provId")
     private List<Provides> providesList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "provId")
+    private List<Orders> ordersList;
 
     public Provider() {
     }
@@ -150,6 +152,15 @@ public class Provider implements Serializable {
 
     public void setProvidesList(List<Provides> providesList) {
         this.providesList = providesList;
+    }
+
+    @XmlTransient
+    public List<Orders> getOrdersList() {
+        return ordersList;
+    }
+
+    public void setOrdersList(List<Orders> ordersList) {
+        this.ordersList = ordersList;
     }
 
     @Override

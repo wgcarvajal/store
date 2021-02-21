@@ -47,4 +47,6 @@ public class ProvidesFacade extends AbstractFacade<Provides> {
         query.setHint("eclipselink.refresh", true);
         return query.getResultList();
     }
+    
+    
 }

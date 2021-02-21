@@ -47,7 +47,6 @@
                             <h:outputText value="#{prod.brandId.brandName}" />
                         </p:column>
                         <p:column headerText="#{bundle.Stock}"   filterBy="#{prod.prodStock}">
-                            
                             <h:outputText rendered="#{prod.prodComposition==null}" value="#{prod.prodStock}" />
                             <h:outputText rendered="#{prod.prodComposition!=null}" value="Producto Compuesto"/>
                         </p:column>

@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../plantillas/admin.xhtml">
+
+            <ui:define name="cssPage">
+                <h:outputStylesheet name="./css/formcss.css"/>
+                <style>
+                    .ui-selectonemenu-panel{
+                        font-size: 14pt !important;
+                    }
+                </style>
+            </ui:define>
+
+            <ui:define name="title">
+                #{bundle.Order}
+            </ui:define>
+
+            <ui:define name="content">
+                
+                <div class="pageTitle">#{bundle.Order}</div>
+                <br />
+                
+                <div class="pageSubTitle">
+                    #{ordersDetailController.formatDate(ordersDetailController.date)}
+                </div>
+                <br/>
+                <div style="margin: 0px auto;width: 85%;">
+                    <h:form>
+                    
+                        <div class="pageSubTitle2">
+                            #{bundle.Total}: #{ordersDetailController.total}
+                        </div>
+                        <br/>
+                        <div class="pageSubTitle2">
+                            #{bundle.PendingTotal}: #{ordersDetailController.pendingTotal}
+                        </div>
+                        <br />
+                        <p:commandButton 
+                            action="#{scheduleOrderController.openScheduleOrder(ordersDetailController.date)}"
+                            rendered="#{ordersDetailController.availableScheduleOrder}" value="#{bundle.ScheduleOrder}"
+                            onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                            >
+                            
+                        </p:commandButton>
+                        <br />
+                        <br />
+                        <p:dataTable var="order" value="#{ordersDetailController.orders}"
+                                     >
+                            <p:column headerText="#{bundle.Date}" styleClass="column_state_#{order.orState}">
+                                #{ordersDetailController.formatShortDate(order.orDate)}
+                            </p:column>
+                            <p:column headerText="#{bundle.Provider}" styleClass="column_state_#{order.orState}">
+                                #{order.provId.provName}
+                            </p:column>
+                            <p:column headerText="#{bundle.Status}" styleClass="column_state_#{order.orState}">
+                                #{ordersDetailController.getStatus(order.orState)} #{ordersDetailController.formatShortDateWithParentesis(order.orDateReceived)}
+                            </p:column>
+                            <p:column headerText="#{bundle.Total}" styleClass="column_state_#{order.orState}">
+                                #{order.orTotal}
+                            </p:column>
+                            <p:column headerText="#{bundle.Action}" style="text-align: center;" styleClass="column_state_#{order.orState}">
+                                <p:commandLink 
+                                    onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                    >
+                                     <i class="pi pi-bars"></i>
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    
+                </h:form>
+                </div>
+                <ui:include src="orderDialog.xhtml"/>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

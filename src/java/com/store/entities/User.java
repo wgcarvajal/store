@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -84,7 +86,12 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId")
     private List<Usergroup> usergroupList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId")
+    private List<Orders> ordersList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usId")
     private List<Lend> lendList;
+    @JoinColumn(name = "ownId", referencedColumnName = "ownId")
+    @ManyToOne
+    private Owner ownId;
 
     public User() {
     }
@@ -221,12 +228,29 @@ public class User implements Serializable {
     }
 
     @XmlTransient
+    public List<Orders> getOrdersList() {
+        return ordersList;
+    }
+
+    public void setOrdersList(List<Orders> ordersList) {
+        this.ordersList = ordersList;
+    }
+
+    @XmlTransient
     public List<Lend> getLendList() {
         return lendList;
     }
 
     public void setLendList(List<Lend> lendList) {
         this.lendList = lendList;
+    }
+
+    public Owner getOwnId() {
+        return ownId;
+    }
+
+    public void setOwnId(Owner ownId) {
+        this.ownId = ownId;
     }
 
     @Override
