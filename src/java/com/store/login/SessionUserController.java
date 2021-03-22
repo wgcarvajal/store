@@ -126,7 +126,7 @@ public class SessionUserController implements Serializable,CashRegisterControlle
         }
     }
     
-    private void redirectView() throws IOException
+    private void redirectView() throws IOException, ServletException
     {
         thereIsSession = true;
         this.sessionError = false;
@@ -145,9 +145,7 @@ public class SessionUserController implements Serializable,CashRegisterControlle
         }
         else if(usergroup.getGrouId().getGrouId().equals(Rol.cashier))
         {
-            FacesContext.getCurrentInstance()
-                    .getExternalContext()
-                    .redirect(Util.projectPath+"/cashier/index.xhtml");
+            logout();
         }
         else if(usergroup.getGrouId().getGrouId().equals(Rol.owner))
         {

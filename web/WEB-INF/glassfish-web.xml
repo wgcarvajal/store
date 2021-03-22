@@ -10,10 +10,6 @@
     <group-name>sAdmin</group-name>
   </security-role-mapping>
   <security-role-mapping>
-    <role-name>cashier</role-name>
-    <group-name>cashier</group-name>
-  </security-role-mapping>
-  <security-role-mapping>
     <role-name>owner</role-name>
     <group-name>owner</group-name>
   </security-role-mapping>
